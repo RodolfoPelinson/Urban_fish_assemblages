@@ -54,8 +54,8 @@ estrutura_loadings_filtrados_new <- estrutura_loadings_filtrados * scaler * 0.8
 
 #estrutura_PCs <- jitter(estrutura_PCs, amount = 0.1)
 
-pc1_label <- paste("PC1 (",round(importance[1]*100,2),"%)",sep = "")
-pc2_label <- paste("PC2 (",round(importance[2]*100,2),"%)",sep = "")
+pc1_label <- paste("PC1 (",round(importance_estrutura[1]*100,2),"%)",sep = "")
+pc2_label <- paste("PC2 (",round(importance_estrutura[2]*100,2),"%)",sep = "")
 
 xmin <- min(c(estrutura_PCs[,1], estrutura_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(estrutura_PCs[,1], estrutura_loadings_filtrados_new[,1]))*1.1
@@ -138,8 +138,8 @@ bacia_loadings_filtrados_new <- bacia_loadings_filtrados * scaler * 0.8
 
 #bacia_PCs <- jitter(bacia_PCs, amount = 0.1)
 
-pc1_label <- paste("PC1 (",round(importance[1]*100,2),"%)",sep = "")
-pc2_label <- paste("PC2 (",round(importance[2]*100,2),"%)",sep = "")
+pc1_label <- paste("PC1 (",round(importance_bacia[1]*100,2),"%)",sep = "")
+pc2_label <- paste("PC2 (",round(importance_bacia[2]*100,2),"%)",sep = "")
 
 xmin <- min(c(bacia_PCs[,1], bacia_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(bacia_PCs[,1], bacia_loadings_filtrados_new[,1]))*1.1
