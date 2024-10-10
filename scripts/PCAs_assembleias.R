@@ -76,8 +76,8 @@ library(scales)
 library(shape)
 
 
-pal <- col_numeric(palette = c("white", "black"), domain = urb[-1], na.color = "grey50", alpha = FALSE, reverse = FALSE)
-col <-pal(urb[-1])
+pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+col <-pal(urb)
 
 Arrows(x0 <- rep(0, nrow(estrutura_loadings_filtrados_new)),
        y0 <- rep(0, nrow(estrutura_loadings_filtrados_new)),
@@ -160,8 +160,8 @@ library(scales)
 library(shape)
 
 
-pal <- col_numeric(palette = c("white", "black"), domain = urb[-1], na.color = "grey50", alpha = FALSE, reverse = FALSE)
-col <-pal(urb[-1])
+pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+col <-pal(urb)
 
 Arrows(x0 <- rep(0, nrow(bacia_loadings_filtrados_new)),
        y0 <- rep(0, nrow(bacia_loadings_filtrados_new)),
