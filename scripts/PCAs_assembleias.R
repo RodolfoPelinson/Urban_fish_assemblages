@@ -15,16 +15,27 @@ estrutura <- estrutura[colnames(estrutura) != "descarga_vel_dim" &
 
 
 
+#Padronizando variaveis
+library(vegan)
+
+estrutura <- estrutura[,colnames(estrutura) != "comp_zona_riparia_plantacao"] #Variavel só com zeros
+
+agua_st <- decostand(agua, method = "stand")
+estrutura_st <- decostand(estrutura, method = "stand")
+bacia_st <- decostand(bacia, method = "stand")
+
+
 #numero de colunas de cada uma
-ncol_agua <- ncol(agua)
-ncol_estrutura <- ncol(estrutura)
-ncol_bacia <- ncol(bacia)
+ncol_agua <- ncol(agua_st)
+ncol_estrutura <- ncol(estrutura_st)
+ncol_bacia <- ncol(bacia_st)
+
+
 
 
 ################################################################################################################
 #PCA estrutura
-library(vegan)
-pca_estrutura <- rda(estrutura)
+pca_estrutura <- rda(estrutura_st)
 
 importance_estrutura <- round(pca_estrutura$CA$eig/sum(pca_estrutura$CA$eig),2)
 Eigenvalues_estrutura <- data.frame(autovalores = pca_estrutura$CA$eig,
@@ -108,7 +119,7 @@ dev.off()
 ################################################################################################################
 #PCA bacia
 library(vegan)
-pca_bacia <- rda(bacia)
+pca_bacia <- rda(bacia_st)
 
 importance_bacia <- round(pca_bacia$CA$eig/sum(pca_bacia$CA$eig),2)
 Eigenvalues_bacia <- data.frame(autovalores = pca_bacia$CA$eig,
