@@ -3,6 +3,14 @@ bacia <- read.csv("data/dados_ambientais_bacia.csv")
 bacia2 <- read.csv("data/dados_ambientais_bacia_2.csv")
 estrutura <- read.csv("data/dados_ambientais_estrutura_por_riacho.csv")
 
+
+
+
+
+##############################################################################
+
+
+
 dados_peixes <- read.table("data/com_por_bacia.csv")
 
 nrow(agua)
@@ -49,20 +57,68 @@ estrutura$descarga_vel_dim <- estrutura$velocidade_media * estrutura$larg_media 
 ############################################################################
 
 
+##############################################################################
+################ ESTIMATING MISSING VALUES IN THE WATER MATRIX ###############
+
+#Removendo bacias não usadas e reordenando a planilha de água de acordo com a planilha de estrutura
+
+posicoes <- match(rownames(estrutura), agua$Group.1)
+na_posicoes <- which(is.na(posicoes))
+
+new_bacias <- data.frame(matrix(data = NA, nrow = length(na_posicoes), ncol = ncol(agua)))
+
+colnames(new_bacias) <- colnames(agua)
+
+new_bacias$Group.1 <- rownames(estrutura)[na_posicoes]
+new_bacias$X.urb <- urb[na_posicoes]
+
+new_agua <- rbind(agua, new_bacias)
+
+rownames(new_agua) <- new_agua$Group.1
+urb_agua <- new_agua$X.urb
+
+new_agua<- new_agua[,-c(1,2,3)]
+
+#################################### GAM Imput #############################
+library(mgcv)
+
+predicted <- list()
+
+families <- c("Gamma", "Gamma", "gaussian", "Gamma", "gaussian", "Gamma", "gaussian", "Gamma", "Gamma", "Gamma", "Gamma")
+names(families) <- colnames(new_agua)
+
+new_agua_imputed <- new_agua
+
+for(i in 1:ncol(new_agua)){
+  y <- new_agua[,i]
+  gam_model <- gam(y ~ s(urb_agua), family = families[i])
+  newdata <- data.frame(urb_agua = urb_agua[(length(urb_agua) - 3) :length(urb_agua) ])
+  pred <- predict(gam_model, newdata = newdata, se = TRUE, type = "response")
+  pred_fit <- pred$fit
+  pred_se <- pred$se.fit
+  set.seed(45)
+  for(j in 1:length(pred_fit)){
+    pred_fit[j] <- rnorm(1, mean = pred_fit[j], sd = pred_se[j])
+  }
+  predicted[[i]] <- pred_fit
+  new_agua_imputed[(length(urb_agua) - 3) :length(urb_agua), i] <- pred_fit
+}
+
+##############################################################################
+
 #Removendo bacias não usadas e reordenando a planilha de água de acordo com a planilha de estrutura
 
 #pegando as posições na planilha água
-posicoes <- match(rownames(estrutura), agua$Group.1)
+posicoes <- match(rownames(estrutura), rownames(new_agua_imputed))
 
-agua_selecionadas <- agua[posicoes,]
+agua_selecionadas <- new_agua_imputed[posicoes,]
 
 agua <- data.frame(bacia = rownames(estrutura), urb = urb, agua_selecionadas)
 
-rownames(agua) <- agua$bacia
+agua <- agua[,-c(1:2)]
 
-agua <- agua[,-c(1:5)]
 
-nrow(agua)
+
 
 #############################################################################
 ################################ DESCARGA ###################################
@@ -174,8 +230,10 @@ data.frame(agua = rownames(agua),
 ##############################################################################
 
 #Verificando de urbanização de delineamento é compatível com a informação da bacia. Acho que a do delineamento é de 2019 e da bacia de 2021
-data.frame(urb_delinamento = urb,
-           urb_bacia = bacia$urbano_2021_Total)
+variaveis_urb_delinemaneto <- data.frame(urb_delinamento_2019 = urb,
+                                         urb_bacia_2021 = bacia$urbano_2021_Total)
+
+write.csv(variaveis_urb_delinemaneto, "urb_2019_2021.csv")
 
 plot(x = urb, y = bacia$urbano_2021_Total, xlab = "Delineamento", ylab = "2021")
 

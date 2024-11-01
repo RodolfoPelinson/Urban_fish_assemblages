@@ -27,6 +27,8 @@ install.packages("DHARMa")
 install.packages("bbmle")
 install.packages("TMB")
 install.packages("Matrix")
+install.packages("randomForest")
+install.packages("mgcv")
 
 
 
