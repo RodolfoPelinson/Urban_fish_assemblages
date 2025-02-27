@@ -1,0 +1,390 @@
+---
+title: "Exemplo varpart_manyglm"
+author: "Rodolfo Pelinson"
+date: "`r Sys.Date()`"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Exemplo varpart_manyglm
+
+```{r, message = FALSE, warning = FALSE}
+dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
+```
+
+
+```{r, message = FALSE, warning = FALSE}
+library(vegan)
+library(mvabund)
+```
+
+
+Carredango planilhas
+
+```{r, message = FALSE, warning = FALSE}
+assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
+```
+
+
+
+Removendo espécies com apenas duas ou menos presenças
+```{r, message = FALSE, warning = FALSE}
+source(paste(sep = "/",dir,"functions/remove_sp.R"))
+
+ncol(assembleia_peixes)
+assembleia_peixes_rm <- remove_sp(assembleia_peixes, 2)
+ncol(assembleia_peixes_rm)
+```
+
+Redução absurda no número de espécies.
+
+
+Agora carregando as planilhas ambientais:
+```{r, message = FALSE, warning = FALSE}
+agua_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/agua_PCs.csv"), row.names = 1)
+estrutura_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/estrutura_PCs.csv"), row.names = 1)
+bacia_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/bacia_PCs.csv"), row.names = 1)
+
+delineamento <- read.csv(paste(sep = "/",dir,"data/delineamento.csv"))
+
+ncol(agua_PCs)
+ncol(estrutura_PCs)
+ncol(bacia_PCs)
+```
+
+Agora carregando planilha com distancias e gerando os filtros espaciais
+```{r, warning = FALSE}
+library(ade4)
+library(adespatial)
+
+dist_euclid <- read.csv(paste(sep = "/",dir,"data/dist/Matriz_distancia_matriz_euclidiana.csv"), row.names = 1)
+dist_euclid <- as.dist(dist_euclid)
+
+dbmem_euclid <- dbmem(dist_euclid, thresh = NULL, MEM.autocor = c("positive", "non-null", "all", "negative"), store.listw = TRUE, silent = FALSE)
+
+ncol(dbmem_euclid)
+
+```
+
+Agora executando a função forward selection para com "mvabund".
+Essa fução basicamente vai:
+1 - Rodar um modelo da matriz resposta em função de cada preditor da matriz preditora separadamente
+2 - Reorganizar a matriz preditora do preditor com maior R² para o menor
+3 - Rodar o modelo adicionando preditora por preditora em ordem do maior R² para o menor, até que adicionar novos preditores não gere aumento no R² do modelo, ou o modelo com o novo preditor não seja significativamente melhor que o anterior.
+
+
+```{r, warning = FALSE}
+source(paste(sep = "/",dir,"functions/R2_manyglm.R"))
+source(paste(sep = "/",dir,"functions/forward_sel_manyglm.R"))
+set.seed(1)
+estrutura_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(estrutura_PCs[,1:5]), nBoot=4999) #considerarei apenas os 5 primeiros eixos
+estrutura_FS
+
+agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PCs[,1:5]), nBoot=4999) #considerarei apenas os 5 primeiros eixos
+agua_FS
+
+bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_PCs[,1:5]), nBoot=4999) #considerarei apenas os 5 primeiros eixos
+bacia_FS
+
+dbmem_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=4999) #considerarei apenas os 5 primeiros eixos
+dbmem_FS
+```
+
+Aqui nenhuma variavel de estrutura ou agua foi significativa. Apenas o primeiro eixo para bacia foi significativo, e 2 eixes espaciais foram significativos.
+
+# Realizando a partição de variância
+
+Vou adotar 3 estratégias. 
+
+## Primeira estratégia
+
+1 - Fazer a partição de variância usando o procedimento clássico, que é com R² ajustado e usando as planilhas resultantes da forward selection.
+
+Nesse caso, quando a forward selection não selecionou nenhuma variavel, eu vou pegar só a primeira. O padrão é pegar todas, temos casos onde temos mais preditores que comunidades.. então nem daria.
+
+```{r, warning = FALSE}
+source(paste(sep = "/",dir,"functions/varpart_manyglm.R"))
+
+#grupos de preditoras devem estar organizadas em listas (com nome)
+predictors <- list(estrutura = data.frame(PC1 = estrutura_PCs[,1]),
+                   bacia = bacia_FS$new_x,
+                   agua = data.frame(PC1 = agua_PCs[,1]),
+                   urbanizacao = data.frame(urbanizacao = delineamento$urbana),
+                   MEMs = dbmem_FS$new_x)
+
+varpart_peixes <-varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = TRUE)
+
+#Valores pra comunidade toda
+varpart_peixes$R2_fractions_com
+
+#Valores para cada espécie, valores cheios
+varpart_peixes$R2_fractions_sp$R2_full_fraction
+round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
+
+#Valores para cada espécie, valores puros
+varpart_peixes$R2_fractions_sp$R2_pure_fraction
+round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
+```
+
+O Objeto resultante contém os R² para todas as combinações de grupos de preditores, então é só usar esses valores para calcular frações específicas.
+
+Por exemplo, se quiser saber a fração compartilhada entre variaveis da bacia e urbanização:
+```{r, warning = FALSE}
+#Bacia sem urbanização
+bacia_sem_urb <- varpart_peixes$R2_models$`bacia-urbanizacao` - varpart_peixes$R2_models$bacia
+bacia_sem_urb
+
+#Urbanização sem bacia
+urb_sem_bacia <- varpart_peixes$R2_models$`bacia-urbanizacao` - varpart_peixes$R2_models$urbanizacao
+urb_sem_bacia
+
+#Fração compartilhada
+varpart_peixes$R2_models$`bacia-urbanizacao` - (bacia_sem_urb + urb_sem_bacia)
+
+#Aqui o valor é superestimado porque as frações puras foram negativas.
+
+```
+
+Mesma coisa para cada espécie:
+```{r, warning = FALSE}
+#Bacia sem urbanização
+bacia_sem_urb <- varpart_peixes$R2_models_sp$bacia.urbanizacao - varpart_peixes$R2_models_sp$bacia
+bacia_sem_urb
+
+#Urbanização sem bacia
+urb_sem_bacia <- varpart_peixes$R2_models_sp$bacia.urbanizacao - varpart_peixes$R2_models_sp$urbanizacao
+urb_sem_bacia
+
+#Fração compartilhada
+frac_comp <- varpart_peixes$R2_models_sp$bacia.urbanizacao - (bacia_sem_urb + urb_sem_bacia)
+
+#Adicionando nomes:
+names(bacia_sem_urb)<- rownames(varpart_peixes$R2_models_sp)
+names(urb_sem_bacia)<- rownames(varpart_peixes$R2_models_sp)
+names(frac_comp)<- rownames(varpart_peixes$R2_models_sp)
+
+bacia_sem_urb
+urb_sem_bacia
+frac_comp
+```
+
+Com exceção das frações compartilhadas, podemos calcular o valor de p para qualquer fração!
+Por exemplo, vou calcular o valor de p para as variaveis de bacia, a fração completa, a fração pura, e a descontando apenas a urbanização.
+
+Primeiro a completa:
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$model_null, varpart_peixes$models$bacia, nBoot=999, p.uni="adjusted")
+```
+
+Agora a pura. Para a pura basicamente é só comparar o modelo com todos os preditores, mas sem os de bacia, com o modelo com todos os preditores.
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$models$`estrutura-agua-urbanizacao-MEMs`, varpart_peixes$models$`estrutura-bacia-agua-urbanizacao-MEMs`, nBoot=999, p.uni="adjusted")
+```
+
+Agora o valor de p das variaveis de bacia, descontando a urbanização.
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$models$`urbanizacao`, varpart_peixes$models$`bacia-urbanizacao`, nBoot=999, p.uni="adjusted")
+```
+
+
+
+
+
+
+
+## Segunda estratégia
+
+1 - Fazer a partição de variância usando um número padrão de variaveis (2) para cada grupo de preditores, sem ajustar valores de R². A única exceção é para urbanização que só tem 1 preditor. Vou considerar a forward selection apenas para os dbMEMns, que selecionou apenas 2 preditores tb.
+
+Eu prefiro assim, o ajuste dos valores de R² para adição de preditores parece muito severo, fora as montes de valores negativos que aparecem, fora o fato de que eu usei a mesma fórmula de ajuste do R² clássico, não sei se ela se aplica a esse pseudo-R².
+
+```{r, warning = FALSE}
+
+#grupos de preditoras devem estar organizadas em listas (com nome)
+predictors <- list(estrutura = data.frame(PC1 = estrutura_PCs[,1:2]),
+                   bacia = data.frame(PC1 = bacia_PCs[,1:2]),
+                   agua = data.frame(PC1 = agua_PCs[,1:2]),
+                   urbanizacao = data.frame(urbanizacao = delineamento$urbana),
+                   MEMs = dbmem_FS$new_x)
+
+varpart_peixes <-varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = FALSE)
+
+#Valores pra comunidade toda
+varpart_peixes$R2_fractions_com
+
+#Valores para cada espécie, valores cheios
+varpart_peixes$R2_fractions_sp$R2_full_fraction
+round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
+
+#Valores para cada espécie, valores puros
+varpart_peixes$R2_fractions_sp$R2_pure_fraction
+round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
+```
+
+O Objeto resultante contém os R² para todas as combinações de grupos de preditores, então é só usar esses valores para calcular frações específicas.
+
+Por exemplo, se quiser saber a fração compartilhada entre variaveis da bacia e urbanização:
+```{r, warning = FALSE}
+#Bacia sem urbanização
+bacia_sem_urb <- varpart_peixes$R2_models$`bacia-urbanizacao` - varpart_peixes$R2_models$bacia
+bacia_sem_urb
+
+#Urbanização sem bacia
+urb_sem_bacia <- varpart_peixes$R2_models$`bacia-urbanizacao` - varpart_peixes$R2_models$urbanizacao
+urb_sem_bacia
+
+#Fração compartilhada
+varpart_peixes$R2_models$`bacia-urbanizacao` - (bacia_sem_urb + urb_sem_bacia) 
+
+```
+
+Mesma coisa para cada espécie:
+```{r, warning = FALSE}
+#Bacia sem urbanização
+bacia_sem_urb <- varpart_peixes$R2_models_sp$bacia.urbanizacao - varpart_peixes$R2_models_sp$bacia
+bacia_sem_urb
+
+#Urbanização sem bacia
+urb_sem_bacia <- varpart_peixes$R2_models_sp$bacia.urbanizacao - varpart_peixes$R2_models_sp$urbanizacao 
+urb_sem_bacia
+
+#Fração compartilhada
+frac_comp <- varpart_peixes$R2_models_sp$bacia.urbanizacao - (bacia_sem_urb + urb_sem_bacia)
+
+#Adicionando nomes:
+names(bacia_sem_urb)<- rownames(varpart_peixes$R2_models_sp)
+names(urb_sem_bacia)<- rownames(varpart_peixes$R2_models_sp)
+names(frac_comp)<- rownames(varpart_peixes$R2_models_sp)
+
+bacia_sem_urb
+urb_sem_bacia
+frac_comp
+```
+
+Com exceção das frações compartilhadas, podemos calcular o valor de p para qualquer fração!
+Por exemplo, vou calcular o valor de p para as variaveis de bacia, a fração completa, a fração pura, e a descontando apenas a urbanização.
+
+Primeiro a completa:
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$model_null, varpart_peixes$models$bacia, nBoot=999, p.uni="adjusted")
+```
+
+Agora a pura. Para a pura basicamente é só comparar o modelo com todos os preditores, mas sem os de bacia, com o modelo com todos os preditores.
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$models$`estrutura-agua-urbanizacao-MEMs`, varpart_peixes$models$`estrutura-bacia-agua-urbanizacao-MEMs`, nBoot=999, p.uni="adjusted")
+```
+
+Agora o valor de p das variaveis de bacia, descontando a urbanização.
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$models$`urbanizacao`, varpart_peixes$models$`bacia-urbanizacao`, nBoot=999, p.uni="adjusted")
+```
+
+
+
+
+
+
+## Terceira estratégia
+
+1 - Fazer a partição de variância usando um número de PCs que indiquem pelo menos 50% da variação nos dados para cada grupo de preditores, sem ajustar valores de R². A única exceção é para urbanização que só tem 1 preditor. Vou considerar a forward selection apenas para os dbMEMns, que selecionou apenas 2 preditores tb.
+
+O ajuste dos valores de R² para adição de preditores parece muito severo, fora as montes de valores negativos que aparecem, fora o fato de que eu usei a mesma fórmula de ajuste do R² clássico, não sei se ela se aplica a esse pseudo-R².
+
+```{r, warning = FALSE}
+
+autovar_estrutura <- read.csv(paste(sep = "/",dir,"data/pcas_amb/estrutura_autovalores.csv"), row.names = 1)
+autovar_agua <- read.csv(paste(sep = "/",dir,"data/pcas_amb/agua_autovalores.csv"), row.names = 1)
+autovar_bacia <- read.csv(paste(sep = "/",dir,"data/pcas_amb/bacia_autovalores.csv"), row.names = 1)
+
+autovar_estrutura$importance[1]
+autovar_estrutura$importance[1] + autovar_estrutura$importance[2]
+autovar_estrutura$importance[1] + autovar_estrutura$importance[2] + autovar_estrutura$importance[3]
+autovar_estrutura$importance[1] + autovar_estrutura$importance[2] + autovar_estrutura$importance[3] + autovar_estrutura$importance[4] + autovar_estrutura$importance[5]
+
+autovar_agua$importance[1]
+
+autovar_bacia$importance[1] + autovar_bacia$importance[2]
+
+
+#grupos de preditoras devem estar organizadas em listas (com nome)
+predictors <- list(estrutura = data.frame(PC1 = estrutura_PCs[,1:5]),
+                   bacia = data.frame(PC1 = bacia_PCs[,1:2]),
+                   agua = data.frame(PC1 = agua_PCs[,1]),
+                   urbanizacao = data.frame(urbanizacao = delineamento$urbana),
+                   MEMs = dbmem_FS$new_x)
+
+varpart_peixes <-varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = FALSE)
+
+#Valores pra comunidade toda
+varpart_peixes$R2_fractions_com
+
+#Valores para cada espécie, valores cheios
+varpart_peixes$R2_fractions_sp$R2_full_fraction
+round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
+
+#Valores para cada espécie, valores puros
+varpart_peixes$R2_fractions_sp$R2_pure_fraction
+round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
+```
+
+O Objeto resultante contém os R² para todas as combinações de grupos de preditores, então é só usar esses valores para calcular frações específicas.
+
+Por exemplo, se quiser saber a fração compartilhada entre variaveis da bacia e urbanização:
+```{r, warning = FALSE}
+#Bacia sem urbanização
+bacia_sem_urb <- varpart_peixes$R2_models$`bacia-urbanizacao` - varpart_peixes$R2_models$bacia
+bacia_sem_urb
+
+#Urbanização sem bacia
+urb_sem_bacia <- varpart_peixes$R2_models$`bacia-urbanizacao` - varpart_peixes$R2_models$urbanizacao
+urb_sem_bacia
+
+#Fração compartilhada
+varpart_peixes$R2_models$`bacia-urbanizacao` - (bacia_sem_urb + urb_sem_bacia)
+
+```
+
+Mesma coisa para cada espécie:
+```{r, warning = FALSE}
+#Bacia sem urbanização
+bacia_sem_urb <- varpart_peixes$R2_models_sp$bacia.urbanizacao - varpart_peixes$R2_models_sp$bacia
+bacia_sem_urb
+
+#Urbanização sem bacia
+urb_sem_bacia <- varpart_peixes$R2_models_sp$bacia.urbanizacao - varpart_peixes$R2_models_sp$urbanizacao 
+urb_sem_bacia
+
+#Fração compartilhada
+frac_comp <- varpart_peixes$R2_models_sp$bacia.urbanizacao - (bacia_sem_urb + urb_sem_bacia)
+
+#Adicionando nomes:
+names(bacia_sem_urb)<- rownames(varpart_peixes$R2_models_sp)
+names(urb_sem_bacia)<- rownames(varpart_peixes$R2_models_sp)
+names(frac_comp)<- rownames(varpart_peixes$R2_models_sp)
+
+bacia_sem_urb
+urb_sem_bacia
+frac_comp
+```
+
+Com exceção das frações compartilhadas, podemos calcular o valor de p para qualquer fração!
+Por exemplo, vou calcular o valor de p para as variaveis de bacia, a fração completa, a fração pura, e a descontando apenas a urbanização.
+
+Primeiro a completa:
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$model_null, varpart_peixes$models$bacia, nBoot=999, p.uni="adjusted")
+```
+
+Agora a pura. Para a pura basicamente é só comparar o modelo com todos os preditores, mas sem os de bacia, com o modelo com todos os preditores.
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$models$`estrutura-agua-urbanizacao-MEMs`, varpart_peixes$models$`estrutura-bacia-agua-urbanizacao-MEMs`, nBoot=999, p.uni="adjusted")
+```
+
+Agora o valor de p das variaveis de bacia, descontando a urbanização.
+```{r, warning = FALSE}
+anova.manyglm(varpart_peixes$models$`urbanizacao`, varpart_peixes$models$`bacia-urbanizacao`, nBoot=999, p.uni="adjusted")
+```
+
+
+

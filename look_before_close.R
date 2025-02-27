@@ -29,6 +29,10 @@ install.packages("TMB")
 install.packages("Matrix")
 install.packages("randomForest")
 install.packages("mgcv")
+install.packages("mvabund")
+
+install.packages("DBI")
+install.packages("hms")
 
 
 

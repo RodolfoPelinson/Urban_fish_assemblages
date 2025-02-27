@@ -26,29 +26,23 @@ nrow(assembleia_peixes)
 
 dist_assembleias <- vegdist(assembleia_peixes, method = "euclidean")
 
-varp1 <- varpart(assembleia_peixes, estrutura_PCs[,1:10], agua_PCs[,1], bacia_PCs[,1:3], urb, transfo = "hel")
-varp2 <- varpart(assembleia_peixes, estrutura_PCs[,1:10], agua_PCs[,1], bacia_PCs[,1:3], urb)
+varp1 <- varpart(assembleia_peixes, estrutura_PCs[,1:2], agua_PCs[,1:2], bacia_PCs[,1:2], urb)
+varp2 <- varpart(assembleia_peixes, estrutura_PCs[,1:2], agua_PCs[,1:2], bacia_PCs[,1:2], urb, transfo = "hel")
+varp3 <- varpart(assembleia_peixes, estrutura_PCs[,1:10], agua_PCs[,1], bacia_PCs[,1:3], urb, transfo = "hel")
 
-pdf("plots/varpart_hellinger.pdf", height = 3.5, width = 3.5, pointsize = 5)
-plot(varp1, Xnames = c("Estrutura", "Água", "Bacia", "Urbanização"))
-dev.off()
-
-pdf("plots/varpart.pdf", height = 3.5, width = 3.5, pointsize = 5)
-plot(varp2, Xnames = c("Estrutura", "Água", "Bacia", "Urbanização"))
-dev.off()
 
 
 
 #########################
-estrutura_rda <- rda(X = assembleia_peixes, Y =  estrutura_PCs[,1:10])
+estrutura_rda <- rda(X = assembleia_peixes, Y =  estrutura_PCs[,1:2])
 anova.cca(estrutura_rda, permutations = 10000)
 RsquareAdj(estrutura_rda)
 
-agua_rda <- rda(X = assembleia_peixes, Y =  agua_PCs[,1])
+agua_rda <- rda(X = assembleia_peixes, Y =  agua_PCs[,1:2])
 anova.cca(agua_rda, permutations = 10000)
 RsquareAdj(agua_rda)
 
-bacia_rda <- rda(X = assembleia_peixes, Y =  bacia_PCs[,1:3])
+bacia_rda <- rda(X = assembleia_peixes, Y =  bacia_PCs[,1:2])
 anova.cca(bacia_rda, permutations = 10000)
 RsquareAdj(bacia_rda)
 
@@ -57,21 +51,35 @@ anova.cca(urb_rda, permutations = 10000)
 RsquareAdj(urb_rda)
 
 #########################
-only_estrutura_rda <- rda(X = assembleia_peixes, Y =  estrutura_PCs[,1:10], Z = data.frame(agua_PCs[,1], bacia_PCs[,1:3], urb))
+only_estrutura_rda <- rda(X = assembleia_peixes, Y =  estrutura_PCs[,1:2], Z = data.frame(agua_PCs[,1:2], bacia_PCs[,1:2], urb))
 anova.cca(only_estrutura_rda, permutations = 10000)
 RsquareAdj(only_estrutura_rda)
 
-only_agua_rda <- rda(X = assembleia_peixes, Y =  agua_PCs[,1], Z = data.frame(estrutura_PCs[,1:10], bacia_PCs[,1:3], urb))
+only_agua_rda <- rda(X = assembleia_peixes, Y =  agua_PCs[,1:2], Z = data.frame(estrutura_PCs[,1:2], bacia_PCs[,1:2], urb))
 anova.cca(only_agua_rda, permutations = 10000)
 RsquareAdj(only_agua_rda)
 
-only_bacia_rda <- rda(X = assembleia_peixes, Y =  bacia_PCs[,1:3], Z = data.frame(agua_PCs[,1], estrutura_PCs[,1:10], urb))
+only_bacia_rda <- rda(X = assembleia_peixes, Y =  bacia_PCs[,1:2], Z = data.frame(agua_PCs[,1:2], estrutura_PCs[,1:2], urb))
 anova.cca(only_bacia_rda, permutations = 10000)
 RsquareAdj(only_bacia_rda)
 
-only_urb_rda <- rda(X = assembleia_peixes, Y =  urb, Z = data.frame(agua_PCs[,1], bacia_PCs[,1:3], estrutura_PCs[,1:10]))
+only_urb_rda <- rda(X = assembleia_peixes, Y =  urb, Z = data.frame(agua_PCs[,1:2], bacia_PCs[,1:2], estrutura_PCs[,1:2]))
 anova.cca(only_urb_rda, permutations = 10000)
 RsquareAdj(only_urb_rda)
+
+
+
+pdf("plots/varpart.pdf", height = 3.5, width = 5, pointsize = 5)
+plot(varp1, Xnames = c(paste("Estrutura", round(RsquareAdj(estrutura_rda)$adj.r.squared,2)),
+                       paste("Água",round(RsquareAdj(agua_rda)$adj.r.squared,2)),
+                       paste("Bacia",round(RsquareAdj(bacia_rda)$adj.r.squared,2)),
+                       paste("Urbanização",round(RsquareAdj(urb_rda)$adj.r.squared,2))))
+dev.off()
+
+
+
+
+
 
 
 
@@ -83,15 +91,15 @@ assembleia_peixes_hell <- decostand(assembleia_peixes, method = "hell")
 
 
 #########################
-estrutura_rda <- rda(X = assembleia_peixes_hell, Y =  estrutura_PCs[,1:10])
+estrutura_rda <- rda(X = assembleia_peixes_hell, Y =  estrutura_PCs[,1:2])
 anova.cca(estrutura_rda, permutations = 10000)
 RsquareAdj(estrutura_rda)
 
-agua_rda <- rda(X = assembleia_peixes_hell, Y =  agua_PCs[,1])
+agua_rda <- rda(X = assembleia_peixes_hell, Y =  agua_PCs[,1:2])
 anova.cca(agua_rda, permutations = 10000)
 RsquareAdj(agua_rda)
 
-bacia_rda <- rda(X = assembleia_peixes_hell, Y =  bacia_PCs[,1:3])
+bacia_rda <- rda(X = assembleia_peixes_hell, Y =  bacia_PCs[,1:2])
 anova.cca(bacia_rda, permutations = 10000)
 RsquareAdj(bacia_rda)
 
@@ -100,19 +108,29 @@ anova.cca(urb_rda, permutations = 10000)
 RsquareAdj(urb_rda)
 
 #########################
-only_estrutura_rda <- rda(X = assembleia_peixes_hell, Y =  estrutura_PCs[,1:10], Z = data.frame(agua_PCs[,1], bacia_PCs[,1:3], urb))
+only_estrutura_rda <- rda(X = assembleia_peixes_hell, Y =  estrutura_PCs[,1:2], Z = data.frame(agua_PCs[,1:2], bacia_PCs[,1:2], urb))
 anova.cca(only_estrutura_rda, permutations = 10000)
 RsquareAdj(only_estrutura_rda)
 
-only_agua_rda <- rda(X = assembleia_peixes_hell, Y =  agua_PCs[,1], Z = data.frame(estrutura_PCs[,1:10], bacia_PCs[,1:3], urb))
+only_agua_rda <- rda(X = assembleia_peixes_hell, Y =  agua_PCs[,1:2], Z = data.frame(estrutura_PCs[,1:2], bacia_PCs[,1:2], urb))
 anova.cca(only_agua_rda, permutations = 10000)
 RsquareAdj(only_agua_rda)
 
-only_bacia_rda <- rda(X = assembleia_peixes_hell, Y =  bacia_PCs[,1:3], Z = data.frame(agua_PCs[,1], estrutura_PCs[,1:10], urb))
+only_bacia_rda <- rda(X = assembleia_peixes_hell, Y =  bacia_PCs[,1:2], Z = data.frame(agua_PCs[,1:2], estrutura_PCs[,1:2], urb))
 anova.cca(only_bacia_rda, permutations = 10000)
 RsquareAdj(only_bacia_rda)
 
-only_urb_rda <- rda(X = assembleia_peixes_hell, Y =  urb, Z = data.frame(agua_PCs[,1], bacia_PCs[,1:3], estrutura_PCs[,1:10]))
+only_urb_rda <- rda(X = assembleia_peixes_hell, Y =  urb, Z = data.frame(agua_PCs[,1:2], bacia_PCs[,1:2], estrutura_PCs[,1:2]))
 anova.cca(only_urb_rda, permutations = 10000)
 RsquareAdj(only_urb_rda)
+
+
+
+pdf("plots/varpart_hellinger.pdf", height = 3.5, width = 5, pointsize = 5)
+plot(varp2, Xnames = c(paste("Estrutura", round(RsquareAdj(estrutura_rda)$adj.r.squared,2)),
+                       paste("Água",round(RsquareAdj(agua_rda)$adj.r.squared,2)),
+                       paste("Bacia",round(RsquareAdj(bacia_rda)$adj.r.squared,2)),
+                       paste("Urbanização",round(RsquareAdj(urb_rda)$adj.r.squared,2))))
+dev.off()
+
 

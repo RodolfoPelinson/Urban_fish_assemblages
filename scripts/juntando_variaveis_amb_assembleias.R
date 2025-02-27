@@ -1,5 +1,5 @@
 agua <- read.csv("data/dados_ambientais_agua_2021.csv")
-bacia <- read.csv("data/dados_ambientais_bacia.csv")
+bacia <- read.csv("data/dados_ambientais_bacia_3.csv")
 bacia2 <- read.csv("data/dados_ambientais_bacia_2.csv")
 estrutura <- read.csv("data/dados_ambientais_estrutura_por_riacho.csv")
 
@@ -196,10 +196,10 @@ bacia_selecionadas2<- bacia2[posicoes2,]
 bacia_selecionadas <- cbind(bacia_selecionadas, bacia_selecionadas2)
 
 var_interesse_bacia <- c(#"bacia",
-                        "area_ha_Total",
-                        "floresta_2021_Total",
-                        "urbano_2021_Total",
-                        "agro_2021_Total",
+                        "Area_ha",
+                        "FOR_2021",
+                        "URB_2021",
+                        "AGR_2021",
                         "Ic",
                         "Kc",
                         "Declividade_av",
@@ -231,11 +231,17 @@ data.frame(agua = rownames(agua),
 
 #Verificando de urbanização de delineamento é compatível com a informação da bacia. Acho que a do delineamento é de 2019 e da bacia de 2021
 variaveis_urb_delinemaneto <- data.frame(urb_delinamento_2019 = urb,
-                                         urb_bacia_2021 = bacia$urbano_2021_Total)
+                                         urb_bacia_2021 = bacia$URB_2021)
 
 write.csv(variaveis_urb_delinemaneto, "urb_2019_2021.csv")
 
-plot(x = urb, y = bacia$urbano_2021_Total, xlab = "Delineamento", ylab = "2021")
+plot(x = urb, y = bacia$URB_2021, xlab = "Delineamento", ylab = "2021 Gabriel")
+plot(x = urb, y = bacia_selecionadas$URB_2019, xlab = "Delineamento", ylab = "2019 Gabriel")
+plot(x = urb, y = bacia_selecionadas$URB_2018, xlab = "Delineamento", ylab = "2018 Gabriel")
+plot(x = urb, y = bacia_selecionadas$URB_2017, xlab = "Delineamento", ylab = "2017 Gabriel")
+
+
+bacia_selecionadas
 
 #Existe variação, adicionando urbanização delineamento pra planilha de bacia
 

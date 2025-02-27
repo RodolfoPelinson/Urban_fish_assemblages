@@ -6,7 +6,7 @@ bacia <- read.csv("data/planilha_bacia_assembleias.csv", row.names = 1)
 #removendo urbanização da bacia
 urb <- bacia$urbano_delineamento
 bacia <- bacia[colnames(bacia) != "urbano_delineamento" &
-                 colnames(bacia) != "urbano_2021_Total"]
+                 colnames(bacia) != "URB_2021"]
 names(urb) <- rownames(bacia)
 
 
