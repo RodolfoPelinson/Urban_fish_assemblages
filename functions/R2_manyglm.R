@@ -5,6 +5,8 @@ R2_manyglm <- function(model, model_null){
   
   R2_c <- c(1 - ( exp(logLik(model_null)-logLik(model))^(2/n)) ) / (1 - exp(logLik(model_null))^(2/n) )
   
+  R2_c[R2_c<0] <- 0
+  
   names(R2_c) <- colnames(model$y)
   
   p <- nrow(data.frame(model$coefficients)) - 1
