@@ -1,5 +1,5 @@
 ---
-title: "Traitglm"
+title: "Traitglm_ONE"
 author: "Rodolfo Pelinson"
 date: "`r Sys.Date()`"
 output: 

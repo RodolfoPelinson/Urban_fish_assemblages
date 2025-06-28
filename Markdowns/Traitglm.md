@@ -1,7 +1,7 @@
 Traitglm
 ================
 Rodolfo Pelinson
-2025-05-21
+2025-06-28
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -22,23 +22,19 @@ library(mvabund)
 library(vegan)
 ```
 
-    ## Carregando pacotes exigidos: permute
-
-    ## Carregando pacotes exigidos: lattice
-
-    ## This is vegan 2.6-8
+    ## Loading required package: permute
 
 ``` r
 library(yarrr)
 ```
 
-    ## Carregando pacotes exigidos: jpeg
+    ## Loading required package: jpeg
 
-    ## Carregando pacotes exigidos: BayesFactor
+    ## Loading required package: BayesFactor
 
-    ## Carregando pacotes exigidos: coda
+    ## Loading required package: coda
 
-    ## Carregando pacotes exigidos: Matrix
+    ## Loading required package: Matrix
 
     ## ************
     ## Welcome to BayesFactor 0.9.12-4.7. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
@@ -46,7 +42,7 @@ library(yarrr)
     ## Type BFManual() to open the manual.
     ## ************
 
-    ## Carregando pacotes exigidos: circlize
+    ## Loading required package: circlize
 
     ## ========================================
     ## circlize version 0.4.16
@@ -455,9 +451,9 @@ library(shape)
 ```
 
     ## 
-    ## Anexando pacote: 'shape'
+    ## Attaching package: 'shape'
 
-    ## O seguinte objeto é mascarado por 'package:corrplot':
+    ## The following object is masked from 'package:corrplot':
     ## 
     ##     colorlegend
 

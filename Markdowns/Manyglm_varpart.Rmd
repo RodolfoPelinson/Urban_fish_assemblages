@@ -208,6 +208,48 @@ p_urbanizacao_pure
 
 Now, lets plot these R² values:
 
+First lets calculate the shared fractions for the whole community:
+```{r}
+
+shared_urb_amb <-  (varpart_peixes$R2_models$ambiente + varpart_peixes$R2_models$urbanizacao) - varpart_peixes$R2_models$`ambiente-urbanizacao`
+
+shared_MEM_amb <- (varpart_peixes$R2_models$MEMs + varpart_peixes$R2_models$ambiente) - varpart_peixes$R2_models$`ambiente-MEMs`
+
+shared_MEM_urb <- (varpart_peixes$R2_models$MEMs + varpart_peixes$R2_models$urbanizacao) - varpart_peixes$R2_models$`urbanizacao-MEMs`
+
+shared_urb_amb_ONLY <- varpart_peixes$R2_models$ambiente - shared_MEM_amb - varpart_peixes$R2_fractions_com$R2_pure_fraction[1]
+
+shared_MEM_amb_ONLY <- varpart_peixes$R2_models$ambiente - shared_urb_amb - varpart_peixes$R2_fractions_com$R2_pure_fraction[1]
+
+shared_MEM_urb_ONLY <- varpart_peixes$R2_models$urbanizacao - shared_urb_amb - varpart_peixes$R2_fractions_com$R2_pure_fraction[2]
+
+shared_all <- shared_urb_amb - shared_urb_amb_ONLY
+
+sum(varpart_peixes$R2_fractions_com$R2_pure_fraction) + shared_urb_amb_ONLY + shared_MEM_amb_ONLY + shared_MEM_urb_ONLY + shared_all
+
+varpart_peixes$R2_models$`ambiente-urbanizacao-MEMs`
+
+amb_pure <- varpart_peixes$R2_fractions_com$R2_pure_fraction[1]
+urb_pure <- varpart_peixes$R2_fractions_com$R2_pure_fraction[2]
+MEM_pure <- varpart_peixes$R2_fractions_com$R2_pure_fraction[3]
+
+R2s_com_varpart1 <- c(amb_pure, urb_pure, MEM_pure, shared_urb_amb_ONLY, shared_MEM_amb_ONLY, shared_MEM_urb_ONLY, shared_all)
+
+names(R2s_com_varpart1) <- c("amb", "urb", "MEM", "amb_urb", "amb_MEM", "urb_MEM", "amb_urb_MEM")
+
+
+R2s_com_varpart1[R2s_com_varpart1 < 0] <- 0
+
+scale <- varpart_peixes$R2_models$`ambiente-urbanizacao-MEMs`/sum(R2s_com_varpart1)
+
+if(scale > 1){scale <-1}
+
+R2s_com_varpart1_scaled <- R2s_com_varpart1 * scale
+
+```
+
+
+
 First we reorder species by they total R² values
 
 ```{r, warning=FALSE}
