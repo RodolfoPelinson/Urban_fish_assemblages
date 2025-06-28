@@ -34,11 +34,17 @@ install.packages("mvabund")
 install.packages("DBI")
 install.packages("hms")
 
-
+install.packages("adespatial")
+install.packages("ade4")
 
 #install.packages("spaa")
 #install.packages("doParallel")
 #install.packages("pbapply")
+
+
+install.packages("VennDiagram")
+
+VennDiagram
 
 
 usethis::use_git()

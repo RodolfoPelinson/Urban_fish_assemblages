@@ -1,0 +1,531 @@
+---
+title: "Traitglm"
+author: "Rodolfo Pelinson"
+date: "`r Sys.Date()`"
+output: 
+  github_document: 
+    fig_width: 10
+    fig_height: 8
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE}
+dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
+```
+
+Loading important functions and packages
+
+```{r}
+source(paste(sep = "/",dir,"functions/remove_sp.R"))
+source(paste(sep = "/",dir,"functions/R2_manyglm.R"))
+source(paste(sep = "/",dir,"functions/forward_sel_manyglm.R"))
+source(paste(sep = "/",dir,"functions/varpart_manyglm.R"))
+source(paste(sep = "/",dir,"functions/My_coefplot.R"))
+source(paste(sep = "/",dir,"functions/letters.R"))
+source(paste(sep = "/",dir,"functions/at_generator.R"))
+
+library(mvabund)
+library(vegan)
+library(yarrr)
+library(ade4)
+library(adespatial)
+library(corrplot)
+
+```
+
+
+```{r}
+assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
+agua_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/agua_PCs.csv"), row.names = 1)
+estrutura_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/estrutura_PCs.csv"), row.names = 1)
+bacia_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/bacia_PCs.csv"), row.names = 1)
+delineamento <- read.csv(paste(sep = "/",dir,"data/delineamento.csv"))
+dist_euclid <- read.csv(paste(sep = "/",dir,"data/dist/Matriz_distancia_matriz_euclidiana.csv"), row.names = 1)
+```
+
+Loading functional data
+
+```{r, warning=FALSE}
+functional <- read.csv(paste(sep = "/",dir,"data/functional_data.csv"), row.names = 1)
+functional[is.na(functional)] <- 0
+
+functional_raw <- read.csv(paste(sep = "/",dir,"data/functional_data_raw.csv"))
+functional[is.na(functional)] <- 0
+
+```
+
+Removing species with less than 2 presences and combining them into the artificial "Singletons" species.
+
+```{r, warning=FALSE}
+assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
+assembleia_peixes <- assembleia_peixes[,-c(4,11)]
+assembleia_peixes_rm <- remove_sp(com = assembleia_peixes, n_sp = 2)
+
+singletons_doubletons <- remove_sp(assembleia_peixes, 2, less_equal = TRUE)
+singletons <- remove_sp(assembleia_peixes, 1, less_equal = TRUE)
+
+sing_doub_ab <- rowSums(singletons_doubletons)
+sing_ab <- rowSums(singletons)
+
+sing_doub <- rowSums(decostand(singletons_doubletons, method = "pa")) 
+sing <- rowSums(decostand(singletons, method = "pa")) 
+
+assembleia_peixes_rm <- data.frame(assembleia_peixes_rm, Singletons_and_doubletons = sing_doub_ab)
+```
+
+Preparing predictors
+
+```{r, warning=FALSE}
+urb <- data.frame(urb = delineamento$urbana)
+
+urb <- decostand(urb, method = "stand")
+agua_PCs <- decostand(agua_PCs, method = "stand")
+estrutura_PCs <- decostand(estrutura_PCs, method = "stand")
+bacia_PCs <- decostand(bacia_PCs, method = "stand")
+```
+
+
+```{r}
+data.frame(
+rownames(assembleia_peixes_rm),
+rownames(agua_PCs),
+rownames(bacia_PCs),
+rownames(estrutura_PCs),
+rownames(as.matrix(dist_euclid)),
+delineamento$bacia_id
+)
+
+assembleia_peixes_rm <- assembleia_peixes_rm[match(delineamento$bacia_id, rownames(assembleia_peixes_rm) ),]
+
+data.frame(
+rownames(assembleia_peixes_rm),
+rownames(agua_PCs),
+rownames(bacia_PCs),
+rownames(estrutura_PCs),
+rownames(as.matrix(dist_euclid)),
+delineamento$bacia_id
+)
+
+```
+
+
+
+Adding body size
+
+```{r}
+
+body_size <- tapply(functional_raw$Comprimento_padrao_SL, INDEX = functional_raw$Especie, mean)
+
+body_size <-  body_size[match(rownames(functional), names(body_size))]
+
+data.frame(names(body_size), rownames(functional))
+
+functional$body_size <- body_size
+
+```
+
+
+
+
+
+Now, because we have an artificial species called "Singletons and doubletons", we will be a weighted average of traits to this species considering the abundance of the species that compose this "taxon".
+
+```{r, warning=FALSE}
+total_ab_singletons <- colSums(singletons_doubletons)
+
+functional_singletons <- functional[match(colnames(singletons_doubletons), rownames(functional)),]
+
+functional_singleton <- colSums(functional_singletons * total_ab_singletons) / sum(total_ab_singletons)
+
+functional <- rbind(functional, Singletons_and_doubletons = functional_singleton)
+
+functional <- functional[match(colnames(assembleia_peixes_rm), rownames(functional)),]
+```
+
+
+
+
+Now we put these traits in a PCA to reduce dimensionality since many traits are correlated
+
+```{r, warning=FALSE}
+
+functional_stand <- decostand(functional, method = "stand")
+
+pca_functional <- rda(functional_stand)
+
+importance_funcional <- round(pca_functional$CA$eig/sum(pca_functional$CA$eig),2)
+Eigenvalues_funcional <- data.frame(autovalores = pca_functional$CA$eig,
+                                    importance = importance_funcional)
+
+importance_funcional
+
+functional_PCs <- pca_functional$CA$u
+functional_loadings <- pca_functional$CA$v
+```
+
+First two axis are the most important, lets see which are the traits correlated with them.
+
+```{r, warning=FALSE}
+functional_loadings_filtrados <- functional_loadings[which(functional_loadings[,1] > 0.25 | functional_loadings[,1] < -0.25 |
+                                                           functional_loadings[,2] > 0.25 | functional_loadings[,2] < -0.25),1:2]
+functional_loadings_filtrados
+
+functional_loadings_filtrados_PC1 <- functional_loadings[which(functional_loadings[,1] > 0.25 | functional_loadings[,1] < -0.25),1]
+functional_loadings_filtrados_PC1
+
+functional_loadings_filtrados_PC2 <- functional_loadings[which(functional_loadings[,2] > 0.25 | functional_loadings[,2] < -0.25),2]
+functional_loadings_filtrados_PC2
+```
+
+Lets plot this PCA
+
+```{r, warning=FALSE}
+pc1_label_functional <- paste("PC1 (",round(importance_funcional[1]*100,2),"%)",sep = "")
+pc2_label_functional <- paste("PC2 (",round(importance_funcional[2]*100,2),"%)",sep = "")
+
+
+sp_names <- rownames(functional_PCs)
+
+sp_names[sp_names == "Gymnotus_pantherinus"] <- "G. pantherinus"
+sp_names[sp_names == "Phalloceros_harpagos"] <- "P. harpagos"
+sp_names[sp_names == "Phalloceros_reisi"] <- "P. reisi"
+sp_names[sp_names == "Hollandichthys_multifasciatus"] <- "H. multifasciatus"
+sp_names[sp_names == "Poecilia_reticulata"] <- "P. reticulata"
+sp_names[sp_names == "Astyanax_lacustris"] <- "A. lacustris"
+sp_names[sp_names == "Hoplosternum_littorale"] <- "H.littorale"
+sp_names[sp_names == "Singletons_and_doubletons"] <- "SD"
+
+names_func <- rownames(functional_loadings_filtrados) 
+
+names_func[names_func == "Depression.index"] <- "DI"
+names_func[names_func == "Relative.depth"] <- "RD"
+names_func[names_func == "Fineness.ratio"] <- "FC"
+names_func[names_func == "Relative.length.of.caudal.peduncle"] <- "RLPd"
+#names_func[names_func == "Relative.height.of.caudal.peduncle"] <- "RHPd"
+names_func[names_func == "Relative.width.of.caudal.peduncle"] <- "RWPd"
+names_func[names_func == "Relative.area.of.dorsal.fin"] <- "RAD"
+#names_func[names_func == "Relative.area.of.caudal.fin"] <- "RAC"
+#names_func[names_func == "Relative.area.of.pectoral.fin"] <- "RAPt"
+names_func[names_func == "Relative.length.of.head"] <- "RLHd"
+names_func[names_func == "Eye.position"] <- "EP"
+names_func[names_func == "Relative.width.of.head"] <- "RWHd"
+#names_func[names_func == "Relative.area.of.eye"] <- "RAE"
+names_func[names_func == "Relative.area.of.anal.fin"] <- "RAA"
+names_func[names_func == "Relative.area.of.pelvic.fin"] <- "RAPv"
+#names_func[names_func == "Aspect.ratio.of.pectoral.fin"] <- "ARPt"
+names_func[names_func == "Aspect.ratio.of.anal.fin"] <- "ARA"
+names_func[names_func == "body_size"] <- "BS"
+
+```
+
+Assessing effects on community responses:
+
+```{r, warning=FALSE, cache = TRUE}
+
+
+urb_pred <- data.frame(urb = urb, urb_squared = urb^2)
+Model_trait_urb_null <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = NULL)
+Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]))
+Model_trait_urb_trait1 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1]))
+Model_trait_urb_trait2 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,2]))
+
+anova_trait_urb1 <- anova(Model_trait_urb_null, Model_trait_urb_trait1, nBoot = 999)
+anova_trait_urb2 <- anova(Model_trait_urb_null, Model_trait_urb_trait2, nBoot = 999)
+
+
+est_pred <- data.frame(est_PC1 = estrutura_PCs[,1], est_PC1_squared = estrutura_PCs[,1]^2)
+Model_trait_est_null <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = NULL)
+Model_trait_est_trait <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,1:2]))
+Model_trait_est_trait1 <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,1]))
+Model_trait_est_trait2 <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,2]))
+
+anova_trait_est1 <- anova(Model_trait_est_null, Model_trait_est_trait1, nBoot = 999)
+anova_trait_est2 <- anova(Model_trait_est_null, Model_trait_est_trait2, nBoot = 999)
+
+
+agua_pred <- data.frame(agua_PC1 = agua_PCs[,1], agua_PC1_squared = agua_PCs[,1]^2)
+Model_trait_agua_null <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = NULL)
+Model_trait_agua_trait <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,1:2]))
+Model_trait_agua_trait1 <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,1]))
+Model_trait_agua_trait2 <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,2]))
+
+anova_trait_agua1 <- anova(Model_trait_agua_null, Model_trait_agua_trait1, nBoot = 999)
+anova_trait_agua2 <- anova(Model_trait_agua_null, Model_trait_agua_trait2, nBoot = 999)
+
+
+bacia_pred <- data.frame(bacia_PC1 = bacia_PCs[,1], bacia_PC1_squared = bacia_PCs[,1]^2)
+Model_trait_bacia_null <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = NULL)
+Model_trait_bacia_trait <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,1:2]))
+Model_trait_bacia_trait1 <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,1]))
+Model_trait_bacia_trait2 <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,2]))
+
+anova_trait_bacia1 <- anova(Model_trait_bacia_null, Model_trait_bacia_trait1, nBoot = 999)
+anova_trait_bacia2 <- anova(Model_trait_bacia_null, Model_trait_bacia_trait2, nBoot = 999)
+
+
+
+
+trait_urb_coef <- c(Model_trait_urb_trait$fourth.corner)
+trait_urb_coef_CI <- Model_trait_urb_trait$stderr.coefficients[13:16,]*qnorm(0.975)
+names(trait_urb_coef) <- names(trait_urb_coef_CI)
+
+trait_est_coef <- c(Model_trait_est_trait$fourth.corner)
+trait_est_coef_CI <- Model_trait_est_trait$stderr.coefficients[13:16,]*qnorm(0.975)
+names(trait_est_coef) <- names(trait_est_coef_CI)
+
+trait_agua_coef <- c(Model_trait_agua_trait$fourth.corner)
+trait_agua_coef_CI <- Model_trait_agua_trait$stderr.coefficients[13:16,]*qnorm(0.975)
+names(trait_agua_coef) <- names(trait_agua_coef_CI)
+
+trait_bacia_coef <- c(Model_trait_bacia_trait$fourth.corner)
+trait_bacia_coef_CI <- Model_trait_bacia_trait$stderr.coefficients[13:16,]*qnorm(0.975)
+names(trait_bacia_coef) <- names(trait_bacia_coef_CI)
+
+```
+
+Lets plot those things:
+
+```{r, warning=FALSE}
+
+coefs_PC1 <- c(trait_urb_coef[c(1,3)], trait_est_coef[c(1,3)], trait_agua_coef[c(1,3)], trait_bacia_coef[c(1,3)])
+CI_PC1 <- c(trait_urb_coef_CI[c(1,3)], trait_est_coef_CI[c(1,3)], trait_agua_coef_CI[c(1,3)], trait_bacia_coef_CI[c(1,3)])
+
+coefs_PC2 <- c(trait_urb_coef[c(2,4)], trait_est_coef[c(2,4)], trait_agua_coef[c(2,4)], trait_bacia_coef[c(2,4)])
+CI_PC2 <- c(trait_urb_coef_CI[c(2,4)], trait_est_coef_CI[c(2,4)], trait_agua_coef_CI[c(2,4)], trait_bacia_coef_CI[c(2,4)])
+
+upper_PC1 <- coefs_PC1 + CI_PC1
+lower_PC1 <- coefs_PC1 - CI_PC1
+
+upper_PC2 <- coefs_PC2 + CI_PC2
+lower_PC2<- coefs_PC2 - CI_PC2
+
+labels <- c("Urban cover", "(Urban cover)²", "Stream structure (PC2)", "Stream structure (PC2)²", "Water parameters (PC1)","Water parameters (PC1)²", "Watershed descriptors (PC1)", "Watershed descriptors (PC1)²")
+```
+
+Lets plot everything together
+
+```{r, warning=FALSE}
+
+#pdf("plots/functional_effects_quad.pdf", width = 8, height = 8, pointsize = 12)
+
+close.screen(all.screens = TRUE)
+split.screen(matrix(c(0,0.25,0.25,1,
+                      0.25,1,0.25,1,
+                      0,0.25,0,0.25, 
+                      0.25,1,0,0.25), ncol = 4, nrow = 4, byrow = TRUE))
+
+screen(2)
+par(mar = c(5,5,1,1), bty = "o")
+xmin <- min(c(functional_PCs[,1], functional_loadings_filtrados[,1]))*1.2
+xmax <- max(c(functional_PCs[,1], functional_loadings_filtrados[,1]))*1.2
+ymin <- min(c(functional_PCs[,2], functional_loadings_filtrados[,2]))*1.2
+ymax <- max(c(functional_PCs[,2], functional_loadings_filtrados[,2]))*1.2
+
+plot(functional_PCs[,1], functional_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
+     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+
+abline(h = 0, v = 0, lty = 2)
+
+library(scales)
+library(shape)
+
+
+#pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+#col <-pal(urb)
+
+Arrows(x0 <- rep(0, nrow(functional_loadings_filtrados)),
+       y0 <- rep(0, nrow(functional_loadings_filtrados)),
+       x1 <- functional_loadings_filtrados[,1],
+       y1 <- functional_loadings_filtrados[,2], arr.type = "triangle", arr.length = 0.4, col = "#C49C94", lwd = 1.5)
+
+#points(functional_PCs[,1],functional_PCs[,2], col = "black", bg = "white", pch = 21, cex = 1.5)
+text(functional_PCs[,1],functional_PCs[,2], labels = sp_names, col =  "black", font = 3)
+
+
+text(x = functional_loadings_filtrados[,1]*1.2, y = functional_loadings_filtrados[,2]*1.2, labels = names_func, cex = 1, col = "black", font = 2)
+
+axis(1, cex.axis = 1)
+axis(2, cex.axis = 1, las = 2)
+title(xlab = pc1_label_functional, cex.lab = 1.2, line = 3)
+title(ylab = pc2_label_functional, cex.lab = 1.2, line = 3)
+#title(main = "Morphological traits", line = 0.5, adj = 0, cex.main = 1.5)
+letters(x = 10, y = 97, "b)", cex = 1.5)
+
+
+col_sig <- c("#AEC7E8","#AEC7E8", "#98DF8A","#98DF8A", "#9EDAE5", "#9EDAE5", "#FFBB78",  "#FFBB78")
+
+
+screen(4)
+par(mar = c(2,5,2,1))
+My_coefplot(mles = coefs_PC1, upper = upper_PC1,
+            lower = lower_PC1, col_sig = col_sig,
+            cex_sig = 1.5, species_labels = labels, yaxis_font = 1, invert = FALSE, axis_sp_labels = 2, cex.axis = 0.8, axis_effect_labels = 3, y_spa = 0.5)
+mtext("Effect on PC1", side = 1, line = 0.5)
+letters(x = 10, y = 95, "c)", cex = 1.5)
+
+
+
+screen(1)
+par(mar = c(5,2,1,2))
+My_coefplot(mles = coefs_PC2, upper = upper_PC2,
+            lower = lower_PC2, col_sig = col_sig,
+           cex_sig = 1.5, species_labels = labels, yaxis_font = 1, invert = TRUE, axis_sp_labels = 1, cex.axis = 0.8, axis_effect_labels = 4, y_spa = 0.5)
+mtext("Effect on PC2", side = 2, line = 0.5)
+letters(x = 7, y = 97, "a)", cex = 1.5)
+
+#dev.off()
+```
+
+
+
+
+
+
+
+
+
+
+
+Assessing only linear effects on community responses:
+
+```{r, warning=FALSE, cache = TRUE}
+
+
+urb_pred <- data.frame(urb = urb[,1])
+Model_trait_urb_null <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = NULL)
+Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]))
+anova_trait_urb <- anova(Model_trait_urb_null, Model_trait_urb_trait, nBoot = 999)
+
+est_pred <- data.frame(est_PC1 = estrutura_PCs[,1])
+Model_trait_est_null <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = NULL)
+Model_trait_est_trait <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,1:2]))
+anova_trait_est <- anova(Model_trait_est_null, Model_trait_est_trait, nBoot = 999)
+
+agua_pred <- data.frame(agua_PC1 = agua_PCs[,1])
+Model_trait_agua_null <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = NULL)
+Model_trait_agua_trait <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,1:2]))
+anova_trait_agua <- anova(Model_trait_agua_null, Model_trait_agua_trait, nBoot = 999)
+
+bacia_pred <- data.frame(bacia_PC1 = bacia_PCs[,1])
+Model_trait_bacia_null <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = NULL)
+Model_trait_bacia_trait <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,1:2]))
+anova_trait_bacia <- anova(Model_trait_bacia_null, Model_trait_bacia_trait, nBoot = 999)
+
+
+
+
+trait_urb_coef <- c(Model_trait_urb_trait$fourth.corner)
+trait_urb_coef_CI <- Model_trait_urb_trait$stderr.coefficients[11:12,]*qnorm(0.975)
+names(trait_urb_coef) <- names(trait_urb_coef_CI)
+
+trait_est_coef <- c(Model_trait_est_trait$fourth.corner)
+trait_est_coef_CI <- Model_trait_est_trait$stderr.coefficients[11:12,]*qnorm(0.975)
+names(trait_est_coef) <- names(trait_est_coef_CI)
+
+trait_agua_coef <- c(Model_trait_agua_trait$fourth.corner)
+trait_agua_coef_CI <- Model_trait_agua_trait$stderr.coefficients[11:12,]*qnorm(0.975)
+names(trait_agua_coef) <- names(trait_agua_coef_CI)
+
+trait_bacia_coef <- c(Model_trait_bacia_trait$fourth.corner)
+trait_bacia_coef_CI <- Model_trait_bacia_trait$stderr.coefficients[11:12,]*qnorm(0.975)
+names(trait_bacia_coef) <- names(trait_bacia_coef_CI)
+
+```
+
+Lets plot those things:
+
+```{r, warning=FALSE}
+
+coefs_PC1 <- c(trait_urb_coef[c(1)], trait_est_coef[c(1)], trait_agua_coef[c(1)], trait_bacia_coef[c(1)])
+CI_PC1 <- c(trait_urb_coef_CI[c(1)], trait_est_coef_CI[c(1)], trait_agua_coef_CI[c(1)], trait_bacia_coef_CI[c(1)])
+
+coefs_PC2 <- c(trait_urb_coef[c(2)], trait_est_coef[c(2)], trait_agua_coef[c(2)], trait_bacia_coef[c(2)])
+CI_PC2 <- c(trait_urb_coef_CI[c(2)], trait_est_coef_CI[c(2)], trait_agua_coef_CI[c(2)], trait_bacia_coef_CI[c(2)])
+
+upper_PC1 <- coefs_PC1 + CI_PC1
+lower_PC1 <- coefs_PC1 - CI_PC1
+
+upper_PC2 <- coefs_PC2 + CI_PC2
+lower_PC2<- coefs_PC2 - CI_PC2
+
+labels <- c("Urban cover", "Stream structure (PC2)", "Water parameters (PC1)","Watershed descriptors (PC1)")
+```
+
+Lets plot everything together
+
+```{r, warning=FALSE}
+
+#pdf("plots/functional_effects_linear.pdf", width = 8, height = 8, pointsize = 12)
+
+close.screen(all.screens = TRUE)
+split.screen(matrix(c(0,0.25,0.25,1,
+                      0.25,1,0.25,1,
+                      0,0.25,0,0.25, 
+                      0.25,1,0,0.25), ncol = 4, nrow = 4, byrow = TRUE))
+
+screen(2)
+par(mar = c(5,5,1,1), bty = "o")
+xmin <- min(c(functional_PCs[,1], functional_loadings_filtrados[,1]))*1.2
+xmax <- max(c(functional_PCs[,1], functional_loadings_filtrados[,1]))*1.2
+ymin <- min(c(functional_PCs[,2], functional_loadings_filtrados[,2]))*1.2
+ymax <- max(c(functional_PCs[,2], functional_loadings_filtrados[,2]))*1.2
+
+plot(functional_PCs[,1], functional_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
+     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+
+abline(h = 0, v = 0, lty = 2)
+
+library(scales)
+library(shape)
+
+
+#pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+#col <-pal(urb)
+
+Arrows(x0 <- rep(0, nrow(functional_loadings_filtrados)),
+       y0 <- rep(0, nrow(functional_loadings_filtrados)),
+       x1 <- functional_loadings_filtrados[,1],
+       y1 <- functional_loadings_filtrados[,2], arr.type = "triangle", arr.length = 0.4, col = "#C49C94", lwd = 1.5)
+
+#points(functional_PCs[,1],functional_PCs[,2], col = "black", bg = "white", pch = 21, cex = 1.5)
+text(functional_PCs[,1],functional_PCs[,2], labels = sp_names, col =  "black", font = 3)
+
+
+text(x = functional_loadings_filtrados[,1]*1.2, y = functional_loadings_filtrados[,2]*1.2, labels = names_func, cex = 1, col = "black", font = 2)
+
+axis(1, cex.axis = 1)
+axis(2, cex.axis = 1, las = 2)
+title(xlab = pc1_label_functional, cex.lab = 1.2, line = 3)
+title(ylab = pc2_label_functional, cex.lab = 1.2, line = 3)
+#title(main = "Morphological traits", line = 0.5, adj = 0, cex.main = 1.5)
+letters(x = 10, y = 97, "b)", cex = 1.5)
+
+
+col_sig <- c("#AEC7E8", "#98DF8A", "#9EDAE5",  "#FFBB78")
+
+
+screen(4)
+par(mar = c(2,5,2,1))
+My_coefplot(mles = coefs_PC1, upper = upper_PC1,
+            lower = lower_PC1, col_sig = col_sig,
+            cex_sig = 1.5, species_labels = labels, yaxis_font = 1, invert = FALSE, axis_sp_labels = 2, cex.axis = 0.8, axis_effect_labels = 3, y_spa = 0.5)
+mtext("Effect on PC1", side = 1, line = 0.5)
+letters(x = 10, y = 95, "c)", cex = 1.5)
+
+
+
+screen(1)
+par(mar = c(5,2,1,2))
+My_coefplot(mles = coefs_PC2, upper = upper_PC2,
+            lower = lower_PC2, col_sig = col_sig,
+           cex_sig = 1.5, species_labels = labels, yaxis_font = 1, invert = TRUE, axis_sp_labels = 1, cex.axis = 0.8, axis_effect_labels = 4, y_spa = 0.5)
+mtext("Effect on PC2", side = 2, line = 0.5)
+letters(x = 7, y = 97, "a)", cex = 1.5)
+
+#dev.off()
+```
