@@ -1,7 +1,7 @@
 Traitglm_ONE
 ================
 Rodolfo Pelinson
-2025-09-11
+2025-10-14
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -553,93 +553,53 @@ Assessing effects on community responses:
 
 ``` r
 urb_pred <- data.frame(urb = urb, urb_squared = urb^2)
-Model_trait_urb_null <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]))
-Model_trait_urb_trait1 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1]))
-Model_trait_urb_trait2 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,2]))
+colnames(urb_pred) <- c("urb", "urb_squared")
+#Model_trait_urb_null <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2))
+Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1 + urb:PC2)
+#Model_trait_urb_trait1 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1)
+#Model_trait_urb_trait2 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC2)
 
 #anova_trait_urb1 <- anova(Model_trait_urb_null, Model_trait_urb_trait1, nBoot = 999)
 #anova_trait_urb2 <- anova(Model_trait_urb_null, Model_trait_urb_trait2, nBoot = 999)
 
 
+
 est_pred <- data.frame(est_PC1 = estrutura_PCs[,1], est_PC1_squared = estrutura_PCs[,1]^2)
-Model_trait_est_null <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_est_trait <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,1:2]))
-Model_trait_est_trait1 <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,1]))
-Model_trait_est_trait2 <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,2]))
-
-
-#anova_trait_est1 <- anova(Model_trait_est_null, Model_trait_est_trait1, nBoot = 999)
-#anova_trait_est2 <- anova(Model_trait_est_null, Model_trait_est_trait2, nBoot = 999)
-
+Model_trait_est_trait <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ est_PC1  + est_PC1_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + est_PC1:PC1 + est_PC1:PC2)
 
 agua_pred <- data.frame(agua_PC1 = agua_PCs[,1], agua_PC1_squared = agua_PCs[,1]^2)
-Model_trait_agua_null <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_agua_trait <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,1:2]))
-Model_trait_agua_trait1 <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,1]))
-Model_trait_agua_trait2 <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,2]))
-
-#anova_trait_agua1 <- anova(Model_trait_agua_null, Model_trait_agua_trait1, nBoot = 999)
-#anova_trait_agua2 <- anova(Model_trait_agua_null, Model_trait_agua_trait2, nBoot = 999)
-
+Model_trait_agua_trait <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ agua_PC1  + agua_PC1_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + agua_PC1:PC1 + agua_PC1:PC2)
 
 bacia_pred <- data.frame(bacia_PC1 = bacia_PCs[,1], bacia_PC1_squared = bacia_PCs[,1]^2)
-Model_trait_bacia_null <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_bacia_trait <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,1:2]))
-Model_trait_bacia_trait1 <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,1]))
-Model_trait_bacia_trait2 <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,2]))
-
-#anova_trait_bacia1 <- anova(Model_trait_bacia_null, Model_trait_bacia_trait1, nBoot = 999)
-#anova_trait_bacia2 <- anova(Model_trait_bacia_null, Model_trait_bacia_trait2, nBoot = 999)
-
+Model_trait_bacia_trait <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ bacia_PC1  + bacia_PC1_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + bacia_PC1:PC1 + bacia_PC1:PC2)
 
 
 
 trait_urb_coef <- c(Model_trait_urb_trait$fourth.corner)
-trait_urb_coef_CI <- Model_trait_urb_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_urb_coef_CI <- Model_trait_urb_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_urb_coef) <- names(trait_urb_coef_CI)
 
 trait_est_coef <- c(Model_trait_est_trait$fourth.corner)
-trait_est_coef_CI <- Model_trait_est_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_est_coef_CI <- Model_trait_est_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_est_coef) <- names(trait_est_coef_CI)
 
 trait_agua_coef <- c(Model_trait_agua_trait$fourth.corner)
-trait_agua_coef_CI <- Model_trait_agua_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_agua_coef_CI <- Model_trait_agua_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_agua_coef) <- names(trait_agua_coef_CI)
 
 trait_bacia_coef <- c(Model_trait_bacia_trait$fourth.corner)
-trait_bacia_coef_CI <- Model_trait_bacia_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_bacia_coef_CI <- Model_trait_bacia_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_bacia_coef) <- names(trait_bacia_coef_CI)
 ```
 
 Lets plot those things:
 
 ``` r
-coefs_PC1 <- c(trait_urb_coef[c(1,3)], trait_est_coef[c(1,3)], trait_agua_coef[c(1,3)], trait_bacia_coef[c(1,3)])
-CI_PC1 <- c(trait_urb_coef_CI[c(1,3)], trait_est_coef_CI[c(1,3)], trait_agua_coef_CI[c(1,3)], trait_bacia_coef_CI[c(1,3)])
+coefs_PC1 <- c(trait_urb_coef[c(1)], trait_est_coef[c(1)], trait_agua_coef[c(1)], trait_bacia_coef[c(1)])
+CI_PC1 <- c(trait_urb_coef_CI[c(1)], trait_est_coef_CI[c(1)], trait_agua_coef_CI[c(1)], trait_bacia_coef_CI[c(1)])
 
-coefs_PC2 <- c(trait_urb_coef[c(2,4)], trait_est_coef[c(2,4)], trait_agua_coef[c(2,4)], trait_bacia_coef[c(2,4)])
-CI_PC2 <- c(trait_urb_coef_CI[c(2,4)], trait_est_coef_CI[c(2,4)], trait_agua_coef_CI[c(2,4)], trait_bacia_coef_CI[c(2,4)])
+coefs_PC2 <- c(trait_urb_coef[c(2)], trait_est_coef[c(2)], trait_agua_coef[c(2)], trait_bacia_coef[c(2)])
+CI_PC2 <- c(trait_urb_coef_CI[c(2)], trait_est_coef_CI[c(2)], trait_agua_coef_CI[c(2)], trait_bacia_coef_CI[c(2)])
 
 upper_PC1 <- coefs_PC1 + CI_PC1
 lower_PC1 <- coefs_PC1 - CI_PC1
@@ -647,7 +607,9 @@ lower_PC1 <- coefs_PC1 - CI_PC1
 upper_PC2 <- coefs_PC2 + CI_PC2
 lower_PC2<- coefs_PC2 - CI_PC2
 
-labels <- c("Urban cover", "(Urban cover)²", "Stream structure (PC2)", "Stream structure (PC2)²", "Water parameters (PC1)","Water parameters (PC1)²", "Watershed descriptors (PC1)", "Watershed descriptors (PC1)²")
+#labels <- c("Urban cover", "(Urban cover)²", "Stream structure (PC2)", "Stream structure (PC2)²", "Water parameters (PC1)","Water parameters (PC1)²", "Watershed descriptors (PC1)", "Watershed descriptors (PC1)²")
+
+labels <- c("Urban cover", "Stream structure (PC1)",  "Water parameters (PC1)", "Watershed descriptors (PC1)")
 ```
 
 Lets plot everything together
@@ -684,174 +646,6 @@ abline(h = 0, v = 0, lty = 2)
 
 library(scales)
 library(shape)
-```
-
-    ## 
-    ## Anexando pacote: 'shape'
-
-    ## O seguinte objeto é mascarado por 'package:corrplot':
-    ## 
-    ##     colorlegend
-
-``` r
-#pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
-#col <-pal(urb)
-
-Arrows(x0 <- rep(0, nrow(functional_loadings_filtrados)),
-       y0 <- rep(0, nrow(functional_loadings_filtrados)),
-       x1 <- functional_loadings_filtrados[,1],
-       y1 <- functional_loadings_filtrados[,2], arr.type = "triangle", arr.length = 0.4, col = "#C49C94", lwd = 1.5)
-
-#points(functional_PCs[,1],functional_PCs[,2], col = "black", bg = "white", pch = 21, cex = 1.5)
-text(functional_PCs[,1],functional_PCs[,2], labels = sp_names, col =  "black", font = 3)
-
-
-text(x = functional_loadings_filtrados[,1]*1.2, y = functional_loadings_filtrados[,2]*1.2, labels = names_func, cex = 1, col = "black", font = 2)
-
-axis(1, cex.axis = 1)
-axis(2, cex.axis = 1, las = 2)
-title(xlab = pc1_label_functional, cex.lab = 1.2, line = 3)
-title(ylab = pc2_label_functional, cex.lab = 1.2, line = 3)
-#title(main = "Morphological traits", line = 0.5, adj = 0, cex.main = 1.5)
-letters(x = 10, y = 97, "b)", cex = 1.5)
-
-
-col_sig <- c("#AEC7E8","#AEC7E8", "#98DF8A","#98DF8A", "#9EDAE5", "#9EDAE5", "#FFBB78",  "#FFBB78")
-
-
-screen(4)
-par(mar = c(2,5,2,1))
-My_coefplot(mles = coefs_PC1, upper = upper_PC1,
-            lower = lower_PC1, col_sig = col_sig,
-            cex_sig = 1.5, species_labels = labels, yaxis_font = 1, invert = FALSE, axis_sp_labels = 2, cex.axis = 0.8, axis_effect_labels = 3, y_spa = 0.5)
-mtext("Effect on PC1", side = 1, line = 0.5)
-letters(x = 10, y = 95, "c)", cex = 1.5)
-
-
-
-screen(1)
-par(mar = c(5,2,1,2))
-My_coefplot(mles = coefs_PC2, upper = upper_PC2,
-            lower = lower_PC2, col_sig = col_sig,
-           cex_sig = 1.5, species_labels = labels, yaxis_font = 1, invert = TRUE, axis_sp_labels = 1, cex.axis = 0.8, axis_effect_labels = 4, y_spa = 0.5)
-mtext("Effect on PC2", side = 2, line = 0.5)
-letters(x = 7, y = 97, "a)", cex = 1.5)
-
-#dev.off()
-```
-
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
-
-Assessing only linear effects on community responses:
-
-``` r
-urb_pred <- data.frame(urb = urb[,1])
-Model_trait_urb_null <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]))
-#anova_trait_urb <- anova(Model_trait_urb_null, Model_trait_urb_trait, nBoot = 999)
-
-est_pred <- data.frame(est_PC1 = estrutura_PCs[,1])
-Model_trait_est_null <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_est_trait <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(functional_PCs[,1:2]))
-#anova_trait_est <- anova(Model_trait_est_null, Model_trait_est_trait, nBoot = 999)
-
-agua_pred <- data.frame(agua_PC1 = agua_PCs[,1])
-Model_trait_agua_null <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_agua_trait <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(functional_PCs[,1:2]))
-#anova_trait_agua <- anova(Model_trait_agua_null, Model_trait_agua_trait, nBoot = 999)
-
-bacia_pred <- data.frame(bacia_PC1 = bacia_PCs[,1])
-Model_trait_bacia_null <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_bacia_trait <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(functional_PCs[,1:2]))
-#anova_trait_bacia <- anova(Model_trait_bacia_null, Model_trait_bacia_trait, nBoot = 999)
-
-
-
-
-trait_urb_coef <- c(Model_trait_urb_trait$fourth.corner)
-trait_urb_coef_CI <- Model_trait_urb_trait$stderr.coefficients[10:11,]*qnorm(0.975)
-names(trait_urb_coef) <- names(trait_urb_coef_CI)
-
-trait_est_coef <- c(Model_trait_est_trait$fourth.corner)
-trait_est_coef_CI <- Model_trait_est_trait$stderr.coefficients[10:11,]*qnorm(0.975)
-names(trait_est_coef) <- names(trait_est_coef_CI)
-
-trait_agua_coef <- c(Model_trait_agua_trait$fourth.corner)
-trait_agua_coef_CI <- Model_trait_agua_trait$stderr.coefficients[10:11,]*qnorm(0.975)
-names(trait_agua_coef) <- names(trait_agua_coef_CI)
-
-trait_bacia_coef <- c(Model_trait_bacia_trait$fourth.corner)
-trait_bacia_coef_CI <- Model_trait_bacia_trait$stderr.coefficients[10:11,]*qnorm(0.975)
-names(trait_bacia_coef) <- names(trait_bacia_coef_CI)
-```
-
-Lets plot those things:
-
-``` r
-coefs_PC1 <- c(trait_urb_coef[c(1)], trait_est_coef[c(1)], trait_agua_coef[c(1)], trait_bacia_coef[c(1)])
-CI_PC1 <- c(trait_urb_coef_CI[c(1)], trait_est_coef_CI[c(1)], trait_agua_coef_CI[c(1)], trait_bacia_coef_CI[c(1)])
-
-coefs_PC2 <- c(trait_urb_coef[c(2)], trait_est_coef[c(2)], trait_agua_coef[c(2)], trait_bacia_coef[c(2)])
-CI_PC2 <- c(trait_urb_coef_CI[c(2)], trait_est_coef_CI[c(2)], trait_agua_coef_CI[c(2)], trait_bacia_coef_CI[c(2)])
-
-upper_PC1 <- coefs_PC1 + CI_PC1
-lower_PC1 <- coefs_PC1 - CI_PC1
-
-upper_PC2 <- coefs_PC2 + CI_PC2
-lower_PC2<- coefs_PC2 - CI_PC2
-
-labels <- c("Urban cover", "Stream structure (PC2)", "Water parameters (PC1)","Watershed descriptors (PC1)")
-```
-
-Lets plot everything together
-
-``` r
-#pdf("plots/functional_effects_linear.pdf", width = 8, height = 8, pointsize = 12)
-
-close.screen(all.screens = TRUE)
-split.screen(matrix(c(0,0.25,0.25,1,
-                      0.25,1,0.25,1,
-                      0,0.25,0,0.25, 
-                      0.25,1,0,0.25), ncol = 4, nrow = 4, byrow = TRUE))
-```
-
-    ## [1] 1 2 3 4
-
-``` r
-screen(2)
-par(mar = c(5,5,1,1), bty = "o")
-xmin <- min(c(functional_PCs[,1], functional_loadings_filtrados[,1]))*1.2
-xmax <- max(c(functional_PCs[,1], functional_loadings_filtrados[,1]))*1.2
-ymin <- min(c(functional_PCs[,2], functional_loadings_filtrados[,2]))*1.2
-ymax <- max(c(functional_PCs[,2], functional_loadings_filtrados[,2]))*1.2
-
-plot(functional_PCs[,1], functional_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
-     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
-
-abline(h = 0, v = 0, lty = 2)
-
-library(scales)
-library(shape)
 
 
 #pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
@@ -876,6 +670,7 @@ title(ylab = pc2_label_functional, cex.lab = 1.2, line = 3)
 letters(x = 10, y = 97, "b)", cex = 1.5)
 
 
+#col_sig <- c("#AEC7E8","#AEC7E8", "#98DF8A","#98DF8A", "#9EDAE5", "#9EDAE5", "#FFBB78",  "#FFBB78")
 col_sig <- c("#AEC7E8", "#98DF8A", "#9EDAE5",  "#FFBB78")
 
 
@@ -900,7 +695,7 @@ letters(x = 7, y = 97, "a)", cex = 1.5)
 #dev.off()
 ```
 
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 Now we put these traits in a PCA to reduce dimensionality since many
 traits are correlated
@@ -1005,92 +800,52 @@ Assessing effects on community responses:
 
 ``` r
 urb_pred <- data.frame(urb = urb, urb_squared = urb^2)
-Model_trait_urb_null <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1:2]))
-Model_trait_urb_trait1 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1]))
-Model_trait_urb_trait2 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,2]))
+colnames(urb_pred) <- c("urb", "urb_squared")
+#Model_trait_urb_null <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2))
+Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1 + urb:PC2)
+#Model_trait_urb_trait1 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1)
+#Model_trait_urb_trait2 <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ urb + urb_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC2)
 
 #anova_trait_urb1 <- anova(Model_trait_urb_null, Model_trait_urb_trait1, nBoot = 999)
 #anova_trait_urb2 <- anova(Model_trait_urb_null, Model_trait_urb_trait2, nBoot = 999)
 
 
+
 est_pred <- data.frame(est_PC1 = estrutura_PCs[,1], est_PC1_squared = estrutura_PCs[,1]^2)
-Model_trait_est_null <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_est_trait <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(non_morph_func_PCs[,1:2]))
-Model_trait_est_trait1 <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(non_morph_func_PCs[,1]))
-Model_trait_est_trait2 <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(non_morph_func_PCs[,2]))
-
-#anova_trait_est1 <- anova(Model_trait_est_null, Model_trait_est_trait1, nBoot = 999)
-#anova_trait_est2 <- anova(Model_trait_est_null, Model_trait_est_trait2, nBoot = 999)
-
+Model_trait_est_trait <- traitglm(L = assembleia_peixes_rm, R = est_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ est_PC1  + est_PC1_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + est_PC1:PC1 + est_PC1:PC2)
 
 agua_pred <- data.frame(agua_PC1 = agua_PCs[,1], agua_PC1_squared = agua_PCs[,1]^2)
-Model_trait_agua_null <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_agua_trait <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(non_morph_func_PCs[,1:2]))
-Model_trait_agua_trait1 <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(non_morph_func_PCs[,1]))
-Model_trait_agua_trait2 <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(non_morph_func_PCs[,2]))
-
-#anova_trait_agua1 <- anova(Model_trait_agua_null, Model_trait_agua_trait1, nBoot = 999)
-#anova_trait_agua2 <- anova(Model_trait_agua_null, Model_trait_agua_trait2, nBoot = 999)
-
+Model_trait_agua_trait <- traitglm(L = assembleia_peixes_rm, R = agua_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ agua_PC1  + agua_PC1_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + agua_PC1:PC1 + agua_PC1:PC2)
 
 bacia_pred <- data.frame(bacia_PC1 = bacia_PCs[,1], bacia_PC1_squared = bacia_PCs[,1]^2)
-Model_trait_bacia_null <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = NULL)
-```
-
-    ## No traits matrix entered, so will fit SDMs with different env response for each spp
-
-``` r
-Model_trait_bacia_trait <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(non_morph_func_PCs[,1:2]))
-Model_trait_bacia_trait1 <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(non_morph_func_PCs[,1]))
-Model_trait_bacia_trait2 <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(non_morph_func_PCs[,2]))
-
-#anova_trait_bacia1 <- anova(Model_trait_bacia_null, Model_trait_bacia_trait1, nBoot = 999)
-#anova_trait_bacia2 <- anova(Model_trait_bacia_null, Model_trait_bacia_trait2, nBoot = 999)
-
-
+Model_trait_bacia_trait <- traitglm(L = assembleia_peixes_rm, R = bacia_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ bacia_PC1  + bacia_PC1_squared + PC1 + PC2 + I(PC1^2) + I(PC2^2) + bacia_PC1:PC1 + bacia_PC1:PC2)
 
 
 trait_urb_coef <- c(Model_trait_urb_trait$fourth.corner)
-trait_urb_coef_CI <- Model_trait_urb_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_urb_coef_CI <- Model_trait_urb_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_urb_coef) <- names(trait_urb_coef_CI)
 
 trait_est_coef <- c(Model_trait_est_trait$fourth.corner)
-trait_est_coef_CI <- Model_trait_est_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_est_coef_CI <- Model_trait_est_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_est_coef) <- names(trait_est_coef_CI)
 
 trait_agua_coef <- c(Model_trait_agua_trait$fourth.corner)
-trait_agua_coef_CI <- Model_trait_agua_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_agua_coef_CI <- Model_trait_agua_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_agua_coef) <- names(trait_agua_coef_CI)
 
 trait_bacia_coef <- c(Model_trait_bacia_trait$fourth.corner)
-trait_bacia_coef_CI <- Model_trait_bacia_trait$stderr.coefficients[12:15,]*qnorm(0.975)
+trait_bacia_coef_CI <- Model_trait_bacia_trait$stderr.coefficients[14:15,]*qnorm(0.975)
 names(trait_bacia_coef) <- names(trait_bacia_coef_CI)
 ```
 
 Lets plot those things:
 
 ``` r
-coefs_PC1 <- c(trait_urb_coef[c(1,3)], trait_est_coef[c(1,3)], trait_agua_coef[c(1,3)], trait_bacia_coef[c(1,3)])
-CI_PC1 <- c(trait_urb_coef_CI[c(1,3)], trait_est_coef_CI[c(1,3)], trait_agua_coef_CI[c(1,3)], trait_bacia_coef_CI[c(1,3)])
+coefs_PC1 <- c(trait_urb_coef[c(1)], trait_est_coef[c(1)], trait_agua_coef[c(1)], trait_bacia_coef[c(1)])
+CI_PC1 <- c(trait_urb_coef_CI[c(1)], trait_est_coef_CI[c(1)], trait_agua_coef_CI[c(1)], trait_bacia_coef_CI[c(1)])
 
-coefs_PC2 <- c(trait_urb_coef[c(2,4)], trait_est_coef[c(2,4)], trait_agua_coef[c(2,4)], trait_bacia_coef[c(2,4)])
-CI_PC2 <- c(trait_urb_coef_CI[c(2,4)], trait_est_coef_CI[c(2,4)], trait_agua_coef_CI[c(2,4)], trait_bacia_coef_CI[c(2,4)])
+coefs_PC2 <- c(trait_urb_coef[c(2)], trait_est_coef[c(2)], trait_agua_coef[c(2)], trait_bacia_coef[c(2)])
+CI_PC2 <- c(trait_urb_coef_CI[c(2)], trait_est_coef_CI[c(2)], trait_agua_coef_CI[c(2)], trait_bacia_coef_CI[c(2)])
 
 upper_PC1 <- coefs_PC1 + CI_PC1
 lower_PC1 <- coefs_PC1 - CI_PC1
@@ -1098,7 +853,9 @@ lower_PC1 <- coefs_PC1 - CI_PC1
 upper_PC2 <- coefs_PC2 + CI_PC2
 lower_PC2<- coefs_PC2 - CI_PC2
 
-labels <- c("Urban cover", "(Urban cover)²", "Stream structure (PC2)", "Stream structure (PC2)²", "Water parameters (PC1)","Water parameters (PC1)²", "Watershed descriptors (PC1)", "Watershed descriptors (PC1)²")
+#labels <- c("Urban cover", "(Urban cover)²", "Stream structure (PC2)", "Stream structure (PC2)²", "Water parameters (PC1)","Water parameters (PC1)²", "Watershed descriptors (PC1)", "Watershed descriptors (PC1)²")
+
+labels <- c("Urban cover", "Stream structure (PC1)", "Water parameters (PC1)", "Watershed descriptors (PC1)")
 ```
 
 Lets plot everything together
@@ -1156,7 +913,8 @@ title(ylab = pc2_label_non_morph_func, cex.lab = 1.2, line = 3)
 letters(x = 10, y = 97, "b)", cex = 1.5)
 
 
-col_sig <- c("#AEC7E8","#AEC7E8", "#98DF8A","#98DF8A", "#9EDAE5", "#9EDAE5", "#FFBB78",  "#FFBB78")
+#col_sig <- c("#AEC7E8","#AEC7E8", "#98DF8A","#98DF8A", "#9EDAE5", "#9EDAE5", "#FFBB78",  "#FFBB78")
+col_sig <- c("#AEC7E8", "#98DF8A", "#9EDAE5", "#FFBB78")
 
 
 screen(4)
@@ -1180,101 +938,4 @@ letters(x = 7, y = 97, "a)", cex = 1.5)
 #dev.off()
 ```
 
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
-
-Just to check if my interpretation are good enougth
-
-``` r
-newR <- data.frame(urb = seq(from = min(urb_pred$urb), to = max(urb_pred$urb), length.out = 50),
-                   urb.1 = seq(from = min(urb_pred$urb), to = max(urb_pred$urb), length.out = 50)^2)
-
-
-
-coef_lin_PC1 <- Model_trait_urb_trait$coefficients[12,]
-coef_quad_PC1 <- Model_trait_urb_trait$coefficients[14,]
-pred_PC1 <-  coef_lin_PC1*newR$urb + coef_quad_PC1*newR$urb.1
-plot(NA, xlim = c(min(newR$urb), max(newR$urb)), ylim = c(min(pred_PC1),max(pred_PC1)), xlab = "", ylab = "")
-lines(x = newR$urb, y = pred_PC1)
-title(xlab = "Urban Cover")
-title(ylab = "PC1")
-abline(h = 0, lty = 2)
-```
-
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
-
-``` r
-coef_lin_PC2 <- Model_trait_urb_trait$coefficients[13,]
-coef_quad_PC2 <- Model_trait_urb_trait$coefficients[15,]
-pred_PC2 <-  coef_lin_PC2*newR$urb + coef_quad_PC2*newR$urb.1
-plot(NA, xlim = c(min(newR$urb), max(newR$urb)), ylim = c(min(pred_PC2),max(pred_PC2)), xlab = "", ylab = "")
-lines(x = newR$urb, y = pred_PC2)
-title(xlab = "Urban Cover")
-title(ylab = "PC2")
-abline(h = 0, lty = 2)
-```
-
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-29-2.png)<!-- -->
-
-``` r
-est_pred <- data.frame(est_PC1 = estrutura_PCs[,1], est_PC1_squared = estrutura_PCs[,1]^2)
-
-newR <- data.frame(est_PC1 = seq(from = min(est_pred$est_PC1), to = max(est_pred$est_PC1), length.out = 50),
-                   est_PC1_squared = seq(from = min(est_pred$est_PC1), to = max(est_pred$est_PC1), length.out = 50)^2)
-
-
-coef_lin_PC1 <- Model_trait_est_trait$coefficients[12,]
-coef_quad_PC1 <- Model_trait_est_trait$coefficients[14,]
-pred_PC1 <-  coef_lin_PC1*newR$est_PC1 + coef_quad_PC1*newR$est_PC1_squared
-plot(NA, xlim = c(min(newR$est_PC1), max(newR$est_PC1)), ylim = c(min(pred_PC1),max(pred_PC1)), xlab = "", ylab = "")
-lines(x = newR$est_PC1, y = pred_PC1)
-title(xlab = "Stream Structure PC1")
-title(ylab = "PC1")
-abline(h = 0, lty = 2)
-```
-
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-29-3.png)<!-- -->
-
-``` r
-coef_lin_PC2 <- Model_trait_est_trait$coefficients[13,]
-coef_quad_PC2 <- Model_trait_est_trait$coefficients[15,]
-pred_PC2 <-  coef_lin_PC2*newR$est_PC1 + coef_quad_PC2*newR$est_PC1_squared
-plot(NA, xlim = c(min(newR$est_PC1), max(newR$est_PC1)), ylim = c(min(pred_PC2),max(pred_PC2)), xlab = "", ylab = "")
-lines(x = newR$est_PC1, y = pred_PC2)
-title(xlab = "Stream Structure PC1")
-title(ylab = "PC2")
-abline(h = 0, lty = 2)
-```
-
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-29-4.png)<!-- -->
-
-``` r
-bacia_pred <- data.frame(bacia_PC1 = bacia_PCs[,1], bacia_PC1_squared = bacia_PCs[,1]^2)
-
-newR <- data.frame(bacia_PC1 = seq(from = min(bacia_pred$bacia_PC1), to = max(bacia_pred$bacia_PC1), length.out = 50),
-                   bacia_PC1_squared = seq(from = min(bacia_pred$bacia_PC1), to = max(bacia_pred$bacia_PC1), length.out = 50)^2)
-
-
-coef_lin_PC1 <- Model_trait_bacia_trait$coefficients[12,]
-coef_quad_PC1 <- Model_trait_bacia_trait$coefficients[14,]
-pred_PC1 <-  coef_lin_PC1*newR$bacia_PC1 + coef_quad_PC1*newR$bacia_PC1_squared
-plot(NA, xlim = c(min(newR$bacia_PC1), max(newR$bacia_PC1)), ylim = c(min(pred_PC1),max(pred_PC1)), xlab = "", ylab = "")
-lines(x = newR$bacia_PC1, y = pred_PC1)
-title(xlab = "Watershed PC1")
-title(ylab = "PC1")
-abline(h = 0, lty = 2)
-```
-
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-29-5.png)<!-- -->
-
-``` r
-coef_lin_PC2 <- Model_trait_bacia_trait$coefficients[13,]
-coef_quad_PC2 <- Model_trait_bacia_trait$coefficients[15,]
-pred_PC2 <-  coef_lin_PC2*newR$bacia_PC1 + coef_quad_PC2*newR$bacia_PC1_squared
-plot(NA, xlim = c(min(newR$bacia_PC1), max(newR$bacia_PC1)), ylim = c(min(pred_PC2),max(pred_PC2)), xlab = "", ylab = "")
-lines(x = newR$bacia_PC1, y = pred_PC2)
-title(xlab = "Watershed PC1")
-title(ylab = "PC2")
-abline(h = 0, lty = 2)
-```
-
-![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-29-6.png)<!-- -->
+![](Traitglm_ONE_varpart_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->

@@ -32,6 +32,8 @@ diet_sum_index <- t(diet_sum_index[,-1])
 
 
 
+
+
 library(iNEXT)
 
 inext_diet <- t(diet_sum_index)
@@ -55,5 +57,4 @@ niche_amplitude$q3 <- inext$iNextEst$size_based[inext$iNextEst$size_based$Order.
 niche_amplitude$q4 <- inext$iNextEst$size_based[inext$iNextEst$size_based$Order.q == 4 & inext$iNextEst$size_based$m == 1300,]$qD
 
 write.csv(niche_amplitude, "data/niche_amplitude.csv")
-
 
