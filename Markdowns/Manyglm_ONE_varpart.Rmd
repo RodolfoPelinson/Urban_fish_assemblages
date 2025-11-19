@@ -42,7 +42,7 @@ library(corrplot)
 
 Loading data
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message =FALSE}
 assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
 agua_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/agua_PCs.csv"), row.names = 1)
 estrutura_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/estrutura_PCs.csv"), row.names = 1)
@@ -57,7 +57,7 @@ dist_euclid <- read.csv(paste(sep = "/",dir,"data/dist/Matriz_distancia_matriz_e
 
 Removing species with less than 2 presences and combining them into the artificial "Singletons" species.
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message = FALSE}
 assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
 assembleia_peixes <- assembleia_peixes[,-c(4,11)]
 assembleia_peixes_rm <- remove_sp(com = assembleia_peixes, n_sp = 2)
@@ -78,7 +78,7 @@ assembleia_peixes_rm <- data.frame(assembleia_peixes_rm, Singletons_and_doubleto
 
 Preparing predictors
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message = FALSE}
 urb <- data.frame(urb = delineamento$urbana)
 
 urb <- decostand(urb, method = "stand")
@@ -149,7 +149,7 @@ corrplot(cor(env_data.frame))
 
 Now lets see if it is worth it to consider quadratic effects for the effect of urban cover.
 
-```{r, warning=FALSE, cache=TRUE}
+```{r, warning=FALSE, cache=FALSE}
 assembleia_peixes_rm_mv <- mvabund(assembleia_peixes_rm)
 
 model_null <- manyglm(assembleia_peixes_rm_mv ~ 1,data = urb)
@@ -175,7 +175,7 @@ Now we will repeat the variation partitioning only for environmental predictors
 
 First, forward selection
 
-```{r, warning=FALSE, cache=TRUE}
+```{r, warning=FALSE, cache=FALSE}
 est_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(est_PC1 = estrutura_PCs[,1],
                                                                        est_PC2 = estrutura_PCs[,2]), nBoot=999, quad = TRUE) 
 
@@ -237,7 +237,7 @@ shared_urb_esp
 
 Tests of significance of fractions:
 
-```{r, warning=FALSE, cache=TRUE}
+```{r, warning=FALSE, cache=FALSE}
 p_est <- anova(varpart_peixes$model_null,
                varpart_peixes$models$estrutura,nBoot=999)
 p_est

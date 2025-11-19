@@ -1,7 +1,7 @@
 Manyglm_varpart
 ================
 Rodolfo Pelinson
-2025-06-28
+2025-11-19
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -24,19 +24,23 @@ library(mvabund)
 library(vegan)
 ```
 
-    ## Loading required package: permute
+    ## Carregando pacotes exigidos: permute
+
+    ## Carregando pacotes exigidos: lattice
+
+    ## This is vegan 2.6-8
 
 ``` r
 library(yarrr)
 ```
 
-    ## Loading required package: jpeg
+    ## Carregando pacotes exigidos: jpeg
 
-    ## Loading required package: BayesFactor
+    ## Carregando pacotes exigidos: BayesFactor
 
-    ## Loading required package: coda
+    ## Carregando pacotes exigidos: coda
 
-    ## Loading required package: Matrix
+    ## Carregando pacotes exigidos: Matrix
 
     ## ************
     ## Welcome to BayesFactor 0.9.12-4.7. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
@@ -44,7 +48,7 @@ library(yarrr)
     ## Type BFManual() to open the manual.
     ## ************
 
-    ## Loading required package: circlize
+    ## Carregando pacotes exigidos: circlize
 
     ## ========================================
     ## circlize version 0.4.16
@@ -59,10 +63,6 @@ library(yarrr)
     ## This message can be suppressed by:
     ##   suppressPackageStartupMessages(library(circlize))
     ## ========================================
-
-    ## yarrr v0.1.5. Citation info at citation('yarrr'). Package guide at yarrr.guide()
-
-    ## Email me at Nathaniel.D.Phillips.is@gmail.com
 
 ``` r
 library(ade4)
@@ -154,7 +154,7 @@ dbmem_euclid <- dbmem(dist_euclid, thresh = NULL, MEM.autocor = c("positive", "n
 ```
 
     ## Truncation level = 0.3268453 
-    ## Time to compute dbMEMs = 0.000000  sec
+    ## Time to compute dbMEMs = 0.030000  sec
 
 ``` r
 dbmem_euclid <- decostand(dbmem_euclid, method = "stand")
@@ -412,13 +412,13 @@ model_urb_quad <- manyglm(assembleia_peixes_rm_mv ~ urb + I(urb^2),data = urb)
 anova_urb <- anova(model_null, model_urb, model_urb_quad)
 ```
 
-    ## Time elapsed: 0 hr 0 min 24 sec
+    ## Time elapsed: 0 hr 0 min 40 sec
 
 ``` r
 anova_urb2 <- anova(model_null, model_urb_quad)
 ```
 
-    ## Time elapsed: 0 hr 0 min 12 sec
+    ## Time elapsed: 0 hr 0 min 18 sec
 
 ``` r
 urb_quad <- urb^2
@@ -438,17 +438,17 @@ est_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(est_PC1 =
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 14 sec
-    ## Time elapsed: 0 hr 0 min 25 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
+    ## Time elapsed: 0 hr 0 min 39 sec
     ##         df.diff      Dev        R2     p
-    ## est_PC1       2 91.13964 0.3966517 0.002
-    ## est_PC2       2 37.88000 0.2232342 0.417
+    ## est_PC1       2 91.13964 0.3966517 0.001
+    ## est_PC2       2 37.88000 0.2232342 0.459
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 26 sec
-    ##         df.diff      Dev         R2     p
-    ## est_PC2       1 12.58174 0.08609846 0.632
+    ## Time elapsed: 0 hr 0 min 41 sec
+    ##         df.diff      Dev         R2    p
+    ## est_PC2       1 12.58174 0.08609846 0.66
 
     ## No linear effects were found
 
@@ -459,17 +459,17 @@ agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PC1
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 12 sec
-    ## Time elapsed: 0 hr 0 min 27 sec
+    ## Time elapsed: 0 hr 0 min 19 sec
+    ## Time elapsed: 0 hr 0 min 43 sec
     ##          df.diff      Dev        R2     p
     ## agua_PC1       2 79.72771 0.3354866 0.001
-    ## agua_PC2       2 43.46037 0.2109107 0.242
+    ## agua_PC2       2 43.46037 0.2109107 0.251
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 28 sec
+    ## Time elapsed: 0 hr 0 min 46 sec
     ##          df.diff      Dev        R2     p
-    ## agua_PC2       1 23.84259 0.1270791 0.179
+    ## agua_PC2       1 23.84259 0.1270791 0.199
 
     ## No linear effects were found
 
@@ -480,17 +480,17 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 16 sec
-    ## Time elapsed: 0 hr 0 min 28 sec
+    ## Time elapsed: 0 hr 0 min 25 sec
+    ## Time elapsed: 0 hr 0 min 43 sec
     ##           df.diff      Dev        R2     p
-    ## bacia_PC1       2 58.56781 0.2659923 0.010
+    ## bacia_PC1       2 58.56781 0.2659923 0.009
     ## bacia_PC2       2 73.00993 0.3858408 0.004
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 29 sec
+    ## Time elapsed: 0 hr 0 min 44 sec
     ##           df.diff      Dev        R2     p
-    ## bacia_PC2       1 43.36181 0.2487927 0.001
+    ## bacia_PC2       1 43.36181 0.2487927 0.003
 
     ## No linear effects were found
 
@@ -498,11 +498,11 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE) 
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
     ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 24 sec
     ##      df.diff      Dev        R2     p
-    ## MEM2       1 22.97168 0.1243038 0.034
-    ## MEM3       1 20.11421 0.1105914 0.158
+    ## MEM2       1 22.97168 0.1243038 0.030
+    ## MEM3       1 20.11421 0.1105914 0.141
 
 Now, the variation partitioning
 
@@ -614,7 +614,7 @@ p_est <- anova(varpart_peixes$model_null,
                varpart_peixes$models$estrutura,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 13 sec
+    ## Time elapsed: 0 hr 0 min 20 sec
 
 ``` r
 p_est
@@ -640,7 +640,7 @@ p_bacia <- anova(varpart_peixes$model_null,
                  varpart_peixes$models$bacia,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 16 sec
+    ## Time elapsed: 0 hr 0 min 30 sec
 
 ``` r
 p_bacia
@@ -654,7 +654,7 @@ p_bacia
     ## Multivariate test:
     ##                             Res.Df Df.diff   Dev Pr(>Dev)   
     ## varpart_peixes$model_null       29                          
-    ## varpart_peixes$models$bacia     27       2 58.57    0.004 **
+    ## varpart_peixes$models$bacia     27       2 58.57    0.007 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -666,7 +666,7 @@ p_agua <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$agua,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 12 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
 
 ``` r
 p_agua
@@ -692,7 +692,7 @@ p_esp <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$esp,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 15 sec
 
 ``` r
 p_esp
@@ -706,7 +706,7 @@ p_esp
     ## Multivariate test:
     ##                           Res.Df Df.diff   Dev Pr(>Dev)  
     ## varpart_peixes$model_null     29                         
-    ## varpart_peixes$models$esp     28       1 22.97     0.03 *
+    ## varpart_peixes$models$esp     28       1 22.97    0.026 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -718,7 +718,7 @@ p_urb <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$urb,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 12 sec
+    ## Time elapsed: 0 hr 0 min 19 sec
 
 ``` r
 p_urb
@@ -732,7 +732,7 @@ p_urb
     ## Multivariate test:
     ##                           Res.Df Df.diff   Dev Pr(>Dev)   
     ## varpart_peixes$model_null     29                          
-    ## varpart_peixes$models$urb     27       2 61.56    0.004 **
+    ## varpart_peixes$models$urb     27       2 61.56    0.002 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -744,7 +744,7 @@ p_est_pure <- anova(varpart_peixes$models$`agua-bacia-urb-esp`,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 26 sec
 
 ``` r
 p_est_pure
@@ -761,7 +761,7 @@ p_est_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     20       2 36.17
     ##                                                      Pr(>Dev)  
     ## varpart_peixes$models$`agua-bacia-urb-esp`                     
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.076 .
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.089 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -773,7 +773,7 @@ p_bacia_pure <- anova(varpart_peixes$models$`estrutura-agua-urb-esp`,
                       varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 17 sec
+    ## Time elapsed: 0 hr 0 min 28 sec
 
 ``` r
 p_bacia_pure
@@ -790,7 +790,7 @@ p_bacia_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     20       2 2.268
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-urb-esp`               
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.956
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.949
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -800,7 +800,7 @@ p_agua_pure <- anova(varpart_peixes$models$`estrutura-bacia-urb-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 18 sec
+    ## Time elapsed: 0 hr 0 min 30 sec
 
 ``` r
 p_agua_pure
@@ -817,7 +817,7 @@ p_agua_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     20       2 51.98
     ##                                                      Pr(>Dev)  
     ## varpart_peixes$models$`estrutura-bacia-urb-esp`                
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.085 .
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.088 .
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -829,7 +829,7 @@ p_urb_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 21 sec
+    ## Time elapsed: 0 hr 0 min 35 sec
 
 ``` r
 p_urb_pure
@@ -846,7 +846,7 @@ p_urb_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     20       2 9.343
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-bacia-esp`             
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.578
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.607
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -856,7 +856,7 @@ p_esp_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-urb`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 18 sec
+    ## Time elapsed: 0 hr 0 min 30 sec
 
 ``` r
 p_esp_pure
@@ -873,7 +873,7 @@ p_esp_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     20       1 2.828
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-bacia-urb`             
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.863
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.861
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -883,7 +883,7 @@ p_full_model <- anova(varpart_peixes$model_null,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 18 sec
+    ## Time elapsed: 0 hr 0 min 30 sec
 
 ``` r
 p_full_model
@@ -900,7 +900,7 @@ p_full_model
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     20       9 234.8
     ##                                                      Pr(>Dev)   
     ## varpart_peixes$model_null                                       
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.002 **
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.006 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
