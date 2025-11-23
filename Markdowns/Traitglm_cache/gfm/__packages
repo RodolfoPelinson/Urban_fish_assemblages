@@ -1,13 +1,5 @@
-base
-methods
-datasets
-utils
-grDevices
-graphics
-stats
 mvabund
 permute
-lattice
 vegan
 jpeg
 coda
@@ -18,3 +10,5 @@ yarrr
 ade4
 adespatial
 corrplot
+scales
+shape

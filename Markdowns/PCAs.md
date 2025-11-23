@@ -1,25 +1,44 @@
-agua <-read.csv("data/planilha_agua_assembleias.csv", row.names = 1)
-estrutura <-read.csv("data/planilha_estrutura_assembleias.csv", row.names = 1)
-bacia <- read.csv("data/planilha_bacia_assembleias.csv", row.names = 1)
+Environmental PCAs
+================
+Rodolfo Pelinson
+2025-11-23
 
+``` r
+dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
+```
 
-#removendo urbanização da bacia
+Loading important functions and packages
+
+``` r
+library(vegan)
+library(yarrr)
+```
+
+``` r
+assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
+
+agua <-read.csv(paste(sep = "/",dir,"data/planilha_agua_assembleias.csv"), row.names = 1)
+estrutura <-read.csv(paste(sep = "/",dir,"data/planilha_estrutura_assembleias.csv"), row.names = 1)
+bacia <- read.csv(paste(sep = "/",dir,"data/planilha_bacia_assembleias.csv"), row.names = 1)
+```
+
+Removing urban cover from watershed descriptors, and a few other
+predictors that are redundant
+
+``` r
 urb <- bacia$urbano_delineamento
 bacia <- bacia[colnames(bacia) != "urbano_delineamento" &
                  colnames(bacia) != "URB_2021"]
 names(urb) <- rownames(bacia)
 
-
-#removendo descargas extras da estrutura
 estrutura <- estrutura[colnames(estrutura) != "descarga_vel_dim" &
                    colnames(estrutura) != "descarga_.L.s_sal"&
                    colnames(estrutura) != "descarga_.L.s_sal"]
+```
 
+Standardizing predictors
 
-
-#Padronizando variaveis
-library(vegan)
-
+``` r
 estrutura <- estrutura[,colnames(estrutura) != "comp_zona_riparia_plantacao"] #Variavel só com zeros
 
 agua_st <- decostand(agua, method = "stand")
@@ -31,12 +50,11 @@ bacia_st <- decostand(bacia, method = "stand")
 ncol_agua <- ncol(agua_st)
 ncol_estrutura <- ncol(estrutura_st)
 ncol_bacia <- ncol(bacia_st)
+```
 
+### PCA stream structure
 
-
-
-################################################################################################################
-#PCA estrutura
+``` r
 pca_estrutura <- rda(estrutura_st)
 
 importance_estrutura <- round(pca_estrutura$CA$eig/sum(pca_estrutura$CA$eig),2)
@@ -44,29 +62,110 @@ Eigenvalues_estrutura <- data.frame(autovalores = pca_estrutura$CA$eig,
                                     importance = importance_estrutura)
 
 sum(importance_estrutura[1:5])
+```
+
+    ## [1] 0.52
+
+``` r
 estrutura_PCs <- pca_estrutura$CA$u
 estrutura_loadings <- pca_estrutura$CA$v
 
 estrutura_loadings_filtrados_PC1 <- estrutura_loadings[which(estrutura_loadings[,1] > 0.2 | estrutura_loadings[,1] < -0.2),1]
+estrutura_loadings_filtrados_PC1
+```
 
+    ##                      comp_ecotono_arborea 
+    ##                                -0.2187643 
+    ##         pert_zona_riparia_lixo_inorganico 
+    ##                                 0.2006876 
+    ##         estrutura_dentro_do_canal_entulho 
+    ##                                 0.2139454 
+    ## estrutura_dentro_do_canal_lixo_inorganico 
+    ##                                 0.2091046
+
+``` r
 estrutura_loadings_filtrados_PC2 <- estrutura_loadings[which(estrutura_loadings[,2] > 0.2 | estrutura_loadings[,2] < -0.2),2]
+estrutura_loadings_filtrados_PC2
+```
 
+    ##      comp_ecotono_herbacea_ereta                  substrato_rocha 
+    ##                        0.2520818                       -0.2230341 
+    ##         tipo_de_canal_corredeira               tipo_de_canal_poco 
+    ##                       -0.2941114                       -0.2276796 
+    ##     tipo_de_canal_fluxo_continuo    comp_zona_riparia_veg_arborea 
+    ##                        0.2937503                       -0.2386225 
+    ##   comp_zona_riparia_veg_herbacea comp_zona_riparia_veg_herb_ereta 
+    ##                        0.2408681                        0.2682561
+
+``` r
 estrutura_loadings_filtrados_PC3 <- estrutura_loadings[which(estrutura_loadings[,3] > 0.2 | estrutura_loadings[,3] < -0.2),3]
+estrutura_loadings_filtrados_PC3
+```
 
+    ##               comp_ecotono_flutuante            substrato_galhos_pequenos 
+    ##                           -0.2952432                           -0.2697092 
+    ##            pert_zona_riparia_entulho  estrutura_dentro_do_canal_macrofita 
+    ##                            0.2151240                           -0.2612014 
+    ## estrutura_dentro_do_canal_herb_ereta 
+    ##                           -0.2198031
+
+``` r
 estrutura_loadings_filtrados_PC4 <- estrutura_loadings[which(estrutura_loadings[,4] > 0.2 | estrutura_loadings[,4] < -0.2),4]
+estrutura_loadings_filtrados_PC4
+```
 
+    ##                        substrato_cascalho 
+    ##                                 0.2987250 
+    ##                           substrato_seixo 
+    ##                                 0.2711730 
+    ##                substrato_litter_grosseiro 
+    ##                                -0.2398220 
+    ##            comp_zona_riparia_solo_exposto 
+    ##                                 0.2047686 
+    ## estrutura_dentro_do_canal_banco_de_folhas 
+    ##                                -0.2508407
+
+``` r
 estrutura_loadings_filtrados_PC5 <- estrutura_loadings[which(estrutura_loadings[,5] > 0.2 | estrutura_loadings[,5] < -0.2),5]
+estrutura_loadings_filtrados_PC5
+```
 
+    ##                              dossel                     substrato_areia 
+    ##                          -0.2447722                          -0.3033599 
+    ##                      substrato_lodo           substrato_galhos_pequenos 
+    ##                           0.2503019                          -0.2578395 
+    ## estrutura_dentro_do_canal_macrofita 
+    ##                          -0.2640236
 
+``` r
+estrutura_loadings_filtrados <- estrutura_loadings[which((estrutura_loadings[,1] > 0.2 | estrutura_loadings[,1] < -0.2) |
+                                                         (estrutura_loadings[,2] > 0.2 | estrutura_loadings[,2] < -0.2)),1:2]
+estrutura_loadings_filtrados
+```
 
-write.csv(Eigenvalues_estrutura, "data/pcas_amb/estrutura_autovalores.csv")
-write.csv(estrutura_PCs, "data/pcas_amb/estrutura_PCs.csv")
-write.csv(estrutura_loadings, "data/pcas_amb/estrutura_loadings.csv")
+    ##                                                    PC1         PC2
+    ## comp_ecotono_herbacea_ereta               -0.028653636  0.25208185
+    ## comp_ecotono_arborea                      -0.218764251 -0.07579779
+    ## substrato_rocha                           -0.101246502 -0.22303411
+    ## tipo_de_canal_corredeira                   0.021045789 -0.29411137
+    ## tipo_de_canal_poco                        -0.079258438 -0.22767956
+    ## tipo_de_canal_fluxo_continuo               0.003990507  0.29375035
+    ## pert_zona_riparia_lixo_inorganico          0.200687591  0.00184380
+    ## comp_zona_riparia_veg_arborea             -0.168900012 -0.23862247
+    ## comp_zona_riparia_veg_herbacea            -0.128949818  0.24086813
+    ## comp_zona_riparia_veg_herb_ereta          -0.081070691  0.26825614
+    ## estrutura_dentro_do_canal_entulho          0.213945418 -0.06114972
+    ## estrutura_dentro_do_canal_lixo_inorganico  0.209104620 -0.08546433
 
+``` r
+#write.csv(Eigenvalues_estrutura, "data/pcas_amb/estrutura_autovalores.csv")
+#write.csv(estrutura_PCs, "data/pcas_amb/estrutura_PCs.csv")
+#write.csv(estrutura_loadings, "data/pcas_amb/estrutura_loadings.csv")
+```
 
+Preparing variables for plotting the PCA
 
-
-####################################################################################################
+``` r
 #Plot parameters
 scaler <- min(max(abs(estrutura_PCs[, 1]))/max(abs(estrutura_loadings_filtrados[,1])),
               max(abs(estrutura_PCs[, 2]))/max(abs(estrutura_loadings_filtrados[,2])))
@@ -100,21 +199,11 @@ names_estrutura[names_estrutura == "comp_zona_riparia_veg_herbacea"] <- "RZC - H
 names_estrutura[names_estrutura == "comp_zona_riparia_veg_herb_ereta"] <- "RZC - Upright Herb. veg."
 names_estrutura[names_estrutura == "estrutura_dentro_do_canal_entulho"] <- "SITC - Construction waste"
 names_estrutura[names_estrutura == "estrutura_dentro_do_canal_lixo_inorganico"] <- "SITC - Inorganic waste"
+```
 
+### PCA watershed descriptors
 
-
-############################################################################################
-
-
-
-
-###########################################################################################
-###########################################################################################
-
-
-################################################################################################################
-#PCA bacia
-library(vegan)
+``` r
 pca_bacia <- rda(bacia_st)
 
 importance_bacia <- round(pca_bacia$CA$eig/sum(pca_bacia$CA$eig),2)
@@ -122,24 +211,38 @@ Eigenvalues_bacia <- data.frame(autovalores = pca_bacia$CA$eig,
                                     importance = importance_bacia)
 
 sum(importance_bacia[1:3])
+```
+
+    ## [1] 0.8
+
+``` r
 bacia_PCs <- pca_bacia$CA$u
 bacia_loadings <- pca_bacia$CA$v
 
-bacia_loadings_filtrados <- bacia_loadings[which(bacia_loadings[,1] > 0.2 | bacia_loadings[,1] < -0.2 |
-                                                 bacia_loadings[,2] > 0.2 | bacia_loadings[,2] < -0.2),]
-
-bacia_loadings_filtrados_PC1 <- bacia_loadings[which(bacia_loadings[,1] > 0.2 | bacia_loadings[,1] < -0.2),1]
 
 
+bacia_loadings_filtrados <- bacia_loadings[which((bacia_loadings[,1] > 0.2 | bacia_loadings[,1] < -0.2) |
+                                                         (bacia_loadings[,2] > 0.2 | bacia_loadings[,2] < -0.2)),1:2]
+bacia_loadings_filtrados
+```
 
-write.csv(Eigenvalues_bacia, "data/pcas_amb/bacia_autovalores.csv")
-write.csv(bacia_PCs, "data/pcas_amb/bacia_PCs.csv")
-write.csv(bacia_loadings, "data/pcas_amb/bacia_loadings.csv")
+    ##                       PC1         PC2
+    ## Area_ha        -0.3438980 -0.09107339
+    ## FOR_2021        0.4389801 -0.23146919
+    ## Ic              0.3350739  0.56895419
+    ## Kc             -0.3122788 -0.58224437
+    ## Declividade_av  0.4965422 -0.31744215
+    ## Altitude_av     0.4554975 -0.37883697
 
+``` r
+#write.csv(Eigenvalues_bacia, "data/pcas_amb/bacia_autovalores.csv")
+#write.csv(bacia_PCs, "data/pcas_amb/bacia_PCs.csv")
+#write.csv(bacia_loadings, "data/pcas_amb/bacia_loadings.csv")
+```
 
+Preparing variables for plotting the PCA
 
-
-####################################################################################################
+``` r
 #Plot parameters
 scaler <- min(max(abs(bacia_PCs[, 1]))/max(abs(bacia_loadings_filtrados[,1])),
               max(abs(bacia_PCs[, 2]))/max(abs(bacia_loadings_filtrados[,2])))
@@ -167,24 +270,11 @@ names_bacia[names_bacia == "Ic"] <- "IC"
 names_bacia[names_bacia == "Kc"] <- "KC"
 names_bacia[names_bacia == "Declividade_av"] <- "Slope"
 names_bacia[names_bacia == "Altitude_av"] <- "Altitude"
+```
 
+### PCA water parameters
 
-
-############################################################################################
-
-
-
-
-
-
-
-###########################################################################################
-###########################################################################################
-
-
-################################################################################################################
-#PCA agua
-library(vegan)
+``` r
 pca_agua <- rda(agua_st)
 
 importance_agua <- round(pca_agua$CA$eig/sum(pca_agua$CA$eig),2)
@@ -192,22 +282,41 @@ Eigenvalues_agua <- data.frame(autovalores = pca_agua$CA$eig,
                                 importance = importance_agua)
 
 sum(importance_agua[1:2])
+```
+
+    ## [1] 0.85
+
+``` r
 agua_PCs <- pca_agua$CA$u
 agua_loadings <- pca_agua$CA$v
 
-agua_loadings_filtrados <- agua_loadings[which(agua_loadings[,1] > 0.2 | agua_loadings[,1] < -0.2 |
-                                                   agua_loadings[,2] > 0.2 | agua_loadings[,2] < -0.2),]
+agua_loadings_filtrados <- agua_loadings[which((agua_loadings[,1] > 0.2 | agua_loadings[,1] < -0.2) |
+                                                         (agua_loadings[,2] > 0.2 | agua_loadings[,2] < -0.2)),1:2]
 
-agua_loadings_filtrados_PC1 <- agua_loadings[which(agua_loadings[,1] > 0.2 | agua_loadings[,1] < -0.2),1]
+agua_loadings_filtrados
+```
 
-write.csv(Eigenvalues_agua, "data/pcas_amb/agua_autovalores.csv")
-write.csv(agua_PCs, "data/pcas_amb/agua_PCs.csv")
-write.csv(agua_loadings, "data/pcas_amb/agua_loadings.csv")
+    ##                             PC1         PC2
+    ## chlorophyll_a         0.3425946  0.22830531
+    ## phycocyanin           0.3319041  0.28605404
+    ## Temperature_.oC.      0.2934168 -0.45383301
+    ## DO_.mg.L.            -0.2829812  0.26678802
+    ## pH                    0.3275608 -0.35428677
+    ## turbidity_.NTU.       0.1928304  0.49530430
+    ## redox_potential_.mV. -0.3265517  0.35175488
+    ## TC                    0.3390057  0.19613608
+    ## TN                    0.3378084  0.22100450
+    ## SPC_.uS.cm.           0.3551645  0.08378666
 
+``` r
+#write.csv(Eigenvalues_agua, "data/pcas_amb/agua_autovalores.csv")
+#write.csv(agua_PCs, "data/pcas_amb/agua_PCs.csv")
+#write.csv(agua_loadings, "data/pcas_amb/agua_loadings.csv")
+```
 
+Preparing variables for plotting the PCA
 
-
-####################################################################################################
+``` r
 #Plot parameters
 scaler <- min(max(abs(agua_PCs[, 1]))/max(abs(agua_loadings_filtrados[,1])),
               max(abs(agua_PCs[, 2]))/max(abs(agua_loadings_filtrados[,2])))
@@ -239,15 +348,12 @@ names_agua[names_agua == "TC"] <- "TC"
 names_agua[names_agua == "TN"] <- "TN"
 names_agua[names_agua == "SPC_.uS.cm."] <- "Specific conductivity"
 names_agua[names_agua == "DO_.mg.L."] <- "DO"
+```
 
+## PCA plots
 
-############################################################################################
-
-
-
-
-
-pdf("plots/pcas.pdf", height = 10.5, width = 3.5, pointsize = 5)
+``` r
+#pdf("plots/pcas.pdf", height = 10.5, width = 3.5, pointsize = 5)
 
 par(mfrow =c(3,1))
 
@@ -361,7 +467,10 @@ axis(2, cex.axis = 1.25, las = 2)
 title(xlab = pc1_label_bacia, cex.lab = 1.4, line = 2.75)
 title(ylab = pc2_label_bacia, cex.lab = 1.4, line = 2.75)
 title(main = "c) Watershed descriptors", line = 0.5, adj = 0, cex.main = 1.5)
-dev.off()
+```
 
+![](PCAs_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
-
+``` r
+#dev.off()
+```
