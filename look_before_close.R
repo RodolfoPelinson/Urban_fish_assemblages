@@ -46,7 +46,14 @@ install.packages("VennDiagram")
 
 VennDiagram
 
+install.packages("usethis")
 
 usethis::use_git()
+
+usethis::use_git_config(
+  user.name = "Rodolfo Pelinson",
+  user.email = "rodolfopelinson@gmail.com"
+)
+
 usethis::use_github()
 usethis::use_readme_rmd()

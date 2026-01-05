@@ -150,10 +150,7 @@ The first PCs seem all correlated with each other.
 
 ```{r, warning=FALSE, cache=FALSE}
 est_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(est_PC1 = estrutura_PCs[,1],
-                                                                       est_PC2 = estrutura_PCs[,2],
-                                                                       est_PC3 = estrutura_PCs[,3],
-                                                                       est_PC4 = estrutura_PCs[,4],
-                                                                       est_PC5 = estrutura_PCs[,5]), nBoot=999, quad = TRUE) 
+                                                                       est_PC2 = estrutura_PCs[,2]), nBoot=999, quad = TRUE) 
 
 agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PC1 = agua_PCs[,1],
                                                                         agua_PC2 = agua_PCs[,2]), nBoot=999, quad = TRUE) 
@@ -176,7 +173,7 @@ predictors <- list(estrutura = est_FS$new_x,
                    urb =  data.frame(urb = urb$urb, urb_squared =  urb$urb^2),
                    esp = esp_FS$new_x)
 
-varpart_peixes <- varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = TRUE)
+varpart_peixes <- varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = FALSE)
 varpart_peixes$R2_fractions_com
 
 full_model2 <- varpart_peixes$R2_models$`estrutura-agua-bacia`

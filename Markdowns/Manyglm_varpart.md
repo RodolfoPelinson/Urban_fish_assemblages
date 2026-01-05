@@ -1,7 +1,7 @@
 Manyglm_varpart
 ================
 Rodolfo Pelinson
-2025-11-23
+2026-01-05
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -24,19 +24,19 @@ library(mvabund)
 library(vegan)
 ```
 
-    ## Loading required package: permute
+    ## Carregando pacotes exigidos: permute
 
 ``` r
 library(yarrr)
 ```
 
-    ## Loading required package: jpeg
+    ## Carregando pacotes exigidos: jpeg
 
-    ## Loading required package: BayesFactor
+    ## Carregando pacotes exigidos: BayesFactor
 
-    ## Loading required package: coda
+    ## Carregando pacotes exigidos: coda
 
-    ## Loading required package: Matrix
+    ## Carregando pacotes exigidos: Matrix
 
     ## ************
     ## Welcome to BayesFactor 0.9.12-4.7. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
@@ -44,10 +44,10 @@ library(yarrr)
     ## Type BFManual() to open the manual.
     ## ************
 
-    ## Loading required package: circlize
+    ## Carregando pacotes exigidos: circlize
 
     ## ========================================
-    ## circlize version 0.4.16
+    ## circlize version 0.4.17
     ## CRAN page: https://cran.r-project.org/package=circlize
     ## Github page: https://github.com/jokergoo/circlize
     ## Documentation: https://jokergoo.github.io/circlize_book/book/
@@ -59,10 +59,6 @@ library(yarrr)
     ## This message can be suppressed by:
     ##   suppressPackageStartupMessages(library(circlize))
     ## ========================================
-
-    ## yarrr v0.1.5. Citation info at citation('yarrr'). Package guide at yarrr.guide()
-
-    ## Email me at Nathaniel.D.Phillips.is@gmail.com
 
 ``` r
 library(ade4)
@@ -154,7 +150,7 @@ dbmem_euclid <- dbmem(dist_euclid, thresh = NULL, MEM.autocor = c("positive", "n
 ```
 
     ## Truncation level = 0.3268453 
-    ## Time to compute dbMEMs = 0.010000  sec
+    ## Time to compute dbMEMs = 0.000000  sec
 
 ``` r
 dbmem_euclid <- decostand(dbmem_euclid, method = "stand")
@@ -400,25 +396,22 @@ The first PCs seem all correlated with each other.
 
 ``` r
 est_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(est_PC1 = estrutura_PCs[,1],
-                                                                       est_PC2 = estrutura_PCs[,2],
-                                                                       est_PC3 = estrutura_PCs[,3],
-                                                                       est_PC4 = estrutura_PCs[,4],
-                                                                       est_PC5 = estrutura_PCs[,5]), nBoot=999, quad = TRUE) 
+                                                                       est_PC2 = estrutura_PCs[,2]), nBoot=999, quad = TRUE) 
 ```
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 13 sec
-    ## Time elapsed: 0 hr 0 min 25 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 18 sec
     ##         df.diff      Dev        R2     p
     ## est_PC1       2 91.13964 0.3966517 0.001
-    ## est_PC2       2 37.88000 0.2232342 0.449
+    ## est_PC2       2 37.88000 0.2232342 0.433
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 26 sec
-    ##         df.diff      Dev       R2     p
-    ## est_PC4       1 24.51379 0.133296 0.149
+    ## Time elapsed: 0 hr 0 min 19 sec
+    ##         df.diff      Dev         R2     p
+    ## est_PC2       1 12.58174 0.08609846 0.653
 
     ## No linear effects were found
 
@@ -429,17 +422,17 @@ agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PC1
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 12 sec
-    ## Time elapsed: 0 hr 0 min 27 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 20 sec
     ##          df.diff      Dev        R2     p
     ## agua_PC1       2 79.72771 0.3354866 0.001
-    ## agua_PC2       2 43.46037 0.2109107 0.231
+    ## agua_PC2       2 43.46037 0.2109107 0.215
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 28 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
     ##          df.diff      Dev        R2     p
-    ## agua_PC2       1 23.84259 0.1270791 0.171
+    ## agua_PC2       1 23.84259 0.1270791 0.161
 
     ## No linear effects were found
 
@@ -450,11 +443,11 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 15 sec
-    ## Time elapsed: 0 hr 0 min 28 sec
+    ## Time elapsed: 0 hr 0 min 11 sec
+    ## Time elapsed: 0 hr 0 min 20 sec
     ##           df.diff      Dev        R2     p
-    ## bacia_PC1       2 58.56781 0.2659923 0.005
-    ## bacia_PC2       2 73.00993 0.3858408 0.008
+    ## bacia_PC1       2 58.56781 0.2659923 0.004
+    ## bacia_PC2       2 73.00993 0.3858408 0.005
 
     ## testing for linear effects...
 
@@ -464,11 +457,11 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE) 
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
-    ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 6 sec
+    ## Time elapsed: 0 hr 0 min 11 sec
     ##      df.diff      Dev        R2     p
     ## MEM2       1 22.97168 0.1243038 0.025
-    ## MEM3       1 20.11421 0.1105914 0.145
+    ## MEM3       1 20.11421 0.1105914 0.142
 
 Now, the variation partitioning
 
@@ -479,51 +472,51 @@ predictors <- list(estrutura = est_FS$new_x,
                    urb =  data.frame(urb = urb$urb, urb_squared =  urb$urb^2),
                    esp = esp_FS$new_x)
 
-varpart_peixes <- varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = TRUE)
+varpart_peixes <- varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = FALSE)
 varpart_peixes$R2_fractions_com
 ```
 
     ##           R2_full_fraction R2_pure_fraction
-    ## estrutura        0.3829740      -0.03219105
-    ## agua             0.3239181      -0.02493671
-    ## bacia            0.4603140      -0.09847216
-    ## urb              0.2750372      -0.05202859
-    ## esp              0.1243038      -0.02547586
+    ## estrutura        0.3966517       0.03306090
+    ## agua             0.3354866       0.04307880
+    ## bacia            0.5134271       0.01738897
+    ## urb              0.2848599       0.00566620
+    ## esp              0.1243038       0.00375549
 
 ``` r
 full_model2 <- varpart_peixes$R2_models$`estrutura-agua-bacia`
 full_model2
 ```
 
-    ## [1] 0.6116372
+    ## [1] 0.806249
 
 ``` r
 round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
 ```
 
     ##                               estrutura   agua  bacia    urb    esp
-    ## Gymnotus_pantherinus             0.3586 0.4334 0.7470 0.4918 0.0223
-    ## Phalloceros_harpagos             0.5139 0.2896 0.7272 0.2837 0.3576
-    ## Phalloceros_reisi                0.2169 0.5370 0.1562 0.2759 0.0398
-    ## Hollandichthys_multifasciatus    0.4941 0.2711 0.7539 0.2415 0.0299
-    ## Astyanax_lacustris               0.2293 0.3396 0.7474 0.3997 0.1074
-    ## Poecilia_reticulata              0.2664 0.3161 0.1930 0.1266 0.0837
-    ## Hoplosternum_littorale           0.4706 0.1540 0.2446 0.1602 0.3489
-    ## Singletons_and_doubletons        0.5139 0.2505 0.1133 0.2208 0.0047
+    ## Gymnotus_pantherinus             0.3714 0.4489 0.8332 0.5094 0.0223
+    ## Phalloceros_harpagos             0.5322 0.2999 0.8111 0.2939 0.3576
+    ## Phalloceros_reisi                0.2247 0.5562 0.1742 0.2858 0.0398
+    ## Hollandichthys_multifasciatus    0.5118 0.2808 0.8408 0.2502 0.0299
+    ## Astyanax_lacustris               0.2375 0.3518 0.8336 0.4140 0.1074
+    ## Poecilia_reticulata              0.2759 0.3274 0.2152 0.1311 0.0837
+    ## Hoplosternum_littorale           0.4875 0.1595 0.2728 0.1659 0.3489
+    ## Singletons_and_doubletons        0.5322 0.2595 0.1264 0.2286 0.0047
 
 ``` r
 round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
 ```
 
-    ##                               estrutura    agua   bacia     urb     esp
-    ## Gymnotus_pantherinus            -0.0575 -0.0575 -0.1139 -0.0575 -0.0287
-    ## Phalloceros_harpagos            -0.0581 -0.0584 -0.1166 -0.0584 -0.0292
-    ## Phalloceros_reisi               -0.0358  0.1647 -0.0398 -0.0387 -0.0083
-    ## Hollandichthys_multifasciatus   -0.0580 -0.0580 -0.1159 -0.0580 -0.0290
-    ## Astyanax_lacustris              -0.0580 -0.0580 -0.1153 -0.0580 -0.0290
-    ## Poecilia_reticulata             -0.0585 -0.0586 -0.1125 -0.0586 -0.0293
-    ## Hoplosternum_littorale          -0.0562 -0.0563 -0.1126 -0.0563 -0.0280
-    ## Singletons_and_doubletons        0.1246 -0.0175 -0.0611 -0.0308 -0.0223
+    ##                               estrutura   agua  bacia    urb    esp
+    ## Gymnotus_pantherinus             0.0000 0.0000 0.0013 0.0000 0.0000
+    ## Phalloceros_harpagos             0.0004 0.0000 0.0003 0.0000 0.0000
+    ## Phalloceros_reisi                0.0282 0.3050 0.0915 0.0242 0.0287
+    ## Hollandichthys_multifasciatus    0.0000 0.0000 0.0002 0.0000 0.0000
+    ## Astyanax_lacustris               0.0000 0.0000 0.0008 0.0000 0.0000
+    ## Poecilia_reticulata              0.0001 0.0000 0.0058 0.0000 0.0000
+    ## Hoplosternum_littorale           0.0002 0.0000 0.0000 0.0000 0.0002
+    ## Singletons_and_doubletons        0.2356 0.0395 0.0391 0.0211 0.0011
 
 ``` r
 full_model_sp <- varpart_peixes$R2_models_sp$estrutura.agua.bacia
@@ -532,13 +525,13 @@ full_model_sp
 ```
 
     ##          Gymnotus_pantherinus          Phalloceros_harpagos 
-    ##                     0.6324356                     0.6424589 
+    ##                     0.8336651                     0.8468777 
     ##             Phalloceros_reisi Hollandichthys_multifasciatus 
-    ##                     0.5881846                     0.6380118 
+    ##                     0.7753342                     0.8410156 
     ##            Astyanax_lacustris           Poecilia_reticulata 
-    ##                     0.6377201                     0.6441986 
+    ##                     0.8406311                     0.8491709 
     ##        Hoplosternum_littorale     Singletons_and_doubletons 
-    ##                     0.6191824                     0.4909056
+    ##                     0.8161950                     0.6471028
 
 Looking at fractions related to the urbanization process
 
@@ -551,25 +544,25 @@ shared_urb_esp <- (varpart_peixes$R2_models$esp + varpart_peixes$R2_models$urb) 
 shared_urb_estrutura
 ```
 
-    ## [1] 0.1955743
+    ## [1] 0.1657165
 
 ``` r
 shared_urb_agua
 ```
 
-    ## [1] 0.2306456
+    ## [1] 0.2095396
 
 ``` r
 shared_urb_bacia
 ```
 
-    ## [1] 0.26683
+    ## [1] 0.2321574
 
 ``` r
 shared_urb_esp
 ```
 
-    ## [1] 0.04218407
+    ## [1] 0.02555076
 
 Tests of significance of fractions:
 
@@ -578,7 +571,7 @@ p_est <- anova(varpart_peixes$model_null,
                varpart_peixes$models$estrutura,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 13 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
 
 ``` r
 p_est
@@ -590,9 +583,9 @@ p_est
     ## varpart_peixes$models$estrutura: resp_mv ~ est_PC1 + est_PC1_squared
     ## 
     ## Multivariate test:
-    ##                                 Res.Df Df.diff   Dev Pr(>Dev)    
-    ## varpart_peixes$model_null           29                           
-    ## varpart_peixes$models$estrutura     27       2 91.14    0.001 ***
+    ##                                 Res.Df Df.diff   Dev Pr(>Dev)   
+    ## varpart_peixes$model_null           29                          
+    ## varpart_peixes$models$estrutura     27       2 91.14    0.002 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -604,7 +597,7 @@ p_bacia <- anova(varpart_peixes$model_null,
                  varpart_peixes$models$bacia,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 19 sec
+    ## Time elapsed: 0 hr 0 min 14 sec
 
 ``` r
 p_bacia
@@ -630,7 +623,7 @@ p_agua <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$agua,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 13 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
 
 ``` r
 p_agua
@@ -656,7 +649,7 @@ p_esp <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$esp,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 6 sec
 
 ``` r
 p_esp
@@ -670,7 +663,7 @@ p_esp
     ## Multivariate test:
     ##                           Res.Df Df.diff   Dev Pr(>Dev)  
     ## varpart_peixes$model_null     29                         
-    ## varpart_peixes$models$esp     28       1 22.97     0.02 *
+    ## varpart_peixes$models$esp     28       1 22.97    0.019 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -682,7 +675,7 @@ p_urb <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$urb,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 12 sec
+    ## Time elapsed: 0 hr 0 min 8 sec
 
 ``` r
 p_urb
@@ -696,7 +689,7 @@ p_urb
     ## Multivariate test:
     ##                           Res.Df Df.diff   Dev Pr(>Dev)   
     ## varpart_peixes$model_null     29                          
-    ## varpart_peixes$models$urb     27       2 61.56    0.002 **
+    ## varpart_peixes$models$urb     27       2 61.56    0.005 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -708,7 +701,7 @@ p_est_pure <- anova(varpart_peixes$models$`agua-bacia-urb-esp`,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 11 sec
+    ## Time elapsed: 0 hr 0 min 7 sec
 
 ``` r
 p_est_pure
@@ -725,7 +718,7 @@ p_est_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 18.81
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`agua-bacia-urb-esp`                   
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.385
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.398
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -735,7 +728,7 @@ p_bacia_pure <- anova(varpart_peixes$models$`estrutura-agua-urb-esp`,
                       varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 10 sec
 
 ``` r
 p_bacia_pure
@@ -752,7 +745,7 @@ p_bacia_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       4 15.49
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-urb-esp`               
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.849
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     0.86
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -762,7 +755,7 @@ p_agua_pure <- anova(varpart_peixes$models$`estrutura-bacia-urb-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
 
 ``` r
 p_agua_pure
@@ -779,7 +772,7 @@ p_agua_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 32.08
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-bacia-urb-esp`              
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.168
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.161
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -789,7 +782,7 @@ p_urb_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 5 sec
 
 ``` r
 p_urb_pure
@@ -806,7 +799,7 @@ p_urb_pure
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 5.292
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-bacia-esp`             
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.747
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.766
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -816,7 +809,7 @@ p_esp_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-urb`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 6 sec
 
 ``` r
 p_esp_pure
@@ -843,7 +836,7 @@ p_full_model <- anova(varpart_peixes$model_null,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 18 sec
+    ## Time elapsed: 0 hr 0 min 12 sec
 
 ``` r
 p_full_model
@@ -860,7 +853,7 @@ p_full_model
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18      11 248
     ##                                                      Pr(>Dev)  
     ## varpart_peixes$model_null                                      
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.013 *
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.014 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -942,14 +935,14 @@ cbind(pure_frac_summed_scaled, full_model_sp)
 ```
 
     ##                               pure_frac_summed_scaled full_model_sp
-    ## Poecilia_reticulata                         0.0000000     0.6441986
-    ## Phalloceros_harpagos                        0.0000000     0.6424589
-    ## Hollandichthys_multifasciatus               0.0000000     0.6380118
-    ## Astyanax_lacustris                          0.0000000     0.6377201
-    ## Gymnotus_pantherinus                        0.0000000     0.6324356
-    ## Hoplosternum_littorale                      0.0000000     0.6191824
-    ## Phalloceros_reisi                           0.1647070     0.5881846
-    ## Singletons_and_doubletons                   0.1245551     0.4909056
+    ## Poecilia_reticulata                      0.0059436801     0.8491709
+    ## Phalloceros_harpagos                     0.0007725335     0.8468777
+    ## Hollandichthys_multifasciatus            0.0001749521     0.8410156
+    ## Astyanax_lacustris                       0.0008629618     0.8406311
+    ## Gymnotus_pantherinus                     0.0013227851     0.8336651
+    ## Hoplosternum_littorale                   0.0004182824     0.8161950
+    ## Phalloceros_reisi                        0.4776026454     0.7753342
+    ## Singletons_and_doubletons                0.3365050344     0.6471028
 
 ``` r
 pure_est_scaled  <- pure_est * scale
