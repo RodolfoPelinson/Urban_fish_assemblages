@@ -48,12 +48,24 @@ VennDiagram
 
 install.packages("usethis")
 
+#Para configurar git pela primeira vez no PC
+#usethis::use_git_config(
+#  user.name = "Rodolfo Pelinson",
+#  user.email = "rodolfopelinson@gmail.com"
+#)
+
+usethis::git_sitrep()
+
+
 usethis::use_git()
 
-usethis::use_git_config(
-  user.name = "Rodolfo Pelinson",
-  user.email = "rodolfopelinson@gmail.com"
+#Para conectar o repositorio a um já existente no github
+usethis::git_remotes_set(
+  name = "origin",
+  url  = "https://github.com/RodolfoPelinson/Urban_fish_assemblages.git"
 )
+
+git remote add origin https://github.com/RodolfoPelinson/Urban_fish_assemblages.git
 
 usethis::use_github()
 usethis::use_readme_rmd()
