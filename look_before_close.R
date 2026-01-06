@@ -54,18 +54,7 @@ install.packages("usethis")
 #  user.email = "rodolfopelinson@gmail.com"
 #)
 
-usethis::git_sitrep()
-
 
 usethis::use_git()
-
-#Para conectar o repositorio a um já existente no github
-usethis::git_remotes_set(
-  name = "origin",
-  url  = "https://github.com/RodolfoPelinson/Urban_fish_assemblages.git"
-)
-
-git remote add origin https://github.com/RodolfoPelinson/Urban_fish_assemblages.git
-
 usethis::use_github()
 usethis::use_readme_rmd()
