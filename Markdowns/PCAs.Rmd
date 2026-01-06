@@ -63,6 +63,10 @@ bacia_st <- decostand(bacia, method = "stand")
 ncol_agua <- ncol(agua_st)
 ncol_estrutura <- ncol(estrutura_st)
 ncol_bacia <- ncol(bacia_st)
+
+remove <- which(is.na(apply(estrutura_st, MARGIN = 2, FUN = mean)))
+
+estrutura_st <- estrutura_st[,-remove]
 ```
 
 

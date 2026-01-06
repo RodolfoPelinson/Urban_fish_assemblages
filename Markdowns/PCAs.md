@@ -1,7 +1,7 @@
 Environmental PCAs
 ================
 Rodolfo Pelinson
-2025-11-23
+2026-01-06
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -43,6 +43,12 @@ estrutura <- estrutura[,colnames(estrutura) != "comp_zona_riparia_plantacao"] #V
 
 agua_st <- decostand(agua, method = "stand")
 estrutura_st <- decostand(estrutura, method = "stand")
+```
+
+    ## Warning in decostand(estrutura, method = "stand"): result contains NaN, perhaps due to impossible mathematical
+    ##                  operation
+
+``` r
 bacia_st <- decostand(bacia, method = "stand")
 
 
@@ -50,6 +56,10 @@ bacia_st <- decostand(bacia, method = "stand")
 ncol_agua <- ncol(agua_st)
 ncol_estrutura <- ncol(estrutura_st)
 ncol_bacia <- ncol(bacia_st)
+
+remove <- which(is.na(apply(estrutura_st, MARGIN = 2, FUN = mean)))
+
+estrutura_st <- estrutura_st[,-remove]
 ```
 
 ### PCA stream structure
@@ -64,7 +74,7 @@ Eigenvalues_estrutura <- data.frame(autovalores = pca_estrutura$CA$eig,
 sum(importance_estrutura[1:5])
 ```
 
-    ## [1] 0.52
+    ## [1] 0.51
 
 ``` r
 estrutura_PCs <- pca_estrutura$CA$u
@@ -74,14 +84,8 @@ estrutura_loadings_filtrados_PC1 <- estrutura_loadings[which(estrutura_loadings[
 estrutura_loadings_filtrados_PC1
 ```
 
-    ##                      comp_ecotono_arborea 
-    ##                                -0.2187643 
-    ##         pert_zona_riparia_lixo_inorganico 
-    ##                                 0.2006876 
-    ##         estrutura_dentro_do_canal_entulho 
-    ##                                 0.2139454 
-    ## estrutura_dentro_do_canal_lixo_inorganico 
-    ##                                 0.2091046
+    ##  comp_ecotono_arborea encaixe_alt_antropica 
+    ##             0.2095068            -0.2281669
 
 ``` r
 estrutura_loadings_filtrados_PC2 <- estrutura_loadings[which(estrutura_loadings[,2] > 0.2 | estrutura_loadings[,2] < -0.2),2]
@@ -89,13 +93,13 @@ estrutura_loadings_filtrados_PC2
 ```
 
     ##      comp_ecotono_herbacea_ereta                  substrato_rocha 
-    ##                        0.2520818                       -0.2230341 
-    ##         tipo_de_canal_corredeira               tipo_de_canal_poco 
-    ##                       -0.2941114                       -0.2276796 
-    ##     tipo_de_canal_fluxo_continuo    comp_zona_riparia_veg_arborea 
-    ##                        0.2937503                       -0.2386225 
-    ##   comp_zona_riparia_veg_herbacea comp_zona_riparia_veg_herb_ereta 
-    ##                        0.2408681                        0.2682561
+    ##                        0.2248243                       -0.2114026 
+    ##         tipo_de_canal_corredeira     tipo_de_canal_fluxo_continuo 
+    ##                       -0.2578407                        0.2569003 
+    ##    comp_zona_riparia_veg_arborea   comp_zona_riparia_veg_herbacea 
+    ##                       -0.2192488                        0.2456757 
+    ## comp_zona_riparia_veg_herb_ereta                     encaixe_vale 
+    ##                        0.2569319                       -0.2253370
 
 ``` r
 estrutura_loadings_filtrados_PC3 <- estrutura_loadings[which(estrutura_loadings[,3] > 0.2 | estrutura_loadings[,3] < -0.2),3]
@@ -103,11 +107,9 @@ estrutura_loadings_filtrados_PC3
 ```
 
     ##               comp_ecotono_flutuante            substrato_galhos_pequenos 
-    ##                           -0.2952432                           -0.2697092 
-    ##            pert_zona_riparia_entulho  estrutura_dentro_do_canal_macrofita 
-    ##                            0.2151240                           -0.2612014 
-    ## estrutura_dentro_do_canal_herb_ereta 
-    ##                           -0.2198031
+    ##                           -0.3122663                           -0.2829659 
+    ##  estrutura_dentro_do_canal_macrofita estrutura_dentro_do_canal_herb_ereta 
+    ##                           -0.2747630                           -0.2239201
 
 ``` r
 estrutura_loadings_filtrados_PC4 <- estrutura_loadings[which(estrutura_loadings[,4] > 0.2 | estrutura_loadings[,4] < -0.2),4]
@@ -115,15 +117,15 @@ estrutura_loadings_filtrados_PC4
 ```
 
     ##                        substrato_cascalho 
-    ##                                 0.2987250 
+    ##                                 0.2870753 
     ##                           substrato_seixo 
-    ##                                 0.2711730 
+    ##                                 0.2692663 
     ##                substrato_litter_grosseiro 
-    ##                                -0.2398220 
-    ##            comp_zona_riparia_solo_exposto 
-    ##                                 0.2047686 
+    ##                                -0.2042895 
     ## estrutura_dentro_do_canal_banco_de_folhas 
-    ##                                -0.2508407
+    ##                                -0.2018773 
+    ##      tipo_de_encaixe_encaixado_canalizado 
+    ##                                -0.2342551
 
 ``` r
 estrutura_loadings_filtrados_PC5 <- estrutura_loadings[which(estrutura_loadings[,5] > 0.2 | estrutura_loadings[,5] < -0.2),5]
@@ -131,11 +133,11 @@ estrutura_loadings_filtrados_PC5
 ```
 
     ##                              dossel                     substrato_areia 
-    ##                          -0.2447722                          -0.3033599 
+    ##                          -0.2353283                          -0.3265303 
     ##                      substrato_lodo           substrato_galhos_pequenos 
-    ##                           0.2503019                          -0.2578395 
+    ##                           0.2131262                          -0.2650882 
     ## estrutura_dentro_do_canal_macrofita 
-    ##                          -0.2640236
+    ##                          -0.2677931
 
 ``` r
 estrutura_loadings_filtrados <- estrutura_loadings[which((estrutura_loadings[,1] > 0.2 | estrutura_loadings[,1] < -0.2) |
@@ -143,19 +145,17 @@ estrutura_loadings_filtrados <- estrutura_loadings[which((estrutura_loadings[,1]
 estrutura_loadings_filtrados
 ```
 
-    ##                                                    PC1         PC2
-    ## comp_ecotono_herbacea_ereta               -0.028653636  0.25208185
-    ## comp_ecotono_arborea                      -0.218764251 -0.07579779
-    ## substrato_rocha                           -0.101246502 -0.22303411
-    ## tipo_de_canal_corredeira                   0.021045789 -0.29411137
-    ## tipo_de_canal_poco                        -0.079258438 -0.22767956
-    ## tipo_de_canal_fluxo_continuo               0.003990507  0.29375035
-    ## pert_zona_riparia_lixo_inorganico          0.200687591  0.00184380
-    ## comp_zona_riparia_veg_arborea             -0.168900012 -0.23862247
-    ## comp_zona_riparia_veg_herbacea            -0.128949818  0.24086813
-    ## comp_zona_riparia_veg_herb_ereta          -0.081070691  0.26825614
-    ## estrutura_dentro_do_canal_entulho          0.213945418 -0.06114972
-    ## estrutura_dentro_do_canal_lixo_inorganico  0.209104620 -0.08546433
+    ##                                           PC1         PC2
+    ## comp_ecotono_herbacea_ereta       0.014319670  0.22482427
+    ## comp_ecotono_arborea              0.209506812 -0.05725049
+    ## substrato_rocha                   0.100474592 -0.21140265
+    ## tipo_de_canal_corredeira         -0.000684176 -0.25784066
+    ## tipo_de_canal_fluxo_continuo     -0.022998059  0.25690035
+    ## comp_zona_riparia_veg_arborea     0.166017778 -0.21924881
+    ## comp_zona_riparia_veg_herbacea    0.108954619  0.24567569
+    ## comp_zona_riparia_veg_herb_ereta  0.061656594  0.25693192
+    ## encaixe_vale                      0.101452756 -0.22533700
+    ## encaixe_alt_antropica            -0.228166892  0.07198920
 
 ``` r
 #write.csv(Eigenvalues_estrutura, "data/pcas_amb/estrutura_autovalores.csv")
