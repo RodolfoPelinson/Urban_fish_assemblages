@@ -408,16 +408,16 @@ est_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(est_PC1 =
     ## testing for quadratic effects...
 
     ## Time elapsed: 0 hr 0 min 11 sec
-    ## Time elapsed: 0 hr 0 min 23 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
     ##         df.diff      Dev        R2     p
-    ## est_PC1       2 91.13964 0.3966517 0.001
-    ## est_PC2       2 37.88000 0.2232342 0.434
+    ## est_PC1       2 95.87289 0.4202933 0.001
+    ## est_PC2       2 37.22101 0.2344924 0.324
 
     ## testing for linear effects...
 
     ## Time elapsed: 0 hr 0 min 22 sec
     ##         df.diff      Dev         R2     p
-    ## est_PC2       1 12.58174 0.08609846 0.637
+    ## est_PC2       1 11.28488 0.06805825 0.632
 
     ## No linear effects were found
 
@@ -428,15 +428,15 @@ agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PC1
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 9 sec
-    ## Time elapsed: 0 hr 0 min 20 sec
+    ## Time elapsed: 0 hr 0 min 10 sec
+    ## Time elapsed: 0 hr 0 min 24 sec
     ##          df.diff      Dev        R2     p
     ## agua_PC1       2 79.72771 0.3354866 0.001
     ## agua_PC2       2 43.46037 0.2109107 0.224
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 23 sec
+    ## Time elapsed: 0 hr 0 min 25 sec
     ##          df.diff      Dev        R2     p
     ## agua_PC2       1 23.84259 0.1270791 0.175
 
@@ -449,8 +449,8 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 11 sec
-    ## Time elapsed: 0 hr 0 min 21 sec
+    ## Time elapsed: 0 hr 0 min 13 sec
+    ## Time elapsed: 0 hr 0 min 23 sec
     ##           df.diff      Dev        R2     p
     ## bacia_PC1       2 58.56781 0.2659923 0.005
     ## bacia_PC2       2 73.00993 0.3858408 0.006
@@ -463,8 +463,8 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE) 
 ```
 
-    ## Time elapsed: 0 hr 0 min 6 sec
-    ## Time elapsed: 0 hr 0 min 11 sec
+    ## Time elapsed: 0 hr 0 min 7 sec
+    ## Time elapsed: 0 hr 0 min 13 sec
     ##      df.diff      Dev        R2     p
     ## MEM2       1 22.97168 0.1243038 0.017
     ## MEM3       1 20.11421 0.1105914 0.156
@@ -483,46 +483,46 @@ varpart_peixes$R2_fractions_com
 ```
 
     ##           R2_full_fraction R2_pure_fraction
-    ## estrutura        0.3966517       0.03306090
-    ## agua             0.3354866       0.04307880
-    ## bacia            0.5134271       0.01738897
-    ## urb              0.2848599       0.00566620
-    ## esp              0.1243038       0.00375549
+    ## estrutura        0.4202933      0.027003909
+    ## agua             0.3354866      0.041621579
+    ## bacia            0.5134271      0.023382500
+    ## urb              0.2848599      0.005243650
+    ## esp              0.1243038      0.006075381
 
 ``` r
 full_model2 <- varpart_peixes$R2_models$`estrutura-agua-bacia`
 full_model2
 ```
 
-    ## [1] 0.806249
+    ## [1] 0.7941543
 
 ``` r
 round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
 ```
 
     ##                               estrutura   agua  bacia    urb    esp
-    ## Gymnotus_pantherinus             0.3714 0.4489 0.8332 0.5094 0.0223
-    ## Phalloceros_harpagos             0.5322 0.2999 0.8111 0.2939 0.3576
-    ## Phalloceros_reisi                0.2247 0.5562 0.1742 0.2858 0.0398
-    ## Hollandichthys_multifasciatus    0.5118 0.2808 0.8408 0.2502 0.0299
-    ## Astyanax_lacustris               0.2375 0.3518 0.8336 0.4140 0.1074
-    ## Poecilia_reticulata              0.2759 0.3274 0.2152 0.1311 0.0837
-    ## Hoplosternum_littorale           0.4875 0.1595 0.2728 0.1659 0.3489
-    ## Singletons_and_doubletons        0.5322 0.2595 0.1264 0.2286 0.0047
+    ## Gymnotus_pantherinus             0.3873 0.4489 0.8332 0.5094 0.0223
+    ## Phalloceros_harpagos             0.5926 0.2999 0.8111 0.2939 0.3576
+    ## Phalloceros_reisi                0.2558 0.5562 0.1742 0.2858 0.0398
+    ## Hollandichthys_multifasciatus    0.4930 0.2808 0.8408 0.2502 0.0299
+    ## Astyanax_lacustris               0.2657 0.3518 0.8336 0.4140 0.1074
+    ## Poecilia_reticulata              0.3373 0.3274 0.2152 0.1311 0.0837
+    ## Hoplosternum_littorale           0.5453 0.1595 0.2728 0.1659 0.3489
+    ## Singletons_and_doubletons        0.4853 0.2595 0.1264 0.2286 0.0047
 
 ``` r
 round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
 ```
 
     ##                               estrutura   agua  bacia    urb    esp
-    ## Gymnotus_pantherinus             0.0000 0.0000 0.0013 0.0000 0.0000
-    ## Phalloceros_harpagos             0.0004 0.0000 0.0003 0.0000 0.0000
-    ## Phalloceros_reisi                0.0282 0.3050 0.0915 0.0242 0.0287
+    ## Gymnotus_pantherinus             0.0000 0.0000 0.0024 0.0000 0.0000
+    ## Phalloceros_harpagos             0.0004 0.0000 0.0002 0.0000 0.0150
+    ## Phalloceros_reisi                0.0244 0.2921 0.0901 0.0151 0.0280
     ## Hollandichthys_multifasciatus    0.0000 0.0000 0.0002 0.0000 0.0000
-    ## Astyanax_lacustris               0.0000 0.0000 0.0008 0.0000 0.0000
-    ## Poecilia_reticulata              0.0001 0.0000 0.0058 0.0000 0.0000
+    ## Astyanax_lacustris               0.0000 0.0000 0.0102 0.0000 0.0000
+    ## Poecilia_reticulata              0.0001 0.0000 0.0203 0.0000 0.0000
     ## Hoplosternum_littorale           0.0002 0.0000 0.0000 0.0000 0.0002
-    ## Singletons_and_doubletons        0.2356 0.0395 0.0391 0.0211 0.0011
+    ## Singletons_and_doubletons        0.1910 0.0408 0.0637 0.0267 0.0053
 
 ``` r
 full_model_sp <- varpart_peixes$R2_models_sp$estrutura.agua.bacia
@@ -531,13 +531,13 @@ full_model_sp
 ```
 
     ##          Gymnotus_pantherinus          Phalloceros_harpagos 
-    ##                     0.8336651                     0.8468777 
+    ##                     0.8336642                     0.8469033 
     ##             Phalloceros_reisi Hollandichthys_multifasciatus 
-    ##                     0.7753342                     0.8410156 
+    ##                     0.7313394                     0.8410153 
     ##            Astyanax_lacustris           Poecilia_reticulata 
-    ##                     0.8406311                     0.8491709 
+    ##                     0.8406026                     0.8490561 
     ##        Hoplosternum_littorale     Singletons_and_doubletons 
-    ##                     0.8161950                     0.6471028
+    ##                     0.8152508                     0.5954026
 
 Looking at fractions related to the urbanization process
 
@@ -550,8 +550,8 @@ varpart_urb_est$R2_fractions_com
 ```
 
     ##           R2_full_fraction R2_pure_fraction
-    ## estrutura        0.3966517        0.2309351
-    ## urb              0.2848599        0.1191434
+    ## estrutura        0.4202933        0.2444068
+    ## urb              0.2848599        0.1089734
 
 ``` r
 shared_urb_estrutura <- (varpart_peixes$R2_models$estrutura + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`estrutura-urb`
@@ -609,7 +609,7 @@ p_est <- anova(varpart_peixes$model_null,
                varpart_peixes$models$estrutura,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 10 sec
 
 ``` r
 p_est
@@ -623,7 +623,7 @@ p_est
     ## Multivariate test:
     ##                                 Res.Df Df.diff   Dev Pr(>Dev)    
     ## varpart_peixes$model_null           29                           
-    ## varpart_peixes$models$estrutura     27       2 91.14    0.001 ***
+    ## varpart_peixes$models$estrutura     27       2 95.87    0.001 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -635,7 +635,7 @@ p_bacia <- anova(varpart_peixes$model_null,
                  varpart_peixes$models$bacia,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 14 sec
+    ## Time elapsed: 0 hr 0 min 16 sec
 
 ``` r
 p_bacia
@@ -661,7 +661,7 @@ p_agua <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$agua,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 10 sec
 
 ``` r
 p_agua
@@ -687,7 +687,7 @@ p_esp <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$esp,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 6 sec
+    ## Time elapsed: 0 hr 0 min 7 sec
 
 ``` r
 p_esp
@@ -713,7 +713,7 @@ p_urb <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$urb,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 8 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
 
 ``` r
 p_urb
@@ -739,7 +739,7 @@ p_est_pure <- anova(varpart_peixes$models$`agua-bacia-urb-esp`,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 7 sec
+    ## Time elapsed: 0 hr 0 min 8 sec
 
 ``` r
 p_est_pure
@@ -753,10 +753,10 @@ p_est_pure
     ## Multivariate test:
     ##                                                      Res.Df Df.diff   Dev
     ## varpart_peixes$models$`agua-bacia-urb-esp`               20              
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 18.81
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 14.86
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`agua-bacia-urb-esp`                   
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.408
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.485
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -766,7 +766,7 @@ p_bacia_pure <- anova(varpart_peixes$models$`estrutura-agua-urb-esp`,
                       varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 10 sec
+    ## Time elapsed: 0 hr 0 min 12 sec
 
 ``` r
 p_bacia_pure
@@ -780,10 +780,10 @@ p_bacia_pure
     ## Multivariate test:
     ##                                                      Res.Df Df.diff   Dev
     ## varpart_peixes$models$`estrutura-agua-urb-esp`           22              
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       4 15.49
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       4 17.91
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-urb-esp`               
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     0.85
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.856
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -793,7 +793,7 @@ p_agua_pure <- anova(varpart_peixes$models$`estrutura-bacia-urb-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 10 sec
+    ## Time elapsed: 0 hr 0 min 11 sec
 
 ``` r
 p_agua_pure
@@ -807,10 +807,10 @@ p_agua_pure
     ## Multivariate test:
     ##                                                      Res.Df Df.diff   Dev
     ## varpart_peixes$models$`estrutura-bacia-urb-esp`          20              
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 32.08
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 30.69
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-bacia-urb-esp`              
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.159
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.173
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -820,7 +820,7 @@ p_urb_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 5 sec
+    ## Time elapsed: 0 hr 0 min 6 sec
 
 ``` r
 p_urb_pure
@@ -834,10 +834,10 @@ p_urb_pure
     ## Multivariate test:
     ##                                                      Res.Df Df.diff   Dev
     ## varpart_peixes$models$`estrutura-agua-bacia-esp`         20              
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 5.292
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 4.146
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-bacia-esp`             
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     0.73
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.799
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -847,7 +847,7 @@ p_esp_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-urb`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 6 sec
+    ## Time elapsed: 0 hr 0 min 7 sec
 
 ``` r
 p_esp_pure
@@ -861,10 +861,10 @@ p_esp_pure
     ## Multivariate test:
     ##                                                      Res.Df Df.diff   Dev
     ## varpart_peixes$models$`estrutura-agua-bacia-urb`         19              
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       1 4.393
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       1 5.319
     ##                                                      Pr(>Dev)
     ## varpart_peixes$models$`estrutura-agua-bacia-urb`             
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.463
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.464
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
     ##  P-value calculated using 999 iterations via PIT-trap resampling.
@@ -874,7 +874,7 @@ p_full_model <- anova(varpart_peixes$model_null,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 12 sec
+    ## Time elapsed: 0 hr 0 min 14 sec
 
 ``` r
 p_full_model
@@ -886,12 +886,12 @@ p_full_model
     ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
     ## 
     ## Multivariate test:
-    ##                                                      Res.Df Df.diff Dev
-    ## varpart_peixes$model_null                                29            
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18      11 248
+    ##                                                      Res.Df Df.diff   Dev
+    ## varpart_peixes$model_null                                29              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18      11 244.1
     ##                                                      Pr(>Dev)  
     ## varpart_peixes$model_null                                      
-    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.015 *
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.013 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -1035,7 +1035,7 @@ parameters and watershed predictores are redundant with urban cover
 estrutura_without_urb
 ```
 
-    ## [1] 0.2309351
+    ## [1] 0.2444068
 
 ``` r
 agua_without_urb
@@ -1060,7 +1060,7 @@ esp_without_urb
 1 - estrutura_without_urb/varpart_peixes$R2_fractions_com[1,1]
 ```
 
-    ## [1] 0.4177886
+    ## [1] 0.4184852
 
 ``` r
 #Water parametersc
@@ -1091,7 +1091,7 @@ p_est_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`estrutura-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 19 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
 
 ``` r
 p_est_no_urb
@@ -1105,7 +1105,7 @@ p_est_no_urb
     ## Multivariate test:
     ##                                       Res.Df Df.diff   Dev Pr(>Dev)  
     ## varpart_peixes$models$urb                 27                         
-    ## varpart_peixes$models$`estrutura-urb`     25       2 62.84    0.025 *
+    ## varpart_peixes$models$`estrutura-urb`     25       2 65.36    0.018 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
@@ -1141,7 +1141,7 @@ p_bacia_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`bacia-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 17 sec
+    ## Time elapsed: 0 hr 0 min 18 sec
 
 ``` r
 p_bacia_no_urb
@@ -1276,7 +1276,7 @@ barplot(full_model_sp, ylim = c(0,1), las = 2, border = "transparent", col = "#C
 par(new = TRUE)
 #pure_scaleds <- rbind(pure_est_scaled, pure_agua_scaled, pure_bacia_scaled, pure_urb_scaled, pure_esp_scaled)
 pure_scaleds <- t(sp_pure_frac_scaled)
-barplot(pure_scaleds, ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "#AEC7E8", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,12.5), yaxt = "n")
+barplot(pure_scaleds, ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "grey30", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,12.5), yaxt = "n")
 box(bty = "l")
 names <- colnames(pure_scaleds)
 names <- gsub("_"," ", names)
@@ -1298,7 +1298,7 @@ par(mar = c(2,4,1,1))
 barplot(as.matrix(full_model), ylim = c(0,1), las = 2, border = "transparent", col = "#C7C7C7", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,2), yaxt = "n")
 par(new = TRUE)
 
-barplot(as.matrix(pure_comm_scaled), ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "#AEC7E8", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,2), yaxt = "n")
+barplot(as.matrix(pure_comm_scaled), ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "grey30", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,2), yaxt = "n")
 box(bty = "l")
 axis(1, at = c(1), gap.axis = -10, tick = FALSE, labels = "Community", las = 1, font = 1, line = -0.5)
 #title(ylab = "Likelihood ratio R²", cex.lab = 1.25)
@@ -1640,7 +1640,7 @@ split.screen(matrix(c(0  , 0.5, 0.6666666, 1  ,
 screen(1)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_urb[,NOT_poecilidae])){
@@ -1652,7 +1652,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,600), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_urb[,poecilidae])){
   lines(x = urb_plot, y = predicted_urb[,poecilidae][,i], col = "white", lwd = 5)
@@ -1674,7 +1674,7 @@ letters(x = 5, y = 95, "a)", cex = 1.5)
 screen(2)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_est[,NOT_poecilidae])){
@@ -1686,7 +1686,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,600), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_est[,poecilidae])){
   lines(x = newdata_est$est_PC1, y = predicted_est[,poecilidae][,i], col = "white", lwd = 5)
@@ -1702,11 +1702,11 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
-mtext("Inorganic and construction ", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+mtext("Arboreal vegetation", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
 
-mtext("Arboreal vegetation", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
+mtext("Anthropogenic entrenchment", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
 
 
 title(xlab = "Stream ", line = 0.5)
@@ -1721,7 +1721,7 @@ letters(x = 5, y = 95, "b)", cex = 1.5)
 screen(3)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_agua[,NOT_poecilidae])){
@@ -1733,7 +1733,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,600), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_agua[,poecilidae])){
   lines(x = newdata_agua$agua_PC1, y = predicted_agua[,poecilidae][,i], col = "white", lwd = 5)
@@ -1775,7 +1775,7 @@ letters(x = 5, y = 95, "c)", cex = 1.5)
 screen(4)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_bacia1[,NOT_poecilidae])){
@@ -1787,7 +1787,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,400), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_bacia1[,poecilidae])){
   lines(x = newdata_bacia1$bacia_PC1, y = predicted_bacia1[,poecilidae][,i], col = "white", lwd = 5)
@@ -1823,7 +1823,7 @@ letters(x = 5, y = 95, "d)", cex = 1.5)
 screen(5)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_bacia2[,NOT_poecilidae])){
@@ -1835,7 +1835,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,400), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_bacia2[,poecilidae])){
   lines(x = newdata_bacia2$bacia_PC2, y = predicted_bacia2[,poecilidae][,i], col = "white", lwd = 5)
@@ -2069,11 +2069,11 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
-mtext("Inorganic and construction ", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+mtext("Arboreal vegetation", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
 
-mtext("Arboreal vegetation", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
+mtext("Anthropogenic entrenchment", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
 
 
 title(xlab = "Stream ", line = 0.5)

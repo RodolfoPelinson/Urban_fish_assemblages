@@ -199,6 +199,9 @@ names_estrutura[names_estrutura == "comp_zona_riparia_veg_herbacea"] <- "RZC - H
 names_estrutura[names_estrutura == "comp_zona_riparia_veg_herb_ereta"] <- "RZC - Upright Herb. veg."
 names_estrutura[names_estrutura == "estrutura_dentro_do_canal_entulho"] <- "SITC - Construction waste"
 names_estrutura[names_estrutura == "estrutura_dentro_do_canal_lixo_inorganico"] <- "SITC - Inorganic waste"
+
+names_estrutura[names_estrutura == "encaixe_vale"] <- "Entrenchment - valley"
+names_estrutura[names_estrutura == "encaixe_alt_antropica"] <- "Entrenchment - anthropogenic"
 ```
 
 ### PCA watershed descriptors

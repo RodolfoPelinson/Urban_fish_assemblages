@@ -294,7 +294,7 @@ names_func[names_func == "body_size"] <- "BS"
 
 Assessing effects on community responses:
 
-```{r, warning=FALSE, cache = TRUE}
+```{r, warning=FALSE, cache = FALSE}
 
 urb_pred <- data.frame(urb = urb, urb_squared = urb^2)
 colnames(urb_pred) <- c("urb", "urb_squared")
@@ -540,7 +540,7 @@ names_func[names_func == "niche_amplitude"] <- "Troph. generalist"
 
 Assessing effects on community responses:
 
-```{r, warning=FALSE, cache = TRUE}
+```{r, warning=FALSE, cache = FALSE}
 
 
 

@@ -572,7 +572,7 @@ barplot(full_model_sp, ylim = c(0,1), las = 2, border = "transparent", col = "#C
 par(new = TRUE)
 #pure_scaleds <- rbind(pure_est_scaled, pure_agua_scaled, pure_bacia_scaled, pure_urb_scaled, pure_esp_scaled)
 pure_scaleds <- t(sp_pure_frac_scaled)
-barplot(pure_scaleds, ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "#AEC7E8", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,12.5), yaxt = "n")
+barplot(pure_scaleds, ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "grey30", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,12.5), yaxt = "n")
 box(bty = "l")
 names <- colnames(pure_scaleds)
 names <- gsub("_"," ", names)
@@ -594,7 +594,7 @@ par(mar = c(2,4,1,1))
 barplot(as.matrix(full_model), ylim = c(0,1), las = 2, border = "transparent", col = "#C7C7C7", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,2), yaxt = "n")
 par(new = TRUE)
 
-barplot(as.matrix(pure_comm_scaled), ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "#AEC7E8", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,2), yaxt = "n")
+barplot(as.matrix(pure_comm_scaled), ylim = c(0,1), las = 2, col = c("#98DF8A", "#9EDAE5", "#FFBB78", "grey30", "#C49C94"), border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = 0.5, xlim = c(0,2), yaxt = "n")
 box(bty = "l")
 axis(1, at = c(1), gap.axis = -10, tick = FALSE, labels = "Community", las = 1, font = 1, line = -0.5)
 #title(ylab = "Likelihood ratio R²", cex.lab = 1.25)
@@ -930,7 +930,7 @@ split.screen(matrix(c(0  , 0.5, 0.6666666, 1  ,
 screen(1)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_urb[,NOT_poecilidae])){
@@ -942,7 +942,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,600), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(0,100), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_urb[,poecilidae])){
   lines(x = urb_plot, y = predicted_urb[,poecilidae][,i], col = "white", lwd = 5)
@@ -964,7 +964,7 @@ letters(x = 5, y = 95, "a)", cex = 1.5)
 screen(2)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_est[,NOT_poecilidae])){
@@ -976,7 +976,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,600), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_est$est_PC1),max(newdata_est$est_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_est[,poecilidae])){
   lines(x = newdata_est$est_PC1, y = predicted_est[,poecilidae][,i], col = "white", lwd = 5)
@@ -992,11 +992,11 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
-mtext("Inorganic and construction ", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+mtext("Arboreal vegetation", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
 
-mtext("Arboreal vegetation", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
+mtext("Anthropogenic entrenchment", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
 
 
 title(xlab = "Stream ", line = 0.5)
@@ -1011,7 +1011,7 @@ letters(x = 5, y = 95, "b)", cex = 1.5)
 screen(3)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_agua[,NOT_poecilidae])){
@@ -1023,7 +1023,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,600), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_agua$agua_PC1),max(newdata_agua$agua_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_agua[,poecilidae])){
   lines(x = newdata_agua$agua_PC1, y = predicted_agua[,poecilidae][,i], col = "white", lwd = 5)
@@ -1065,7 +1065,7 @@ letters(x = 5, y = 95, "c)", cex = 1.5)
 screen(4)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_bacia1[,NOT_poecilidae])){
@@ -1077,7 +1077,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,400), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_bacia1$bacia_PC1),max(newdata_bacia1$bacia_PC1)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_bacia1[,poecilidae])){
   lines(x = newdata_bacia1$bacia_PC1, y = predicted_bacia1[,poecilidae][,i], col = "white", lwd = 5)
@@ -1113,7 +1113,7 @@ letters(x = 5, y = 95, "d)", cex = 1.5)
 screen(5)
 
 par(mar = c(4,4,1,4), bty = "u")
-plot(NA, ylim = c(0,25), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,35), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 
 for(i in 1:ncol(predicted_bacia2[,NOT_poecilidae])){
@@ -1125,7 +1125,7 @@ axis(2, labels = FALSE)
 axis(2, labels = TRUE, tick = FALSE, line = -0.5)
 
 par(new = TRUE)
-plot(NA, ylim = c(0,400), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plot(NA, ylim = c(0,700), xlim = c(min(newdata_bacia2$bacia_PC2),max(newdata_bacia2$bacia_PC2)), xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 
 for(i in 1:ncol(predicted_bacia2[,poecilidae])){
   lines(x = newdata_bacia2$bacia_PC2, y = predicted_bacia2[,poecilidae][,i], col = "white", lwd = 5)
@@ -1370,11 +1370,11 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
-mtext("Inorganic and construction ", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
-mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+mtext("Arboreal vegetation", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("waste inside and",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+#mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
 
-mtext("Arboreal vegetation", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
+mtext("Anthropogenic entrenchment", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est$est_PC1)-0.4)
 
 
 title(xlab = "Stream ", line = 0.5)
