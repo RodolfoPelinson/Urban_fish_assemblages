@@ -641,6 +641,8 @@ labels <- c("Urban cover", "Stream structure (PC1)",  "Water parameters (PC1)", 
 
 ```{r, warning=FALSE}
 
+set.seed(1)
+
 #pdf("plots/non_morph_func_effects_quad.pdf", width = 9, height = 8, pointsize = 12)
 
 close.screen(all.screens = TRUE)
@@ -674,9 +676,9 @@ Arrows(x0 <- rep(0, nrow(non_morph_func_loadings_filtrados)),
        y1 <- non_morph_func_loadings_filtrados[,2], arr.type = "triangle", arr.length = 0.4, col = "#F4CAE4", lwd = 1.5)
 
 #points(non_morph_func_PCs[,1],non_morph_func_PCs[,2], col = "black", bg = "white", pch = 21, cex = 1.5)
-text(jitter(non_morph_func_PCs[,1], amount = 0.1),
-     jitter(non_morph_func_PCs[,2], amount = 0.1),
-     labels = sp_names, col =  "black", font = 3)
+text(jitter(non_morph_func_PCs[,1], amount = 0.05),
+     jitter(non_morph_func_PCs[,2], amount = 0.05),
+     labels = sp_names, col =  "black", font = 3, xpd = NA)
 
 
 text(x = non_morph_func_loadings_filtrados[,1], y = non_morph_func_loadings_filtrados[,2], labels = names_func, cex = 1, col = "black", font = 2)

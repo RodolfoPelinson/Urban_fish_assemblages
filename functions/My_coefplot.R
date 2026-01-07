@@ -38,7 +38,7 @@ My_coefplot <- function (mles, upper, lower, species_labels = NULL, xlab = "",
   lwd.seq[which(lower < 0 & upper < 0)] <- 2
   lwd.seq[which(lower > 0 & upper > 0)] <- 2
 
-  lwd.seq[which(mles < -10 | mles > 10)] <- 1
+  #lwd.seq[which(mles < -10 | mles > 10)] <- 1
 
   cex.seq <- rep(1, length(mles))
   cex.seq[which(lower < 0 & upper < 0)] <- cex_sig

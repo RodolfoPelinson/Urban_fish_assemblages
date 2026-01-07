@@ -194,16 +194,6 @@ full_model_sp
 Looking at fractions related to the urbanization process
 
 ```{r}
-varpart_urb_est <- varpart_manyglm(resp = assembleia_peixes_rm, pred = list(estrutura = est_FS$new_x,
-                                                                            urb =  data.frame(urb = urb$urb, urb_squared = 
-                                                                                                urb$urb^2)), DF_adj_r2 = FALSE)
-
-varpart_urb_est$R2_fractions_com
-
-```
-
-
-```{r}
 shared_urb_estrutura <- (varpart_peixes$R2_models$estrutura + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`estrutura-urb`
 shared_urb_agua <- (varpart_peixes$R2_models$agua + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`agua-urb`
 shared_urb_bacia <- (varpart_peixes$R2_models$bacia + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`bacia-urb`
@@ -1291,7 +1281,7 @@ NOT_poecilidae <- which(colnames(loess_pred_urb) != "Phalloceros_reisi" & colnam
 
 ```{r, warning=FALSE}
 
-#pdf("plots/predictions_loess.pdf", width = 11, height = 10, pointsize = 12)
+pdf("plots/predictions_loess.pdf", width = 11, height = 10, pointsize = 12)
 
 
 
@@ -1547,7 +1537,7 @@ font[which(names == "Singletons and doubletons")] <- 1
 
 legend(x = 50, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font)
 
-#dev.off()
+dev.off()
   
 
 
