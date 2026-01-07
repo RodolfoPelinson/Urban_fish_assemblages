@@ -62,12 +62,20 @@ Removing species with less than 2 presences and combining them into the artifici
 ```{r, warning=FALSE, message = FALSE}
 assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
 assembleia_peixes <- assembleia_peixes[,-c(4,11)]
+
+ncol(assembleia_peixes)
+
 assembleia_peixes_rm <- remove_sp(com = assembleia_peixes, n_sp = 2)
 
 singletons_doubletons <- remove_sp(assembleia_peixes, 2, less_equal = TRUE)
 doubletons <- remove_sp(singletons_doubletons, 1)
 
+ncol(doubletons)
+
 singletons <- remove_sp(assembleia_peixes, 1, less_equal = TRUE)
+
+ncol(singletons)
+
 
 sing_doub_ab <- rowSums(singletons_doubletons)
 sing_ab <- rowSums(singletons)
@@ -77,6 +85,27 @@ sing <- rowSums(decostand(singletons, method = "pa"))
 
 assembleia_peixes_rm <- data.frame(assembleia_peixes_rm, Singletons_and_doubletons = sing_doub_ab)
 ```
+
+
+Percentage of Poecilidae
+
+```{r}
+
+abundances <- rowSums(assembleia_peixes)
+total_ind <- sum(abundances)
+total_ind
+
+abundances_poecilidae <- rowSums(assembleia_peixes[,c(3,4,9,18)])
+total_ind_poecilidae <- sum(abundances_poecilidae)
+total_ind_poecilidae
+
+
+total_ind_poecilidae/total_ind
+
+
+```
+
+
 
 Preparing and standardizing predictors
 
@@ -1281,7 +1310,7 @@ NOT_poecilidae <- which(colnames(loess_pred_urb) != "Phalloceros_reisi" & colnam
 
 ```{r, warning=FALSE}
 
-pdf("plots/predictions_loess.pdf", width = 11, height = 10, pointsize = 12)
+#pdf("plots/predictions_loess.pdf", width = 11, height = 10, pointsize = 12)
 
 
 
@@ -1537,7 +1566,7 @@ font[which(names == "Singletons and doubletons")] <- 1
 
 legend(x = 50, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font)
 
-dev.off()
+#dev.off()
   
 
 

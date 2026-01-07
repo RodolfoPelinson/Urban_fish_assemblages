@@ -1,7 +1,7 @@
 Environmental PCAs
 ================
 Rodolfo Pelinson
-2026-01-06
+2026-01-07
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -387,7 +387,7 @@ points(estrutura_PCs[,1],estrutura_PCs[,2], col = "black", bg = col, pch = 21, c
 #text(estrutura_PCs[,1],estrutura_PCs[,2], labels = rownames(estrutura_PCs))
 
 
-text(x = estrutura_loadings_filtrados_new[,1] * 0.9, y = estrutura_loadings_filtrados_new[,2] * 0.9, labels = names_estrutura, cex = 0.9, font = 2)
+text(x = estrutura_loadings_filtrados_new[,1] * 0.9, y = estrutura_loadings_filtrados_new[,2] * 0.9, labels = names_estrutura, cex = 0.9, font = 2, xpd = NA)
 
 axis(1, cex.axis = 1.25)
 axis(2, cex.axis = 1.25, las = 2)
@@ -425,7 +425,7 @@ Arrows(x0 <- rep(0, nrow(agua_loadings_filtrados_new)),
 points(agua_PCs[,1],agua_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
 #text(agua_PCs[,1],agua_PCs[,2], labels = rownames(agua_PCs))
 
-text(x = agua_loadings_filtrados_new[,1]*1.15, y = agua_loadings_filtrados_new[,2]*1.15, labels = names_agua, cex = 1, font = 2)
+text(x = agua_loadings_filtrados_new[,1]*1.15, y = agua_loadings_filtrados_new[,2]*1.15, labels = names_agua, cex = 1, font = 2, xpd = NA)
 
 axis(1, cex.axis = 1.25)
 axis(2, cex.axis = 1.25, las = 2)
@@ -463,7 +463,7 @@ Arrows(x0 <- rep(0, nrow(bacia_loadings_filtrados_new)),
 points(bacia_PCs[,1],bacia_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
 #text(bacia_PCs[,1],bacia_PCs[,2], labels = rownames(bacia_PCs))
 
-text(x = bacia_loadings_filtrados_new[,1]*1.15, y = bacia_loadings_filtrados_new[,2]*1.15, labels = names_bacia, cex = 1, font = 2)
+text(x = bacia_loadings_filtrados_new[,1]*1.15, y = bacia_loadings_filtrados_new[,2]*1.15, labels = names_bacia, cex = 1, font = 2, xpd = NA)
 
 axis(1, cex.axis = 1.25)
 axis(2, cex.axis = 1.25, las = 2)

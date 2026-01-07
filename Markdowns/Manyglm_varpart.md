@@ -1,7 +1,7 @@
 Manyglm_varpart
 ================
 Rodolfo Pelinson
-2026-01-06
+2026-01-07
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -120,13 +120,32 @@ artificial “Singletons and doubletons” species.
 ``` r
 assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
 assembleia_peixes <- assembleia_peixes[,-c(4,11)]
+
+ncol(assembleia_peixes)
+```
+
+    ## [1] 23
+
+``` r
 assembleia_peixes_rm <- remove_sp(com = assembleia_peixes, n_sp = 2)
 
 singletons_doubletons <- remove_sp(assembleia_peixes, 2, less_equal = TRUE)
 doubletons <- remove_sp(singletons_doubletons, 1)
 
+ncol(doubletons)
+```
+
+    ## [1] 5
+
+``` r
 singletons <- remove_sp(assembleia_peixes, 1, less_equal = TRUE)
 
+ncol(singletons)
+```
+
+    ## [1] 11
+
+``` r
 sing_doub_ab <- rowSums(singletons_doubletons)
 sing_ab <- rowSums(singletons)
 
@@ -135,6 +154,30 @@ sing <- rowSums(decostand(singletons, method = "pa"))
 
 assembleia_peixes_rm <- data.frame(assembleia_peixes_rm, Singletons_and_doubletons = sing_doub_ab)
 ```
+
+Percentage of Poecilidae
+
+``` r
+abundances <- rowSums(assembleia_peixes)
+total_ind <- sum(abundances)
+total_ind
+```
+
+    ## [1] 3709
+
+``` r
+abundances_poecilidae <- rowSums(assembleia_peixes[,c(3,4,9,18)])
+total_ind_poecilidae <- sum(abundances_poecilidae)
+total_ind_poecilidae
+```
+
+    ## [1] 3589
+
+``` r
+total_ind_poecilidae/total_ind
+```
+
+    ## [1] 0.9676463
 
 Preparing and standardizing predictors
 
@@ -394,7 +437,7 @@ env_data.frame <- data.frame(est_PC1 = estrutura_PCs[,1],
 corrplot(cor(env_data.frame), type = "lower", diag = FALSE)
 ```
 
-![](Manyglm_varpart_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](Manyglm_varpart_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 The first PCs seem all correlated with each other.
 
@@ -407,15 +450,15 @@ est_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(est_PC1 =
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 11 sec
-    ## Time elapsed: 0 hr 0 min 21 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 17 sec
     ##         df.diff      Dev        R2     p
     ## est_PC1       2 95.87289 0.4202933 0.001
     ## est_PC2       2 37.22101 0.2344924 0.324
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 22 sec
+    ## Time elapsed: 0 hr 0 min 18 sec
     ##         df.diff      Dev         R2     p
     ## est_PC2       1 11.28488 0.06805825 0.632
 
@@ -428,15 +471,15 @@ agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PC1
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 10 sec
-    ## Time elapsed: 0 hr 0 min 24 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 20 sec
     ##          df.diff      Dev        R2     p
     ## agua_PC1       2 79.72771 0.3354866 0.001
     ## agua_PC2       2 43.46037 0.2109107 0.224
 
     ## testing for linear effects...
 
-    ## Time elapsed: 0 hr 0 min 25 sec
+    ## Time elapsed: 0 hr 0 min 22 sec
     ##          df.diff      Dev        R2     p
     ## agua_PC2       1 23.84259 0.1270791 0.175
 
@@ -449,8 +492,8 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 
     ## testing for quadratic effects...
 
-    ## Time elapsed: 0 hr 0 min 13 sec
-    ## Time elapsed: 0 hr 0 min 23 sec
+    ## Time elapsed: 0 hr 0 min 11 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
     ##           df.diff      Dev        R2     p
     ## bacia_PC1       2 58.56781 0.2659923 0.005
     ## bacia_PC2       2 73.00993 0.3858408 0.006
@@ -463,8 +506,8 @@ bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_P
 esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE) 
 ```
 
-    ## Time elapsed: 0 hr 0 min 7 sec
-    ## Time elapsed: 0 hr 0 min 13 sec
+    ## Time elapsed: 0 hr 0 min 6 sec
+    ## Time elapsed: 0 hr 0 min 11 sec
     ##      df.diff      Dev        R2     p
     ## MEM2       1 22.97168 0.1243038 0.017
     ## MEM3       1 20.11421 0.1105914 0.156
@@ -542,18 +585,6 @@ full_model_sp
 Looking at fractions related to the urbanization process
 
 ``` r
-varpart_urb_est <- varpart_manyglm(resp = assembleia_peixes_rm, pred = list(estrutura = est_FS$new_x,
-                                                                            urb =  data.frame(urb = urb$urb, urb_squared = 
-                                                                                                urb$urb^2)), DF_adj_r2 = FALSE)
-
-varpart_urb_est$R2_fractions_com
-```
-
-    ##           R2_full_fraction R2_pure_fraction
-    ## estrutura        0.4202933        0.2444068
-    ## urb              0.2848599        0.1089734
-
-``` r
 shared_urb_estrutura <- (varpart_peixes$R2_models$estrutura + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`estrutura-urb`
 shared_urb_agua <- (varpart_peixes$R2_models$agua + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`agua-urb`
 shared_urb_bacia <- (varpart_peixes$R2_models$bacia + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`bacia-urb`
@@ -609,7 +640,7 @@ p_est <- anova(varpart_peixes$model_null,
                varpart_peixes$models$estrutura,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 10 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
 
 ``` r
 p_est
@@ -635,7 +666,7 @@ p_bacia <- anova(varpart_peixes$model_null,
                  varpart_peixes$models$bacia,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 16 sec
+    ## Time elapsed: 0 hr 0 min 14 sec
 
 ``` r
 p_bacia
@@ -661,7 +692,7 @@ p_agua <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$agua,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 10 sec
+    ## Time elapsed: 0 hr 0 min 9 sec
 
 ``` r
 p_agua
@@ -687,7 +718,7 @@ p_esp <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$esp,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 7 sec
+    ## Time elapsed: 0 hr 0 min 6 sec
 
 ``` r
 p_esp
@@ -713,7 +744,7 @@ p_urb <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$urb,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 9 sec
+    ## Time elapsed: 0 hr 0 min 8 sec
 
 ``` r
 p_urb
@@ -739,7 +770,7 @@ p_est_pure <- anova(varpart_peixes$models$`agua-bacia-urb-esp`,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 8 sec
+    ## Time elapsed: 0 hr 0 min 7 sec
 
 ``` r
 p_est_pure
@@ -766,7 +797,7 @@ p_bacia_pure <- anova(varpart_peixes$models$`estrutura-agua-urb-esp`,
                       varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 12 sec
+    ## Time elapsed: 0 hr 0 min 11 sec
 
 ``` r
 p_bacia_pure
@@ -793,7 +824,7 @@ p_agua_pure <- anova(varpart_peixes$models$`estrutura-bacia-urb-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 11 sec
+    ## Time elapsed: 0 hr 0 min 10 sec
 
 ``` r
 p_agua_pure
@@ -847,7 +878,7 @@ p_esp_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-urb`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 7 sec
+    ## Time elapsed: 0 hr 0 min 6 sec
 
 ``` r
 p_esp_pure
@@ -874,7 +905,7 @@ p_full_model <- anova(varpart_peixes$model_null,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 14 sec
+    ## Time elapsed: 0 hr 0 min 12 sec
 
 ``` r
 p_full_model
@@ -1091,7 +1122,7 @@ p_est_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`estrutura-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 21 sec
+    ## Time elapsed: 0 hr 0 min 20 sec
 
 ``` r
 p_est_no_urb
@@ -1141,7 +1172,7 @@ p_bacia_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`bacia-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 18 sec
+    ## Time elapsed: 0 hr 0 min 17 sec
 
 ``` r
 p_bacia_no_urb
