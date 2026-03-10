@@ -212,6 +212,7 @@ functional <- functional[match(colnames(assembleia_peixes_rm), rownames(function
 
 
 
+
 ### Trait PCAs
 
 #### Morphological traits

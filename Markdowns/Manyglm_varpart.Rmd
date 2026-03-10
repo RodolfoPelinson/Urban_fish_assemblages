@@ -87,6 +87,21 @@ assembleia_peixes_rm <- data.frame(assembleia_peixes_rm, Singletons_and_doubleto
 ```
 
 
+```{r}
+
+colSums(assembleia_peixes)[order(colSums(assembleia_peixes), decreasing = TRUE)]
+
+
+assembleia_peixes_oc <- colSums(decostand(assembleia_peixes, method = "pa"))
+
+assembleia_peixes_oc[order(assembleia_peixes_oc, decreasing = TRUE)]
+
+
+
+```
+
+
+
 Percentage of Poecilidae
 
 ```{r}

@@ -1,7 +1,7 @@
 Environmental PCAs
 ================
 Rodolfo Pelinson
-2026-01-07
+2026-01-27
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -158,6 +158,11 @@ estrutura_loadings_filtrados
     ## encaixe_alt_antropica            -0.228166892  0.07198920
 
 ``` r
+urb_cors_estrutura <- rep(NA, ncol(estrutura_PCs))
+for(i in 1:ncol(estrutura_PCs)){
+  urb_cors_estrutura[i] <- cor(estrutura_PCs[,i], urb)
+}
+
 #write.csv(Eigenvalues_estrutura, "data/pcas_amb/estrutura_autovalores.csv")
 #write.csv(estrutura_PCs, "data/pcas_amb/estrutura_PCs.csv")
 #write.csv(estrutura_loadings, "data/pcas_amb/estrutura_loadings.csv")
@@ -174,8 +179,9 @@ estrutura_loadings_filtrados_new <- estrutura_loadings_filtrados * scaler * 0.8
 
 #estrutura_PCs <- jitter(estrutura_PCs, amount = 0.1)
 
-pc1_label_estrutura <- paste("PC1 (",round(importance_estrutura[1]*100,2),"%)",sep = "")
-pc2_label_estrutura <- paste("PC2 (",round(importance_estrutura[2]*100,2),"%)",sep = "")
+pc1_label_estrutura <- paste("PC1 (",round(importance_estrutura[1]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_estrutura[1], 3), ")", sep = "")
+
+pc2_label_estrutura <- paste("PC2 (",round(importance_estrutura[2]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_estrutura[2], 3), ")", sep = "")
 
 xmin <- min(c(estrutura_PCs[,1], estrutura_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(estrutura_PCs[,1], estrutura_loadings_filtrados_new[,1]))*1.1
@@ -238,6 +244,11 @@ bacia_loadings_filtrados
     ## Altitude_av     0.4554975 -0.37883697
 
 ``` r
+urb_cors_bacia <- rep(NA, ncol(bacia_PCs))
+for(i in 1:ncol(bacia_PCs)){
+  urb_cors_bacia[i] <- cor(bacia_PCs[,i], urb)
+}
+
 #write.csv(Eigenvalues_bacia, "data/pcas_amb/bacia_autovalores.csv")
 #write.csv(bacia_PCs, "data/pcas_amb/bacia_PCs.csv")
 #write.csv(bacia_loadings, "data/pcas_amb/bacia_loadings.csv")
@@ -254,8 +265,9 @@ bacia_loadings_filtrados_new <- bacia_loadings_filtrados * scaler * 0.8
 
 #bacia_PCs <- jitter(bacia_PCs, amount = 0.1)
 
-pc1_label_bacia <- paste("PC1 (",round(importance_bacia[1]*100,2),"%)",sep = "")
-pc2_label_bacia <- paste("PC2 (",round(importance_bacia[2]*100,2),"%)",sep = "")
+pc1_label_bacia <- expression(paste("PC1 (",round(importance_bacia[1]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_bacia[1], 3), ")", sep = ""))
+
+pc2_label_bacia <- paste("PC2 (",round(importance_bacia[2]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_bacia[2], 3), ")", sep = "")
 
 xmin <- min(c(bacia_PCs[,1], bacia_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(bacia_PCs[,1], bacia_loadings_filtrados_new[,1]))*1.1
@@ -312,6 +324,10 @@ agua_loadings_filtrados
     ## SPC_.uS.cm.           0.3551645  0.08378666
 
 ``` r
+urb_cors_agua <- rep(NA, ncol(agua_PCs))
+for(i in 1:ncol(agua_PCs)){
+  urb_cors_agua[i] <- cor(agua_PCs[,i], urb)
+}
 #write.csv(Eigenvalues_agua, "data/pcas_amb/agua_autovalores.csv")
 #write.csv(agua_PCs, "data/pcas_amb/agua_PCs.csv")
 #write.csv(agua_loadings, "data/pcas_amb/agua_loadings.csv")
@@ -328,8 +344,9 @@ agua_loadings_filtrados_new <- agua_loadings_filtrados * scaler * 0.8
 
 #agua_PCs <- jitter(agua_PCs, amount = 0.1)
 
-pc1_label_agua <- paste("PC1 (",round(importance_agua[1]*100,2),"%)",sep = "")
-pc2_label_agua <- paste("PC2 (",round(importance_agua[2]*100,2),"%)",sep = "")
+pc1_label_agua <- paste("PC1 (",round(importance_agua[1]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_agua[1], 3), ")", sep = "")
+
+pc2_label_agua <- paste("PC2 (",round(importance_agua[2]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_agua[2], 3), ")", sep = "")
 
 xmin <- min(c(agua_PCs[,1], agua_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(agua_PCs[,1], agua_loadings_filtrados_new[,1]))*1.1
