@@ -1,7 +1,7 @@
 Environmental PCAs
 ================
 Rodolfo Pelinson
-2026-01-27
+2026-03-17
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -12,6 +12,9 @@ Loading important functions and packages
 ``` r
 library(vegan)
 library(yarrr)
+library(greekLetters)
+library(scales)
+library(shape)
 ```
 
 ``` r
@@ -78,14 +81,16 @@ sum(importance_estrutura[1:5])
 
 ``` r
 estrutura_PCs <- pca_estrutura$CA$u
+estrutura_PCs[,1] <- estrutura_PCs[,1]*-1
 estrutura_loadings <- pca_estrutura$CA$v
-
+estrutura_loadings[,1] <- estrutura_loadings[,1]*-1
+  
 estrutura_loadings_filtrados_PC1 <- estrutura_loadings[which(estrutura_loadings[,1] > 0.2 | estrutura_loadings[,1] < -0.2),1]
 estrutura_loadings_filtrados_PC1
 ```
 
     ##  comp_ecotono_arborea encaixe_alt_antropica 
-    ##             0.2095068            -0.2281669
+    ##            -0.2095068             0.2281669
 
 ``` r
 estrutura_loadings_filtrados_PC2 <- estrutura_loadings[which(estrutura_loadings[,2] > 0.2 | estrutura_loadings[,2] < -0.2),2]
@@ -146,16 +151,16 @@ estrutura_loadings_filtrados
 ```
 
     ##                                           PC1         PC2
-    ## comp_ecotono_herbacea_ereta       0.014319670  0.22482427
-    ## comp_ecotono_arborea              0.209506812 -0.05725049
-    ## substrato_rocha                   0.100474592 -0.21140265
-    ## tipo_de_canal_corredeira         -0.000684176 -0.25784066
-    ## tipo_de_canal_fluxo_continuo     -0.022998059  0.25690035
-    ## comp_zona_riparia_veg_arborea     0.166017778 -0.21924881
-    ## comp_zona_riparia_veg_herbacea    0.108954619  0.24567569
-    ## comp_zona_riparia_veg_herb_ereta  0.061656594  0.25693192
-    ## encaixe_vale                      0.101452756 -0.22533700
-    ## encaixe_alt_antropica            -0.228166892  0.07198920
+    ## comp_ecotono_herbacea_ereta      -0.014319670  0.22482427
+    ## comp_ecotono_arborea             -0.209506812 -0.05725049
+    ## substrato_rocha                  -0.100474592 -0.21140265
+    ## tipo_de_canal_corredeira          0.000684176 -0.25784066
+    ## tipo_de_canal_fluxo_continuo      0.022998059  0.25690035
+    ## comp_zona_riparia_veg_arborea    -0.166017778 -0.21924881
+    ## comp_zona_riparia_veg_herbacea   -0.108954619  0.24567569
+    ## comp_zona_riparia_veg_herb_ereta -0.061656594  0.25693192
+    ## encaixe_vale                     -0.101452756 -0.22533700
+    ## encaixe_alt_antropica             0.228166892  0.07198920
 
 ``` r
 urb_cors_estrutura <- rep(NA, ncol(estrutura_PCs))
@@ -179,9 +184,9 @@ estrutura_loadings_filtrados_new <- estrutura_loadings_filtrados * scaler * 0.8
 
 #estrutura_PCs <- jitter(estrutura_PCs, amount = 0.1)
 
-pc1_label_estrutura <- paste("PC1 (",round(importance_estrutura[1]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_estrutura[1], 3), ")", sep = "")
+pc1_label_estrutura <- paste("PC1 (",round(importance_estrutura[1]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_estrutura[1], 3), ")", sep = "")
 
-pc2_label_estrutura <- paste("PC2 (",round(importance_estrutura[2]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_estrutura[2], 3), ")", sep = "")
+pc2_label_estrutura <- paste("PC2 (",round(importance_estrutura[2]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_estrutura[2], 3), ")", sep = "")
 
 xmin <- min(c(estrutura_PCs[,1], estrutura_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(estrutura_PCs[,1], estrutura_loadings_filtrados_new[,1]))*1.1
@@ -193,21 +198,21 @@ ymax <- max(c(estrutura_PCs[,2], estrutura_loadings_filtrados_new[,2]))*1.1
 #Plot########################################################################################
 names_estrutura <- rownames(estrutura_loadings_filtrados_new)
 
-names_estrutura[names_estrutura == "comp_ecotono_herbacea_ereta"] <- "EC - Upright herb. veg." #Upright herbaceous vegetation in the ecotone
-names_estrutura[names_estrutura == "comp_ecotono_arborea"] <- "EC - Arboreal veg." #Upright herbaceous vegetation in the ecotone
-names_estrutura[names_estrutura == "substrato_rocha"] <- "Substrate - Rocky"
+names_estrutura[names_estrutura == "comp_ecotono_herbacea_ereta"] <- "Marginal Upright herb. veg." #Upright herbaceous vegetation in the ecotone
+names_estrutura[names_estrutura == "comp_ecotono_arborea"] <- "Marginal arboreal veg." #Upright herbaceous vegetation in the ecotone
+names_estrutura[names_estrutura == "substrato_rocha"] <- "Rocky substrate"
 names_estrutura[names_estrutura == "tipo_de_canal_corredeira"] <- "Rapids"
 names_estrutura[names_estrutura == "tipo_de_canal_poco"] <- "Pools"
 names_estrutura[names_estrutura == "tipo_de_canal_fluxo_continuo"] <- "Continuous flow"
-names_estrutura[names_estrutura == "pert_zona_riparia_lixo_inorganico"] <- "PITRZ - Inorganic waste"
-names_estrutura[names_estrutura == "comp_zona_riparia_veg_arborea"] <- "RZC - Arboreal veg."
-names_estrutura[names_estrutura == "comp_zona_riparia_veg_herbacea"] <- "RZC - Herbaceous veg."
-names_estrutura[names_estrutura == "comp_zona_riparia_veg_herb_ereta"] <- "RZC - Upright Herb. veg."
-names_estrutura[names_estrutura == "estrutura_dentro_do_canal_entulho"] <- "SITC - Construction waste"
-names_estrutura[names_estrutura == "estrutura_dentro_do_canal_lixo_inorganico"] <- "SITC - Inorganic waste"
+names_estrutura[names_estrutura == "pert_zona_riparia_lixo_inorganico"] <- "Riparian inorganic waste"
+names_estrutura[names_estrutura == "comp_zona_riparia_veg_arborea"] <- "Riparian arboreal veg."
+names_estrutura[names_estrutura == "comp_zona_riparia_veg_herbacea"] <- "Riparian herbaceous veg."
+names_estrutura[names_estrutura == "comp_zona_riparia_veg_herb_ereta"] <- "Riparian upright Herb. veg."
+names_estrutura[names_estrutura == "estrutura_dentro_do_canal_entulho"] <- "Construction waste inside"
+names_estrutura[names_estrutura == "estrutura_dentro_do_canal_lixo_inorganico"] <- "Inorganic waste inside"
 
-names_estrutura[names_estrutura == "encaixe_vale"] <- "Entrenchment - valley"
-names_estrutura[names_estrutura == "encaixe_alt_antropica"] <- "Entrenchment - anthropogenic"
+names_estrutura[names_estrutura == "encaixe_vale"] <- "Valley channel confinement"
+names_estrutura[names_estrutura == "encaixe_alt_antropica"] <- "Anthr. channel confinement"
 ```
 
 ### PCA watershed descriptors
@@ -226,7 +231,9 @@ sum(importance_bacia[1:3])
 
 ``` r
 bacia_PCs <- pca_bacia$CA$u
+bacia_PCs[,1] <- bacia_PCs[,1]*-1
 bacia_loadings <- pca_bacia$CA$v
+bacia_loadings[,1] <- bacia_loadings[,1]*-1
 
 
 
@@ -236,12 +243,12 @@ bacia_loadings_filtrados
 ```
 
     ##                       PC1         PC2
-    ## Area_ha        -0.3438980 -0.09107339
-    ## FOR_2021        0.4389801 -0.23146919
-    ## Ic              0.3350739  0.56895419
-    ## Kc             -0.3122788 -0.58224437
-    ## Declividade_av  0.4965422 -0.31744215
-    ## Altitude_av     0.4554975 -0.37883697
+    ## Area_ha         0.3438980 -0.09107339
+    ## FOR_2021       -0.4389801 -0.23146919
+    ## Ic             -0.3350739  0.56895419
+    ## Kc              0.3122788 -0.58224437
+    ## Declividade_av -0.4965422 -0.31744215
+    ## Altitude_av    -0.4554975 -0.37883697
 
 ``` r
 urb_cors_bacia <- rep(NA, ncol(bacia_PCs))
@@ -265,9 +272,9 @@ bacia_loadings_filtrados_new <- bacia_loadings_filtrados * scaler * 0.8
 
 #bacia_PCs <- jitter(bacia_PCs, amount = 0.1)
 
-pc1_label_bacia <- expression(paste("PC1 (",round(importance_bacia[1]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_bacia[1], 3), ")", sep = ""))
+pc1_label_bacia <- paste("PC1 (",round(importance_bacia[1]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_bacia[1], 3), ")", sep = "")
 
-pc2_label_bacia <- paste("PC2 (",round(importance_bacia[2]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_bacia[2], 3), ")", sep = "")
+pc2_label_bacia <- paste("PC2 (",round(importance_bacia[2]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_bacia[2], 3), ")", sep = "")
 
 xmin <- min(c(bacia_PCs[,1], bacia_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(bacia_PCs[,1], bacia_loadings_filtrados_new[,1]))*1.1
@@ -344,9 +351,13 @@ agua_loadings_filtrados_new <- agua_loadings_filtrados * scaler * 0.8
 
 #agua_PCs <- jitter(agua_PCs, amount = 0.1)
 
-pc1_label_agua <- paste("PC1 (",round(importance_agua[1]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_agua[1], 3), ")", sep = "")
 
-pc2_label_agua <- paste("PC2 (",round(importance_agua[2]*100,2),"%)", " (", expression(rho), " = ", round(urb_cors_agua[2], 3), ")", sep = "")
+
+
+
+pc1_label_agua <- paste("PC1 (",round(importance_agua[1]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_agua[1], 3), ")", sep = "")
+
+pc2_label_agua <- paste("PC2 (",round(importance_agua[2]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_agua[2], 3), ")", sep = "")
 
 xmin <- min(c(agua_PCs[,1], agua_loadings_filtrados_new[,1]))*1.1
 xmax <- max(c(agua_PCs[,1], agua_loadings_filtrados_new[,1]))*1.1
@@ -373,7 +384,7 @@ names_agua[names_agua == "DO_.mg.L."] <- "DO"
 ## PCA plots
 
 ``` r
-#pdf("plots/pcas.pdf", height = 10.5, width = 3.5, pointsize = 5)
+#svg("plots/pcas.svg", height = 10.5, width = 3.5, pointsize = 6)
 
 par(mfrow =c(3,1))
 
@@ -388,9 +399,6 @@ plot(estrutura_PCs[,1], estrutura_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, y
 
 abline(h = 0, v = 0, lty = 2)
 
-library(scales)
-library(shape)
-
 
 pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
 col <-pal(urb)
@@ -404,7 +412,7 @@ points(estrutura_PCs[,1],estrutura_PCs[,2], col = "black", bg = col, pch = 21, c
 #text(estrutura_PCs[,1],estrutura_PCs[,2], labels = rownames(estrutura_PCs))
 
 
-text(x = estrutura_loadings_filtrados_new[,1] * 0.9, y = estrutura_loadings_filtrados_new[,2] * 0.9, labels = names_estrutura, cex = 0.9, font = 2, xpd = NA)
+text(x = estrutura_loadings_filtrados_new[,1] * 0.9, y = estrutura_loadings_filtrados_new[,2] * 0.9, labels = names_estrutura, cex = 1, font = 2, xpd = NA)
 
 axis(1, cex.axis = 1.25)
 axis(2, cex.axis = 1.25, las = 2)

@@ -1,26 +1,15 @@
----
-title: "Manyglm_varpart"
-author: "Rodolfo Pelinson"
-date: "`r Sys.Date()`"
-output: 
-  github_document: 
-    fig_width: 10
-    fig_height: 8
-editor_options: 
-  chunk_output_type: console
----
+Manyglm_varpart
+================
+Rodolfo Pelinson
+2026-03-17
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r, warning=FALSE}
+``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
 ```
 
 Loading important functions and packages
 
-```{r, warning=FALSE}
+``` r
 source(paste(sep = "/",dir,"functions/remove_sp.R"))
 source(paste(sep = "/",dir,"functions/R2_manyglm.R"))
 source(paste(sep = "/",dir,"functions/forward_sel_manyglm.R"))
@@ -33,10 +22,82 @@ source(paste(sep = "/",dir,"functions/at_generator.R"))
 
 library(mvabund)
 library(vegan)
+```
+
+    ## Carregando pacotes exigidos: permute
+
+``` r
 library(yarrr)
+```
+
+    ## Carregando pacotes exigidos: jpeg
+
+    ## Carregando pacotes exigidos: BayesFactor
+
+    ## Carregando pacotes exigidos: coda
+
+    ## Carregando pacotes exigidos: Matrix
+
+    ## ************
+    ## Welcome to BayesFactor 0.9.12-4.7. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
+    ## 
+    ## Type BFManual() to open the manual.
+    ## ************
+
+    ## Carregando pacotes exigidos: circlize
+
+    ## ========================================
+    ## circlize version 0.4.17
+    ## CRAN page: https://cran.r-project.org/package=circlize
+    ## Github page: https://github.com/jokergoo/circlize
+    ## Documentation: https://jokergoo.github.io/circlize_book/book/
+    ## 
+    ## If you use it in published research, please cite:
+    ## Gu, Z. circlize implements and enhances circular visualization
+    ##   in R. Bioinformatics 2014.
+    ## 
+    ## This message can be suppressed by:
+    ##   suppressPackageStartupMessages(library(circlize))
+    ## ========================================
+
+``` r
 library(ade4)
 library(adespatial)
+```
+
+    ## Registered S3 methods overwritten by 'adegraphics':
+    ##   method         from
+    ##   biplot.dudi    ade4
+    ##   kplot.foucart  ade4
+    ##   kplot.mcoa     ade4
+    ##   kplot.mfa      ade4
+    ##   kplot.pta      ade4
+    ##   kplot.sepan    ade4
+    ##   kplot.statis   ade4
+    ##   scatter.coa    ade4
+    ##   scatter.dudi   ade4
+    ##   scatter.nipals ade4
+    ##   scatter.pco    ade4
+    ##   score.acm      ade4
+    ##   score.mix      ade4
+    ##   score.pca      ade4
+    ##   screeplot.dudi ade4
+
+    ## Registered S3 method overwritten by 'spdep':
+    ##   method   from
+    ##   plot.mst ape
+
+    ## Registered S3 method overwritten by 'adespatial':
+    ##   method          from       
+    ##   plot.multispati adegraphics
+
+``` r
 library(corrplot)
+```
+
+    ## corrplot 0.95 loaded
+
+``` r
 library(colorspace)
 
 set.seed(1)
@@ -44,39 +105,47 @@ set.seed(1)
 
 Loading data
 
-```{r, warning=FALSE, message =FALSE}
+``` r
 assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
 agua_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/agua_PCs.csv"), row.names = 1)
 estrutura_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/estrutura_PCs.csv"), row.names = 1)
 bacia_PCs <- read.csv(paste(sep = "/",dir,"data/pcas_amb/bacia_PCs.csv"), row.names = 1)
 delineamento <- read.csv(paste(sep = "/",dir,"data/delineamento.csv"))
 dist_euclid <- read.csv(paste(sep = "/",dir,"data/dist/Matriz_distancia_matriz_euclidiana.csv"), row.names = 1)
-
-
-
-
 ```
 
-Removing species with less than 2 presences and combining them into the artificial "Singletons and doubletons" species.
+Removing species with less than 2 presences and combining them into the
+artificial “Singletons and doubletons” species.
 
-```{r, warning=FALSE, message = FALSE}
+``` r
 assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
 assembleia_peixes <- assembleia_peixes[,-c(4,11)]
 
 ncol(assembleia_peixes)
+```
 
+    ## [1] 23
+
+``` r
 assembleia_peixes_rm <- remove_sp(com = assembleia_peixes, n_sp = 1)
 
 singletons_doubletons <- remove_sp(assembleia_peixes, 2, less_equal = TRUE)
 doubletons <- remove_sp(singletons_doubletons, 1)
 
 ncol(doubletons)
+```
 
+    ## [1] 5
+
+``` r
 singletons <- remove_sp(assembleia_peixes, 1, less_equal = TRUE)
 
 ncol(singletons)
+```
 
+    ## [1] 11
 
+``` r
 sing_doub_ab <- rowSums(singletons_doubletons)
 sing_ab <- rowSums(singletons)
 
@@ -86,45 +155,93 @@ sing <- rowSums(decostand(singletons, method = "pa"))
 assembleia_peixes_rm <- data.frame(assembleia_peixes_rm, Singletons = sing_ab)
 ```
 
-
-```{r}
-
+``` r
 colSums(assembleia_peixes)[order(colSums(assembleia_peixes), decreasing = TRUE)]
+```
 
+    ##             Phalloceros_reisi           Poecilia_reticulata 
+    ##                          3316                           170 
+    ##          Phalloceros_harpagos             Poecilia_vivipara 
+    ##                            57                            46 
+    ##          Gymnotus_pantherinus            Astyanax_lacustris 
+    ##                            24                            23 
+    ## Hollandichthys_multifasciatus         Characidium_oiticicai 
+    ##                            17                            14 
+    ##        Hoplosternum_littorale              Tilapia_rendalli 
+    ##                             6                             6 
+    ##           Hoplias_malabaricus          Psalidodon_fasciatus 
+    ##                             4                             4 
+    ##       Trichomycterus_iheringi               Pareiorhina_sp. 
+    ##                             3                             3 
+    ##            Psalidodon_paranae              Corydoras_aeneus 
+    ##                             3                             3 
+    ##       Callichthys_callichthys                Rhamdia_quelen 
+    ##                             2                             2 
+    ##    Hyphessobrycon_reticulatus       Hypostomus_ancistroides 
+    ##                             2                             1 
+    ##              Gymnotus_sylvius         Cichlasoma_paranaense 
+    ##                             1                             1 
+    ##           Taunayia_bifasciata 
+    ##                             1
 
+``` r
 assembleia_peixes_oc <- colSums(decostand(assembleia_peixes, method = "pa"))
 
 assembleia_peixes_oc[order(assembleia_peixes_oc, decreasing = TRUE)]
-
-
-
 ```
 
-
+    ##             Phalloceros_reisi Hollandichthys_multifasciatus 
+    ##                            13                             4 
+    ##          Gymnotus_pantherinus          Phalloceros_harpagos 
+    ##                             3                             3 
+    ##            Astyanax_lacustris           Poecilia_reticulata 
+    ##                             3                             3 
+    ##        Hoplosternum_littorale       Callichthys_callichthys 
+    ##                             3                             2 
+    ##           Hoplias_malabaricus              Corydoras_aeneus 
+    ##                             2                             2 
+    ##             Poecilia_vivipara              Tilapia_rendalli 
+    ##                             2                             2 
+    ##       Trichomycterus_iheringi               Pareiorhina_sp. 
+    ##                             1                             1 
+    ##            Psalidodon_paranae       Hypostomus_ancistroides 
+    ##                             1                             1 
+    ##                Rhamdia_quelen              Gymnotus_sylvius 
+    ##                             1                             1 
+    ##    Hyphessobrycon_reticulatus          Psalidodon_fasciatus 
+    ##                             1                             1 
+    ##         Cichlasoma_paranaense         Characidium_oiticicai 
+    ##                             1                             1 
+    ##           Taunayia_bifasciata 
+    ##                             1
 
 Percentage of Poecilidae
 
-```{r}
-
+``` r
 abundances <- rowSums(assembleia_peixes)
 total_ind <- sum(abundances)
 total_ind
+```
 
+    ## [1] 3709
+
+``` r
 abundances_poecilidae <- rowSums(assembleia_peixes[,c(3,4,9,18)])
 total_ind_poecilidae <- sum(abundances_poecilidae)
 total_ind_poecilidae
-
-
-total_ind_poecilidae/total_ind
-
-
 ```
 
+    ## [1] 3589
 
+``` r
+total_ind_poecilidae/total_ind
+```
+
+    ## [1] 0.9676463
 
 Preparing and standardizing predictors
 
-```{r, warning=FALSE, message = FALSE}
+``` r
 urb <- data.frame(urb = delineamento$urbana)
 
 urb <- decostand(urb, method = "stand")
@@ -135,17 +252,22 @@ bacia_PCs <- decostand(bacia_PCs, method = "stand")
 
 Producing spatial filters
 
-```{r, warning=FALSE}
+``` r
 dist_euclid <- as.dist(dist_euclid)
 
 dbmem_euclid <- dbmem(dist_euclid, thresh = NULL, MEM.autocor = c("positive", "non-null", "all", "negative"), store.listw = TRUE, silent = FALSE)
+```
 
+    ## Truncation level = 0.3268453 
+    ## Time to compute dbMEMs = 0.000000  sec
+
+``` r
 dbmem_euclid <- decostand(dbmem_euclid, method = "stand")
 ```
 
 Checking if the rows of all data frames match
 
-```{r}
+``` r
 data.frame(
 rownames(assembleia_peixes_rm),
 rownames(agua_PCs),
@@ -154,7 +276,103 @@ rownames(estrutura_PCs),
 rownames(as.matrix(dist_euclid)),
 delineamento$bacia_id
 )
+```
 
+    ##    rownames.assembleia_peixes_rm. rownames.agua_PCs. rownames.bacia_PCs.
+    ## 1                           ebbsn               b031                b031
+    ## 2                           ebbrc               b034                b034
+    ## 3                            b581               b039                b039
+    ## 4                            b631               b040                b040
+    ## 5                            b539               b066                b066
+    ## 6                            b570               b202                b202
+    ## 7                            b034               b204                b204
+    ## 8                            b620               b309                b309
+    ## 9                            b589               b310                b310
+    ## 10                           b627               b320                b320
+    ## 11                           b545               b321                b321
+    ## 12                           b711               b344                b344
+    ## 13                           b543               b539                b539
+    ## 14                           b320               b543                b543
+    ## 15                           b031               b545                b545
+    ## 16                           b637               b570                b570
+    ## 17                           b321               b574                b574
+    ## 18                           b039               b578                b578
+    ## 19                           b040               b579                b579
+    ## 20                           b066               b581                b581
+    ## 21                           b202               b589                b589
+    ## 22                           b204               b594                b594
+    ## 23                           b309               b620                b620
+    ## 24                           b310               b627                b627
+    ## 25                           b344               b631                b631
+    ## 26                           b574               b637                b637
+    ## 27                           b578               b673                b673
+    ## 28                           b579               b711                b711
+    ## 29                           b594              ebbrc               ebbrc
+    ## 30                           b673              ebbsn               ebbsn
+    ##    rownames.estrutura_PCs. rownames.as.matrix.dist_euclid..
+    ## 1                     b031                             b031
+    ## 2                     b034                             b034
+    ## 3                     b039                             b039
+    ## 4                     b040                             b040
+    ## 5                     b066                             b066
+    ## 6                     b202                             b202
+    ## 7                     b204                             b204
+    ## 8                     b309                             b309
+    ## 9                     b310                             b310
+    ## 10                    b320                             b320
+    ## 11                    b321                             b321
+    ## 12                    b344                             b344
+    ## 13                    b539                             b539
+    ## 14                    b543                             b543
+    ## 15                    b545                             b545
+    ## 16                    b570                             b570
+    ## 17                    b574                             b574
+    ## 18                    b578                             b578
+    ## 19                    b579                             b579
+    ## 20                    b581                             b581
+    ## 21                    b589                             b589
+    ## 22                    b594                             b594
+    ## 23                    b620                             b620
+    ## 24                    b627                             b627
+    ## 25                    b631                             b631
+    ## 26                    b637                             b637
+    ## 27                    b673                             b673
+    ## 28                    b711                             b711
+    ## 29                   ebbrc                            ebbrc
+    ## 30                   ebbsn                            ebbsn
+    ##    delineamento.bacia_id
+    ## 1                   b031
+    ## 2                   b034
+    ## 3                   b039
+    ## 4                   b040
+    ## 5                   b066
+    ## 6                   b202
+    ## 7                   b204
+    ## 8                   b309
+    ## 9                   b310
+    ## 10                  b320
+    ## 11                  b321
+    ## 12                  b344
+    ## 13                  b539
+    ## 14                  b543
+    ## 15                  b545
+    ## 16                  b570
+    ## 17                  b574
+    ## 18                  b578
+    ## 19                  b579
+    ## 20                  b581
+    ## 21                  b589
+    ## 22                  b594
+    ## 23                  b620
+    ## 24                  b627
+    ## 25                  b631
+    ## 26                  b637
+    ## 27                  b673
+    ## 28                  b711
+    ## 29                 ebbrc
+    ## 30                 ebbsn
+
+``` r
 assembleia_peixes_rm <- assembleia_peixes_rm[match(delineamento$bacia_id, rownames(assembleia_peixes_rm) ),]
 
 data.frame(
@@ -165,15 +383,107 @@ rownames(estrutura_PCs),
 rownames(as.matrix(dist_euclid)),
 delineamento$bacia_id
 )
-
 ```
 
+    ##    rownames.assembleia_peixes_rm. rownames.agua_PCs. rownames.bacia_PCs.
+    ## 1                            b031               b031                b031
+    ## 2                            b034               b034                b034
+    ## 3                            b039               b039                b039
+    ## 4                            b040               b040                b040
+    ## 5                            b066               b066                b066
+    ## 6                            b202               b202                b202
+    ## 7                            b204               b204                b204
+    ## 8                            b309               b309                b309
+    ## 9                            b310               b310                b310
+    ## 10                           b320               b320                b320
+    ## 11                           b321               b321                b321
+    ## 12                           b344               b344                b344
+    ## 13                           b539               b539                b539
+    ## 14                           b543               b543                b543
+    ## 15                           b545               b545                b545
+    ## 16                           b570               b570                b570
+    ## 17                           b574               b574                b574
+    ## 18                           b578               b578                b578
+    ## 19                           b579               b579                b579
+    ## 20                           b581               b581                b581
+    ## 21                           b589               b589                b589
+    ## 22                           b594               b594                b594
+    ## 23                           b620               b620                b620
+    ## 24                           b627               b627                b627
+    ## 25                           b631               b631                b631
+    ## 26                           b637               b637                b637
+    ## 27                           b673               b673                b673
+    ## 28                           b711               b711                b711
+    ## 29                          ebbrc              ebbrc               ebbrc
+    ## 30                          ebbsn              ebbsn               ebbsn
+    ##    rownames.estrutura_PCs. rownames.as.matrix.dist_euclid..
+    ## 1                     b031                             b031
+    ## 2                     b034                             b034
+    ## 3                     b039                             b039
+    ## 4                     b040                             b040
+    ## 5                     b066                             b066
+    ## 6                     b202                             b202
+    ## 7                     b204                             b204
+    ## 8                     b309                             b309
+    ## 9                     b310                             b310
+    ## 10                    b320                             b320
+    ## 11                    b321                             b321
+    ## 12                    b344                             b344
+    ## 13                    b539                             b539
+    ## 14                    b543                             b543
+    ## 15                    b545                             b545
+    ## 16                    b570                             b570
+    ## 17                    b574                             b574
+    ## 18                    b578                             b578
+    ## 19                    b579                             b579
+    ## 20                    b581                             b581
+    ## 21                    b589                             b589
+    ## 22                    b594                             b594
+    ## 23                    b620                             b620
+    ## 24                    b627                             b627
+    ## 25                    b631                             b631
+    ## 26                    b637                             b637
+    ## 27                    b673                             b673
+    ## 28                    b711                             b711
+    ## 29                   ebbrc                            ebbrc
+    ## 30                   ebbsn                            ebbsn
+    ##    delineamento.bacia_id
+    ## 1                   b031
+    ## 2                   b034
+    ## 3                   b039
+    ## 4                   b040
+    ## 5                   b066
+    ## 6                   b202
+    ## 7                   b204
+    ## 8                   b309
+    ## 9                   b310
+    ## 10                  b320
+    ## 11                  b321
+    ## 12                  b344
+    ## 13                  b539
+    ## 14                  b543
+    ## 15                  b545
+    ## 16                  b570
+    ## 17                  b574
+    ## 18                  b578
+    ## 19                  b579
+    ## 20                  b581
+    ## 21                  b589
+    ## 22                  b594
+    ## 23                  b620
+    ## 24                  b627
+    ## 25                  b631
+    ## 26                  b637
+    ## 27                  b673
+    ## 28                  b711
+    ## 29                 ebbrc
+    ## 30                 ebbsn
 
 ### Variation Partitioning
 
 First, lets just look at a corplot for all environmental filters.
 
-```{r, warning=FALSE}
+``` r
 env_data.frame <- data.frame(est_PC1 = estrutura_PCs[,1],
                              est_PC2 = estrutura_PCs[,2],
                              #est_PC3 = estrutura_PCs[,3],
@@ -187,32 +497,84 @@ env_data.frame <- data.frame(est_PC1 = estrutura_PCs[,1],
 corrplot(cor(env_data.frame), type = "lower", diag = FALSE)
 ```
 
+![](Manyglm_varpart_only_singletons_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
 The first PCs seem all correlated with each other.
-
-
 
 ##### Now, forward selection
 
-
-```{r, warning=FALSE, cache=FALSE}
+``` r
 est_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(est_PC1 = estrutura_PCs[,1],
                                                                        est_PC2 = estrutura_PCs[,2]), nBoot=999, quad = TRUE) 
-
-agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PC1 = agua_PCs[,1],
-                                                                        agua_PC2 = agua_PCs[,2]), nBoot=999, quad = TRUE) 
-
-bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_PC1 = bacia_PCs[,1],
-                                                                         bacia_PC2 = bacia_PCs[,2]), nBoot=999, quad = TRUE) 
-
-esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE) 
-
 ```
 
+    ## testing for quadratic effects...
+
+    ## Time elapsed: 0 hr 0 min 26 sec
+    ## Time elapsed: 0 hr 0 min 42 sec
+    ##         df.diff      Dev        R2     p
+    ## est_PC1       2 128.9520 0.4264417 0.001
+    ## est_PC2       2  70.8934 0.3449213 0.064
+
+    ## testing for linear effects...
+
+    ## Time elapsed: 0 hr 0 min 44 sec
+    ##         df.diff      Dev        R2     p
+    ## est_PC2       1 31.38347 0.1537368 0.232
+
+    ## No linear effects were found
+
+``` r
+agua_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(agua_PC1 = agua_PCs[,1],
+                                                                        agua_PC2 = agua_PCs[,2]), nBoot=999, quad = TRUE) 
+```
+
+    ## testing for quadratic effects...
+
+    ## Time elapsed: 0 hr 0 min 25 sec
+    ## Time elapsed: 0 hr 0 min 57 sec
+    ##          df.diff       Dev        R2     p
+    ## agua_PC1       2 119.86518 0.3665291 0.001
+    ## agua_PC2       2  53.62232 0.2608713 0.351
+
+    ## testing for linear effects...
+
+    ## Time elapsed: 0 hr 1 min 1 sec
+    ##          df.diff      Dev        R2     p
+    ## agua_PC2       1 40.35758 0.2065609 0.106
+
+    ## No linear effects were found
+
+``` r
+bacia_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(bacia_PC1 = bacia_PCs[,1],
+                                                                         bacia_PC2 = bacia_PCs[,2]), nBoot=999, quad = TRUE) 
+```
+
+    ## testing for quadratic effects...
+
+    ## Time elapsed: 0 hr 0 min 32 sec
+    ## Time elapsed: 0 hr 1 min 2 sec
+    ##           df.diff      Dev        R2     p
+    ## bacia_PC1       2 75.86153 0.2378997 0.036
+    ## bacia_PC2       2 88.35715 0.3312875 0.015
+
+    ## testing for linear effects...
+
+    ## No remaining linear effects to be tested.
+
+``` r
+esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE) 
+```
+
+    ## Time elapsed: 0 hr 0 min 16 sec
+    ## Time elapsed: 0 hr 0 min 35 sec
+    ##      df.diff      Dev        R2     p
+    ## MEM2       1 46.97309 0.1755213 0.006
+    ## MEM3       1 37.05634 0.1651138 0.066
 
 Now, the variation partitioning
 
-```{r, warning=FALSE}
-
+``` r
 predictors <- list(estrutura = est_FS$new_x,
                    agua = agua_FS$new_x,
                    bacia = bacia_FS$new_x,
@@ -221,23 +583,84 @@ predictors <- list(estrutura = est_FS$new_x,
 
 varpart_peixes <- varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = FALSE)
 varpart_peixes$R2_fractions_com
+```
 
+    ##           R2_full_fraction R2_pure_fraction
+    ## estrutura        0.4264417      0.002061163
+    ## agua             0.3665291      0.023903419
+    ## bacia            0.4603146      0.026048157
+    ## urb              0.3212391      0.001687421
+    ## esp              0.1755213      0.003709479
+
+``` r
 full_model2 <- varpart_peixes$R2_models$`estrutura-agua-bacia`
 full_model2
+```
 
+    ## [1] 0.8185994
+
+``` r
 round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
+```
 
+    ##                               estrutura   agua  bacia    urb    esp
+    ## Gymnotus_pantherinus             0.3873 0.4489 0.8332 0.5094 0.0223
+    ## Phalloceros_harpagos             0.5926 0.2999 0.8111 0.2939 0.3576
+    ## Phalloceros_reisi                0.2558 0.5562 0.1742 0.2858 0.0398
+    ## Hollandichthys_multifasciatus    0.4930 0.2808 0.8408 0.2502 0.0299
+    ## Astyanax_lacustris               0.2657 0.3518 0.8336 0.4140 0.1074
+    ## Poecilia_reticulata              0.3373 0.3274 0.2152 0.1311 0.0837
+    ## Callichthys_callichthys          0.6468 0.4871 0.4626 0.3067 0.1499
+    ## Hoplias_malabaricus              0.3246 0.5636 0.0872 0.6113 0.0313
+    ## Corydoras_aeneus                 0.3731 0.3318 0.7849 0.4301 0.2278
+    ## Hoplosternum_littorale           0.5453 0.1595 0.2728 0.1659 0.3489
+    ## Poecilia_vivipara                0.4241 0.1899 0.1900 0.1668 0.3897
+    ## Tilapia_rendalli                 0.5198 0.2241 0.2217 0.1949 0.4712
+    ## Singletons                       0.3784 0.5439 0.2567 0.4160 0.0221
+
+``` r
 round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
+```
 
+    ##                               estrutura   agua  bacia    urb    esp
+    ## Gymnotus_pantherinus             0.0000 0.0000 0.0024 0.0000 0.0000
+    ## Phalloceros_harpagos             0.0004 0.0000 0.0002 0.0000 0.0191
+    ## Phalloceros_reisi                0.0244 0.2921 0.0901 0.0151 0.0280
+    ## Hollandichthys_multifasciatus    0.0000 0.0000 0.0002 0.0000 0.0000
+    ## Astyanax_lacustris               0.0000 0.0000 0.0102 0.0000 0.0000
+    ## Poecilia_reticulata              0.0001 0.0000 0.0203 0.0000 0.0000
+    ## Callichthys_callichthys          0.0001 0.0000 0.0003 0.0000 0.0000
+    ## Hoplias_malabaricus              0.0001 0.0000 0.0000 0.0000 0.0000
+    ## Corydoras_aeneus                 0.0001 0.0000 0.0000 0.0000 0.0001
+    ## Hoplosternum_littorale           0.0002 0.0000 0.0000 0.0000 0.0002
+    ## Poecilia_vivipara                0.0000 0.0000 0.0000 0.0000 0.0003
+    ## Tilapia_rendalli                 0.0000 0.0000 0.0000 0.0000 0.0004
+    ## Singletons                       0.0014 0.0185 0.2149 0.0067 0.0000
+
+``` r
 full_model_sp <- varpart_peixes$R2_models_sp$estrutura.agua.bacia
 names(full_model_sp) <- rownames(varpart_peixes$R2_fractions_sp$R2_full_fraction)
 full_model_sp
 ```
 
+    ##          Gymnotus_pantherinus          Phalloceros_harpagos 
+    ##                     0.8336642                     0.8469033 
+    ##             Phalloceros_reisi Hollandichthys_multifasciatus 
+    ##                     0.7313394                     0.8410153 
+    ##            Astyanax_lacustris           Poecilia_reticulata 
+    ##                     0.8406026                     0.8490561 
+    ##       Callichthys_callichthys           Hoplias_malabaricus 
+    ##                     0.7769547                     0.8148361 
+    ##              Corydoras_aeneus        Hoplosternum_littorale 
+    ##                     0.8079209                     0.8152508 
+    ##             Poecilia_vivipara              Tilapia_rendalli 
+    ##                     0.8152140                     0.8144152 
+    ##                    Singletons 
+    ##                     0.8546195
 
 Looking at fractions related to the urbanization process
 
-```{r}
+``` r
 shared_urb_estrutura <- (varpart_peixes$R2_models$estrutura + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`estrutura-urb`
 shared_urb_agua <- (varpart_peixes$R2_models$agua + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`agua-urb`
 shared_urb_bacia <- (varpart_peixes$R2_models$bacia + varpart_peixes$R2_models$urb) - varpart_peixes$R2_models$`bacia-urb`
@@ -284,71 +707,309 @@ sp_full_urb_estrutura <- varpart_peixes$R2_models_sp$`estrutura.urb`
 sp_full_urb_agua <- varpart_peixes$R2_models_sp$`agua.urb`
 sp_full_urb_bacia <- varpart_peixes$R2_models_sp$`bacia.urb`
 sp_full_urb_esp <- varpart_peixes$R2_models_sp$`urb.esp`
-
-
 ```
-
-
-
-
-
 
 Tests of significance of fractions:
 
-```{r, warning=FALSE, cache=FALSE}
+``` r
 p_est <- anova(varpart_peixes$model_null,
                varpart_peixes$models$estrutura,nBoot=999)
-p_est
+```
 
+    ## Time elapsed: 0 hr 0 min 25 sec
+
+``` r
+p_est
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$model_null: resp_mv ~ 1
+    ## varpart_peixes$models$estrutura: resp_mv ~ est_PC1 + est_PC1_squared
+    ## 
+    ## Multivariate test:
+    ##                                 Res.Df Df.diff   Dev Pr(>Dev)    
+    ## varpart_peixes$model_null           29                           
+    ## varpart_peixes$models$estrutura     27       2 128.9    0.001 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_bacia <- anova(varpart_peixes$model_null,
                  varpart_peixes$models$bacia,nBoot=999)
-p_bacia
+```
 
+    ## Time elapsed: 0 hr 0 min 32 sec
+
+``` r
+p_bacia
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$model_null: resp_mv ~ 1
+    ## varpart_peixes$models$bacia: resp_mv ~ bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared
+    ## 
+    ## Multivariate test:
+    ##                             Res.Df Df.diff   Dev Pr(>Dev)   
+    ## varpart_peixes$model_null       29                          
+    ## varpart_peixes$models$bacia     25       4 164.2    0.007 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_agua <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$agua,nBoot=999)
-p_agua
+```
 
+    ## Time elapsed: 0 hr 0 min 25 sec
+
+``` r
+p_agua
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$model_null: resp_mv ~ 1
+    ## varpart_peixes$models$agua: resp_mv ~ agua_PC1 + agua_PC1_squared
+    ## 
+    ## Multivariate test:
+    ##                            Res.Df Df.diff   Dev Pr(>Dev)    
+    ## varpart_peixes$model_null      29                           
+    ## varpart_peixes$models$agua     27       2 119.9    0.001 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_esp <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$esp,nBoot=999)
-p_esp
+```
 
+    ## Time elapsed: 0 hr 0 min 16 sec
+
+``` r
+p_esp
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$model_null: resp_mv ~ 1
+    ## varpart_peixes$models$esp: resp_mv ~ MEM2
+    ## 
+    ## Multivariate test:
+    ##                           Res.Df Df.diff   Dev Pr(>Dev)   
+    ## varpart_peixes$model_null     29                          
+    ## varpart_peixes$models$esp     28       1 46.97    0.008 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_urb <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$urb,nBoot=999)
-p_urb
+```
 
+    ## Time elapsed: 0 hr 0 min 24 sec
+
+``` r
+p_urb
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$model_null: resp_mv ~ 1
+    ## varpart_peixes$models$urb: resp_mv ~ urb + urb_squared
+    ## 
+    ## Multivariate test:
+    ##                           Res.Df Df.diff   Dev Pr(>Dev)   
+    ## varpart_peixes$model_null     29                          
+    ## varpart_peixes$models$urb     27       2 96.07    0.005 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_est_pure <- anova(varpart_peixes$models$`agua-bacia-urb-esp`,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
-p_est_pure
+```
 
+    ## Time elapsed: 0 hr 0 min 15 sec
+
+``` r
+p_est_pure
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$`agua-bacia-urb-esp`: resp_mv ~ agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## 
+    ## Multivariate test:
+    ##                                                      Res.Df Df.diff   Dev
+    ## varpart_peixes$models$`agua-bacia-urb-esp`               20              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 3.827
+    ##                                                      Pr(>Dev)
+    ## varpart_peixes$models$`agua-bacia-urb-esp`                   
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.623
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_bacia_pure <- anova(varpart_peixes$models$`estrutura-agua-urb-esp`,
                       varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
-p_bacia_pure
+```
 
+    ## Time elapsed: 0 hr 0 min 23 sec
+
+``` r
+p_bacia_pure
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$`estrutura-agua-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + urb + urb_squared + MEM2
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## 
+    ## Multivariate test:
+    ##                                                      Res.Df Df.diff   Dev
+    ## varpart_peixes$models$`estrutura-agua-urb-esp`           22              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       4 31.59
+    ##                                                      Pr(>Dev)
+    ## varpart_peixes$models$`estrutura-agua-urb-esp`               
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.219
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_agua_pure <- anova(varpart_peixes$models$`estrutura-bacia-urb-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
-p_agua_pure
+```
 
+    ## Time elapsed: 0 hr 0 min 22 sec
+
+``` r
+p_agua_pure
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$`estrutura-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## 
+    ## Multivariate test:
+    ##                                                      Res.Df Df.diff   Dev
+    ## varpart_peixes$models$`estrutura-bacia-urb-esp`          20              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 29.96
+    ##                                                      Pr(>Dev)
+    ## varpart_peixes$models$`estrutura-bacia-urb-esp`              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.115
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_urb_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-esp`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
-p_urb_pure
+```
 
+    ## Time elapsed: 0 hr 0 min 15 sec
+
+``` r
+p_urb_pure
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$`estrutura-agua-bacia-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + MEM2
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## 
+    ## Multivariate test:
+    ##                                                      Res.Df Df.diff   Dev
+    ## varpart_peixes$models$`estrutura-agua-bacia-esp`         20              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       2 3.058
+    ##                                                      Pr(>Dev)
+    ## varpart_peixes$models$`estrutura-agua-bacia-esp`             
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`    0.703
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_esp_pure <- anova(varpart_peixes$models$`estrutura-agua-bacia-urb`,
                      varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
-p_esp_pure
+```
 
+    ## Time elapsed: 0 hr 0 min 16 sec
+
+``` r
+p_esp_pure
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## 
+    ## Multivariate test:
+    ##                                                      Res.Df Df.diff   Dev
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb`         19              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18       1 5.196
+    ##                                                      Pr(>Dev)
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb`             
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     0.28
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_full_model <- anova(varpart_peixes$model_null,
                     varpart_peixes$models$`estrutura-agua-bacia-urb-esp`,nBoot=999)
+```
+
+    ## Time elapsed: 0 hr 0 min 27 sec
+
+``` r
 p_full_model
 ```
 
-
-
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$model_null: resp_mv ~ 1
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`: resp_mv ~ est_PC1 + est_PC1_squared + agua_PC1 + agua_PC1_squared + bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared + MEM2
+    ## 
+    ## Multivariate test:
+    ##                                                      Res.Df Df.diff   Dev
+    ## varpart_peixes$model_null                                29              
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     18      11 342.3
+    ##                                                      Pr(>Dev)  
+    ## varpart_peixes$model_null                                      
+    ## varpart_peixes$models$`estrutura-agua-bacia-urb-esp`     0.02 *
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 Now, lets plot these R² values:
 
 We will make the same procedures as before:
 
-```{r, warning=FALSE}
+``` r
 names(full_model_sp) <- rownames(varpart_peixes$R2_models_sp)
 ord_sp <- order(full_model_sp, decreasing = TRUE)
 
@@ -453,12 +1114,9 @@ pure_fracs <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 pure_comm_scaled <- scale_fractions(full_model, data.frame(pure_fracs))
 
 rownames(pure_comm_scaled) <- rownames(varpart_peixes$R2_fractions_com)
-
 ```
 
-```{r}
-
-
+``` r
 #Scale Estrutura
 
 estrutura_urb_scaled <- scale_fractions(full_urb_estrutura, data.frame(estrutura_without_urb, urb_without_estrutura))
@@ -475,70 +1133,189 @@ sp_estrutura_urb_scaled <- sp_estrutura_urb_scaled[ord_sp,]
 sp_agua_urb_scaled <- sp_agua_urb_scaled[ord_sp,]
 sp_bacia_urb_scaled <- sp_bacia_urb_scaled[ord_sp,]
 sp_esp_urb_scaled <- sp_esp_urb_scaled[ord_sp,]
-
-
 ```
 
+What are the percentages of the full effects of stream structure, water
+parameters and watershed predictores are redundant with urban cover
 
-What are the percentages of the full effects of stream structure, water parameters and watershed predictores are redundant with urban cover
-
-```{r}
+``` r
 estrutura_without_urb
-agua_without_urb
-bacia_without_urb
-esp_without_urb
+```
 
+    ## [1] 0.2941855
+
+``` r
+agua_without_urb
+```
+
+    ## [1] 0.1535425
+
+``` r
+bacia_without_urb
+```
+
+    ## [1] 0.268002
+
+``` r
+esp_without_urb
+```
+
+    ## [1] 0.1522219
+
+``` r
 #Stream structure
 1 - estrutura_without_urb/varpart_peixes$R2_fractions_com[1,1]
+```
 
+    ## [1] 0.310139
+
+``` r
 #Water parametersc
 1 - agua_without_urb/varpart_peixes$R2_fractions_com[2,1]
+```
 
+    ## [1] 0.5810905
+
+``` r
 #Watershed descriptors
 1 - bacia_without_urb/varpart_peixes$R2_fractions_com[3,1]
+```
 
+    ## [1] 0.4177852
+
+``` r
 #Spatial filters
 1 - esp_without_urb/varpart_peixes$R2_fractions_com[5,1]
 ```
 
+    ## [1] 0.1327442
 
-Are these fractions significant after the removal of urban cover explanation?
+Are these fractions significant after the removal of urban cover
+explanation?
 
-```{r}
+``` r
 p_est_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`estrutura-urb`,nBoot=999)
-p_est_no_urb
+```
 
+    ## Time elapsed: 0 hr 1 min 0 sec
+
+``` r
+p_est_no_urb
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$urb: resp_mv ~ urb + urb_squared
+    ## varpart_peixes$models$`estrutura-urb`: resp_mv ~ est_PC1 + est_PC1_squared + urb + urb_squared
+    ## 
+    ## Multivariate test:
+    ##                                       Res.Df Df.diff Dev Pr(>Dev)   
+    ## varpart_peixes$models$urb                 27                        
+    ## varpart_peixes$models$`estrutura-urb`     25       2 102     0.01 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_agua_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`agua-urb`,nBoot=999)
-p_agua_no_urb
+```
 
+    ## Time elapsed: 0 hr 0 min 56 sec
+
+``` r
+p_agua_no_urb
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$urb: resp_mv ~ urb + urb_squared
+    ## varpart_peixes$models$`agua-urb`: resp_mv ~ agua_PC1 + agua_PC1_squared + urb + urb_squared
+    ## 
+    ## Multivariate test:
+    ##                                  Res.Df Df.diff   Dev Pr(>Dev)
+    ## varpart_peixes$models$urb            27                       
+    ## varpart_peixes$models$`agua-urb`     25       2 63.95    0.116
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_bacia_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`bacia-urb`,nBoot=999)
-p_bacia_no_urb
+```
 
+    ## Time elapsed: 0 hr 0 min 52 sec
+
+``` r
+p_bacia_no_urb
+```
+
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$urb: resp_mv ~ urb + urb_squared
+    ## varpart_peixes$models$`bacia-urb`: resp_mv ~ bacia_PC1 + bacia_PC1_squared + bacia_PC2 + bacia_PC2_squared + urb + urb_squared
+    ## 
+    ## Multivariate test:
+    ##                                   Res.Df Df.diff   Dev Pr(>Dev)
+    ## varpart_peixes$models$urb             27                       
+    ## varpart_peixes$models$`bacia-urb`     23       4 115.8    0.188
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
+
+``` r
 p_esp_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`urb-esp`,nBoot=999)
+```
+
+    ## Time elapsed: 0 hr 0 min 54 sec
+
+``` r
 p_esp_no_urb
 ```
 
-
-
+    ## Analysis of Deviance Table
+    ## 
+    ## varpart_peixes$models$urb: resp_mv ~ urb + urb_squared
+    ## varpart_peixes$models$`urb-esp`: resp_mv ~ urb + urb_squared + MEM2
+    ## 
+    ## Multivariate test:
+    ##                                 Res.Df Df.diff   Dev Pr(>Dev)  
+    ## varpart_peixes$models$urb           27                         
+    ## varpart_peixes$models$`urb-esp`     26       1 47.49     0.03 *
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Arguments:
+    ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 Now we can plot all of these fractions:
 
 Pure and shared fractions fisrt:
 
-```{r plot da particao de variancia, warning=FALSE}
+``` r
 #svg("plots/varpart_pure.svg", width = 8, height = 8, pointsize = 13)
 
 
 close.screen(all.screens = TRUE)
+```
+
+    ## [1] FALSE
+
+``` r
 split.screen(matrix(c(0,0.3,0.625,1,
                       0.3,1,0.625,1,
                       0,0.3,0.25,0.625,
                       0.3,1,0.25,0.625), ncol = 4, nrow = 4, byrow = TRUE))
+```
 
+    ## [1] 1 2 3 4
+
+``` r
 screen(2)
 par(mar = c(2,1,1,1))
 
@@ -643,14 +1420,16 @@ letters(x = 7, y = 96, "c)", cex = 1.5)
 #dev.off()
 ```
 
+![](Manyglm_varpart_only_singletons_files/figure-gfm/plot%20da%20particao%20de%20variancia-1.png)<!-- -->
 
 ### Ploting coeffitients and predicted values
 
-Now, we will plot coeffitients for predictors that were important to describe fish community structure. We will focus on the effects of urban cover alone, and that of significant sets of environmental descriptors, which in this case are predictors of stream structure.
+Now, we will plot coeffitients for predictors that were important to
+describe fish community structure. We will focus on the effects of urban
+cover alone, and that of significant sets of environmental descriptors,
+which in this case are predictors of stream structure.
 
-
-
-```{r, warning=FALSE}
+``` r
 urb_coefs <- varpart_peixes$models$urb$coefficients[2,]
 urb_IC_coefs <- varpart_peixes$models$urb$stderr.coefficients[2,] * qnorm(0.975)
 urb_upper_coefs <- urb_coefs + urb_IC_coefs
@@ -728,7 +1507,11 @@ split.screen(matrix(c(0,0.2,0.5,1,
                       0.52,0.68,0,0.5,
                       0.68,0.84,0,0.5,
                       0.84,1,0,0.5), ncol = 4, nrow = 12, byrow = TRUE))
+```
 
+    ##  [1]  1  2  3  4  5  6  7  8  9 10 11 12
+
+``` r
 sp_font <- rep(3, length(names))
 sp_font[names == "Singletons and doubletons"] <- 1
 
@@ -830,18 +1613,17 @@ letters(x = 12, y = 94, "j)", cex = 1.5)
 
 
 #dev.off()
-
 ```
 
+![](Manyglm_varpart_only_singletons_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
-
-Now, we can also plot species predictions for the models we fitted, specifically, we can plot the effects of urban cover and stream structure on fish abundances.
+Now, we can also plot species predictions for the models we fitted,
+specifically, we can plot the effects of urban cover and stream
+structure on fish abundances.
 
 First, lets generate predictions:
 
-```{r, warning=FALSE}
-
-
+``` r
 newdata_urb <- data.frame(urb = seq(from = min(urb), to = max(urb), length.out = 100))
 newdata_urb$urb_squared <- newdata_urb$urb^2
 predicted_urb <- predict.manyglm(varpart_peixes$models$urb, newdata = newdata_urb, type = "response")
@@ -943,11 +1725,9 @@ lwd_bacia2[which(bacia_2_IC_coefs2 < abs(bacia_2_coefs2))] <- 4
 
 poecilidae <- which(colnames(predicted_urb) == "Phalloceros_reisi" | colnames(predicted_urb) == "Phalloceros_harpagos" | colnames(predicted_urb) == "Poecilia_reticulata" | colnames(predicted_urb) == "Poecilia_vivipara")
 NOT_poecilidae <- which(colnames(predicted_urb) != "Phalloceros_reisi" & colnames(predicted_urb) != "Phalloceros_harpagos" & colnames(predicted_urb) != "Poecilia_reticulata" & colnames(predicted_urb) != "Poecilia_vivipara")
-
 ```
 
-```{r, warning=FALSE}
-
+``` r
 #svg("plots/predictions.svg", width = 11, height = 10, pointsize = 13)
 
 
@@ -959,8 +1739,11 @@ split.screen(matrix(c(0  , 0.5, 0.6666666, 1  ,
                       0.5, 1  , 0.3333333, 0.6666666, 
                       0  , 0.5, 0, 0.3333333,
                       0.5, 1  , 0, 0.3333333), ncol = 4, nrow = 6, byrow = TRUE))
+```
 
+    ## [1] 1 2 3 4 5 6
 
+``` r
 ###################################################################### FIRST PLOT
 screen(1)
 
@@ -1203,23 +1986,20 @@ plot(NA, xlim = c(0,100), ylim = c(0,100), xaxt = "n", yaxt = "n", , xaxs = "i",
 font <- rep(3, length(names))
 font[which(names == "Singletons")] <- 1
 
-legend(x = 50, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font, x.intersp	
+legend(x = 50, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font, x.intersp 
 = 1)
-
-#dev.off()
-  
-
-
 ```
 
+![](Manyglm_varpart_only_singletons_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
+``` r
+#dev.off()
+```
 
+It is also usefull to plot loess predictions to compare with the
+predictions from our models:
 
-
-It is also usefull to plot loess predictions to compare with the predictions from our models:
-
-```{r}
-
+``` r
 degree <- 1
 span <- 0.5
 
@@ -1316,22 +2096,9 @@ bacia_plot2 <- newdata_bacia2$bacia_PC2
 
 poecilidae <- which(colnames(loess_pred_urb) == "Phalloceros_reisi" | colnames(loess_pred_urb) == "Phalloceros_harpagos" | colnames(loess_pred_urb) == "Poecilia_reticulata" | colnames(loess_pred_urb) == "Poecilia_vivipara")
 NOT_poecilidae <- which(colnames(loess_pred_urb) != "Phalloceros_reisi" & colnames(loess_pred_urb) != "Phalloceros_harpagos" & colnames(loess_pred_urb) != "Poecilia_reticulata" & colnames(loess_pred_urb) != "Poecilia_vivipara")
-
-
-
-
 ```
 
-
-
-
-
-
-
-
-
-```{r, warning=FALSE}
-
+``` r
 #svg("plots/predictions_loess.svg", width = 11, height = 10, pointsize = 13)
 
 
@@ -1343,8 +2110,11 @@ split.screen(matrix(c(0  , 0.5, 0.6666666, 1  ,
                       0.5, 1  , 0.3333333, 0.6666666, 
                       0  , 0.5, 0, 0.3333333,
                       0.5, 1  , 0, 0.3333333), ncol = 4, nrow = 6, byrow = TRUE))
+```
 
+    ## [1] 1 2 3 4 5 6
 
+``` r
 ###################################################################### FIRST PLOT
 screen(1)
 
@@ -1588,11 +2358,10 @@ font <- rep(3, length(names))
 font[which(names == "Singletons")] <- 1
 
 legend(x = 50, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font)
-
-#dev.off()
-  
-
-
 ```
 
+![](Manyglm_varpart_only_singletons_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
+``` r
+#dev.off()
+```
