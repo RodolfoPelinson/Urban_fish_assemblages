@@ -84,7 +84,9 @@ importance_estrutura <- round(pca_estrutura$CA$eig/sum(pca_estrutura$CA$eig),2)
 Eigenvalues_estrutura <- data.frame(autovalores = pca_estrutura$CA$eig,
                                     importance = importance_estrutura)
 
-sum(importance_estrutura[1:5])
+Eigenvalues_estrutura
+sum(importance_estrutura[1:13])
+
 estrutura_PCs <- pca_estrutura$CA$u
 estrutura_PCs[,1] <- estrutura_PCs[,1]*-1
 estrutura_loadings <- pca_estrutura$CA$v
@@ -105,6 +107,9 @@ estrutura_loadings_filtrados_PC4
 estrutura_loadings_filtrados_PC5 <- estrutura_loadings[which(estrutura_loadings[,5] > 0.2 | estrutura_loadings[,5] < -0.2),5]
 estrutura_loadings_filtrados_PC5
 
+estrutura_loadings_filtrados_PC9 <- estrutura_loadings[which(estrutura_loadings[,9] > 0.2 | estrutura_loadings[,9] < -0.2),9]
+estrutura_loadings_filtrados_PC9
+
 estrutura_loadings_filtrados <- estrutura_loadings[which((estrutura_loadings[,1] > 0.2 | estrutura_loadings[,1] < -0.2) |
                                                          (estrutura_loadings[,2] > 0.2 | estrutura_loadings[,2] < -0.2)),1:2]
 estrutura_loadings_filtrados
@@ -114,9 +119,9 @@ for(i in 1:ncol(estrutura_PCs)){
   urb_cors_estrutura[i] <- cor(estrutura_PCs[,i], urb)
 }
 
-#write.csv(Eigenvalues_estrutura, "data/pcas_amb/estrutura_autovalores.csv")
-#write.csv(estrutura_PCs, "data/pcas_amb/estrutura_PCs.csv")
-#write.csv(estrutura_loadings, "data/pcas_amb/estrutura_loadings.csv")
+write.csv(Eigenvalues_estrutura, "data/pcas_amb/estrutura_autovalores.csv")
+write.csv(estrutura_PCs, "data/pcas_amb/estrutura_PCs.csv")
+write.csv(estrutura_loadings, "data/pcas_amb/estrutura_loadings.csv")
 
 ```
 
@@ -172,14 +177,35 @@ names_estrutura[names_estrutura == "encaixe_alt_antropica"] <- "Anthr. channel c
 pca_bacia <- rda(bacia_st)
 
 importance_bacia <- round(pca_bacia$CA$eig/sum(pca_bacia$CA$eig),2)
-Eigenvalues_bacia <- data.frame(autovalores = pca_bacia$CA$eig,
-                                    importance = importance_bacia)
 
+cumulative_importance_bacia <- rep(NA, length(importance_bacia))
+exp_importance_bacia <- rep(NA, length(importance_bacia))
+
+cumulative_importance_bacia[1] <- importance_bacia[1]
+#exp_importance_bacia[1] <- importance_bacia[1]
+for(i in 2:length(importance_bacia)){
+  cumulative_importance_bacia[i] <- cumulative_importance_bacia[i-1] + importance_bacia[i]
+#  exp_importance_bacia[i] <- importance_bacia[i-1]/2
+}
+
+
+Eigenvalues_bacia <- data.frame(autovalores = pca_bacia$CA$eig,
+                                    importance = importance_bacia,
+                                cumulative_importance_bacia)
+
+Eigenvalues_bacia
+
+screeplot(pca_bacia, bstick = TRUE, type = "lines", 
+          main = "Scree Plot vs Broken Stick Model")
+
+Eigenvalues_bacia
 sum(importance_bacia[1:3])
 bacia_PCs <- pca_bacia$CA$u
 bacia_PCs[,1] <- bacia_PCs[,1]*-1
 bacia_loadings <- pca_bacia$CA$v
 bacia_loadings[,1] <- bacia_loadings[,1]*-1
+
+barplot(Eigenvalues_bacia$importance)
 
 
 
@@ -192,9 +218,9 @@ for(i in 1:ncol(bacia_PCs)){
   urb_cors_bacia[i] <- cor(bacia_PCs[,i], urb)
 }
 
-#write.csv(Eigenvalues_bacia, "data/pcas_amb/bacia_autovalores.csv")
-#write.csv(bacia_PCs, "data/pcas_amb/bacia_PCs.csv")
-#write.csv(bacia_loadings, "data/pcas_amb/bacia_loadings.csv")
+write.csv(Eigenvalues_bacia, "data/pcas_amb/bacia_autovalores.csv")
+write.csv(bacia_PCs, "data/pcas_amb/bacia_PCs.csv")
+write.csv(bacia_loadings, "data/pcas_amb/bacia_loadings.csv")
 ```
 
 
@@ -240,6 +266,7 @@ pca_agua <- rda(agua_st)
 importance_agua <- round(pca_agua$CA$eig/sum(pca_agua$CA$eig),2)
 Eigenvalues_agua <- data.frame(autovalores = pca_agua$CA$eig,
                                 importance = importance_agua)
+Eigenvalues_agua
 
 sum(importance_agua[1:2])
 agua_PCs <- pca_agua$CA$u

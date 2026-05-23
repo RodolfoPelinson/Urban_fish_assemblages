@@ -11,9 +11,7 @@ R2_manyglm <- function(model, model_null){
   
   p <- nrow(data.frame(model$coefficients)) - 1
   
-  #adj_R2 <- 1 - (1 - R2) * (n-1)/(n-p-1)
-  
-  adj_R2 <- R2_c * ((n-p)/(n-1))
+  adj_R2 <- 1 - (((n-1)/(n-p))*(1-R2_c))
   
   ind_R2 <- list(R2 = R2_c, adj_R2 = adj_R2)
   
