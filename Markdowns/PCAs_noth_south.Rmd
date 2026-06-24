@@ -1,0 +1,684 @@
+---
+title: "Environmental PCAs - North vs South"
+author: "Rodolfo Pelinson"
+date: "`r Sys.Date()`"
+output: 
+  github_document: 
+    fig_width: 5
+    fig_height: 15
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, warning=FALSE}
+dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
+```
+
+Loading important functions and packages
+
+```{r, message = FALSE, warning = FALSE}
+library(vegan)
+library(yarrr)
+library(greekLetters)
+library(scales)
+library(shape)
+
+
+```
+
+
+```{r}
+
+assembleia_peixes <- read.csv(paste(sep = "/",dir,"data/com_por_bacia.csv"), row.names = 1)
+
+agua <-read.csv(paste(sep = "/",dir,"data/planilha_agua_assembleias.csv"), row.names = 1)
+estrutura <-read.csv(paste(sep = "/",dir,"data/planilha_estrutura_assembleias.csv"), row.names = 1)
+bacia <- read.csv(paste(sep = "/",dir,"data/planilha_bacia_assembleias.csv"), row.names = 1)
+```
+
+Removing urban cover from watershed descriptors, and a few other predictors that are redundant
+```{r}
+urb <- bacia$urbano_delineamento
+bacia <- bacia[colnames(bacia) != "urbano_delineamento" &
+                 colnames(bacia) != "URB_2021"]
+names(urb) <- rownames(bacia)
+
+estrutura <- estrutura[colnames(estrutura) != "descarga_vel_dim" &
+                   colnames(estrutura) != "descarga_.L.s_sal"&
+                   colnames(estrutura) != "descarga_.L.s_sal"]
+
+```
+
+
+```{r}
+comp_ecotono_arborea <- estrutura$comp_ecotono_arborea + estrutura$comp_ecotono_arbustiva + estrutura$comp_ecotono_pendurada
+comp_ecotono_raizes <- estrutura$comp_ecotono_raizes_finas_em_rede + estrutura$comp_ecotono_raizes_grandes
+comp_ecotono_grasses <- estrutura$comp_ecotono_gramineas + estrutura$comp_ecotono_vegetacao_herbacea + estrutura$comp_ecotono_herbacea_ereta
+comp_ecotono_aquatic_veg <- estrutura$comp_ecotono_submersa + estrutura$comp_ecotono_flutuante
+comp_ecotono_anthropic_complex_est <- estrutura$comp_ecotono_entulho + estrutura$comp_ecotono_arame
+
+
+estrutura <- estrutura[,-which(colnames(estrutura) %in% c("comp_ecotono_arbustiva",
+                                "comp_ecotono_arborea",
+                                "comp_ecotono_gramineas",
+                                "comp_ecotono_vegetacao_herbacea",
+                                "comp_ecotono_herbacea_ereta",
+                                "comp_ecotono_pendurada",
+                                "comp_ecotono_submersa",
+                                "comp_ecotono_flutuante",
+                                "comp_ecotono_entulho",
+                                "comp_ecotono_arame",
+                                "comp_ecotono_raizes_finas_em_rede",
+                                "comp_ecotono_raizes_grandes"))]
+
+estrutura <- cbind(estrutura, comp_ecotono_arborea, comp_ecotono_raizes, comp_ecotono_grasses, comp_ecotono_aquatic_veg, comp_ecotono_anthropic_complex_est)
+
+```
+
+
+```{r}
+substrato_areia <- estrutura$substrato_silte + estrutura$substrato_areia
+substrato_cascalho <- estrutura$substrato_cascalho + estrutura$substrato_seixo
+substrato_litter <- estrutura$substrato_litter + estrutura$substrato_litter_grosseiro
+substrato_galhos_troncos <-  estrutura$substrato_galhos_grandes_troncos + estrutura$substrato_galhos_pequenos
+substrato_entulho <-  estrutura$substrato_entulho + estrutura$substrato_arame
+
+
+estrutura <- estrutura[,-which(colnames(estrutura) %in% c("substrato_silte",
+                                                         "substrato_areia",
+                                "substrato_cascalho",
+                                "substrato_seixo",
+                                "substrato_litter",
+                                "substrato_litter_grosseiro",
+                                "substrato_galhos_grandes_troncos",
+                                "substrato_galhos_pequenos",
+                                "substrato_entulho",
+                                "substrato_arame"))]
+                                
+
+estrutura <- cbind(estrutura, substrato_areia, substrato_cascalho, substrato_litter, substrato_galhos_troncos, substrato_entulho)
+
+```
+
+```{r}
+
+comp_zona_riparia_veg_arborea <- estrutura$comp_zona_riparia_veg_arborea + estrutura$comp_zona_riparia_veg_arbustiva
+comp_zona_riparia_grasses <- estrutura$comp_zona_riparia_veg_herbacea + estrutura$comp_zona_riparia_veg_herb_ereta + estrutura$comp_zona_riparia_graminea
+comp_zona_riparia_const_anthr <- estrutura$comp_zona_riparia_calcada + estrutura$comp_zona_riparia_asfalto + estrutura$comp_zona_riparia_constucao + estrutura$comp_zona_riparia_canal_vert + estrutura$comp_zona_riparia_grade_arame
+comp_zona_riparia_agriculture <- estrutura$comp_zona_riparia_plantacao + estrutura$comp_zona_riparia_pastagem
+
+estrutura <- estrutura[,-which(colnames(estrutura) %in% c("comp_zona_riparia_veg_arborea",                      
+                                "comp_zona_riparia_veg_arbustiva",
+                                "comp_zona_riparia_veg_herbacea",                     
+                                "comp_zona_riparia_veg_herb_ereta",            
+                                "comp_zona_riparia_graminea",
+                                "comp_zona_riparia_calcada",                          
+                                "comp_zona_riparia_asfalto",
+                                "comp_zona_riparia_constucao",                        
+                                "comp_zona_riparia_canal_vert",                       
+                                "comp_zona_riparia_grade_arame",
+                                "comp_zona_riparia_plantacao",                        
+                                "comp_zona_riparia_pastagem"))]
+
+estrutura <- cbind(estrutura, comp_zona_riparia_veg_arborea, comp_zona_riparia_grasses, comp_zona_riparia_const_anthr, comp_zona_riparia_agriculture)
+
+```
+
+
+
+```{r}
+pert_zona_riparia_entulho_e_lixo <- estrutura$pert_zona_riparia_entulho + estrutura$pert_zona_riparia_lixo_inorganico
+pert_zona_riparia_construções <- estrutura$pert_zona_riparia_construcoes + estrutura$pert_zona_riparia_bomba
+
+estrutura <- estrutura[,-which(colnames(estrutura) %in% c("pert_zona_riparia_entulho",
+                                "pert_zona_riparia_lixo_inorganico",
+                                "pert_zona_riparia_construcoes",
+                                "pert_zona_riparia_bomba"))]
+
+
+estrutura <- cbind(estrutura, pert_zona_riparia_entulho_e_lixo, pert_zona_riparia_construções)
+
+```
+
+
+
+```{r}
+estrutura_dentro_do_canal_pedaco_de_madeira <- estrutura$estrutura_dentro_do_canal_pedaco_de_madeira_grande + estrutura$estrutura_dentro_do_canal_pedaco_de_madeira_pequeno
+estrutura_dentro_do_canal_macrofitas_e_raizes <- estrutura$estrutura_dentro_do_canal_raizes_vivas + estrutura$estrutura_dentro_do_canal_vegetacao_pendurada + estrutura$estrutura_dentro_do_canal_macrofita
+estrutura_dentro_do_canal_grasses <- estrutura$estrutura_dentro_do_canal_herb_ereta + estrutura$estrutura_dentro_do_canal_graminea
+estrutura_dentro_do_canal_entulho_e_lixo <- estrutura$estrutura_dentro_do_canal_entulho + estrutura$estrutura_dentro_do_canal_lixo_inorganico
+
+estrutura <- estrutura[,-which(colnames(estrutura) %in% c("estrutura_dentro_do_canal_pedaco_de_madeira_grande", 
+                                "estrutura_dentro_do_canal_pedaco_de_madeira_pequeno",
+                                "estrutura_dentro_do_canal_raizes_vivas",
+                                "estrutura_dentro_do_canal_vegetacao_pendurada", 
+                                "estrutura_dentro_do_canal_macrofita", 
+                                "estrutura_dentro_do_canal_herb_ereta",               
+                                "estrutura_dentro_do_canal_graminea",   
+                                "estrutura_dentro_do_canal_entulho",                  
+                                "estrutura_dentro_do_canal_lixo_inorganico"))]
+
+estrutura <- cbind(estrutura, estrutura_dentro_do_canal_pedaco_de_madeira, estrutura_dentro_do_canal_macrofitas_e_raizes, estrutura_dentro_do_canal_grasses, estrutura_dentro_do_canal_entulho_e_lixo)
+
+         
+              
+
+```
+
+
+```{r}
+vars <- colnames(estrutura)
+estrutura <- estrutura[,order(vars)]
+```
+
+
+# Sctructural complexity
+```{r}
+colnames(estrutura)
+colnames(bacia)
+colnames(agua)
+
+structural_complexity_vars <- c("dossel",
+                                "comp_ecotono_anthropic_complex_est",          
+                                "comp_ecotono_aquatic_veg",                     
+                                "comp_ecotono_arborea",                         
+                                "comp_ecotono_concreto",                        
+                                "comp_ecotono_grasses",                         
+                                "comp_ecotono_raizes",                          
+                                "comp_ecotono_rocha",                           
+                                "comp_ecotono_solo_exposto",
+                                
+                                "substrato_areia",                              
+                                "substrato_argila",                             
+                                "substrato_cascalho",                           
+                                "substrato_concreto" ,                          
+                                "substrato_entulho"  ,                          
+                                "substrato_galhos_troncos" ,                    
+                                "substrato_litter"    ,                         
+                                "substrato_lodo" ,                              
+                                "substrato_matacao" ,                           
+                                "substrato_rocha",
+                                
+                                "tipo_de_canal_corredeira",
+                                "tipo_de_canal_poco",
+                                "tipo_de_canal_cascata",
+                                "tipo_de_canal_fluxo_continuo",
+                                
+                                "pert_zona_riparia_animais_criacao",            
+                                "pert_zona_riparia_cano_esgoto",                
+                                "pert_zona_riparia_construções",                
+                                "pert_zona_riparia_entulho_e_lixo"  ,           
+                                "pert_zona_riparia_lixo_organico" ,
+                                
+                                "comp_zona_riparia_agriculture",                
+                                "comp_zona_riparia_area_alagada",               
+                                "comp_zona_riparia_const_anthr",                
+                                "comp_zona_riparia_grasses",                    
+                                "comp_zona_riparia_solo_exposto",               
+                                "comp_zona_riparia_veg_arborea",
+                                
+                                "estrutura_dentro_do_canal_banco_de_folhas",    
+                                "estrutura_dentro_do_canal_banco_de_terra",     
+                                "estrutura_dentro_do_canal_cianobacterias",     
+                                "estrutura_dentro_do_canal_entulho_e_lixo",     
+                                "estrutura_dentro_do_canal_grasses",            
+                                "estrutura_dentro_do_canal_macrofitas_e_raizes",
+                                "estrutura_dentro_do_canal_matacao",            
+                                "estrutura_dentro_do_canal_pedaco_de_madeira",
+                                
+                               #"encaixe_rocha",                                      
+                               #"encaixe_vale",                                       
+                               #"encaixe_terraco",                                    
+                               #"encaixe_alt_antropica",                              
+                               #"encaixe_sem_feicoes",                                
+                                "tipo_de_encaixe_vale_em_U",                          
+                                "tipo_de_encaixe_concavo",                            
+                                "tipo_de_encaixe_encaixado_canalizado",               
+                                "tipo_de_encaixe_vale_assimetrico")
+
+
+hydrology_vars <- c("nova_descarga_sal",
+                    "sinuosidade",
+                    "prof_media",
+                    "larg_media",
+                    "velocidade_media",
+                    "Area_ha",
+                    "Ic",
+                    "Kc",
+                    "Declividade_av",
+                    "Altitude_av")
+
+water_quality_vars <- c("chlorophyll_a",
+                    "phycocyanin",
+                    "Temperature_.oC.",
+                    "DO_.mg.L.",
+                    "pH",
+                    "turbidity_.NTU.",
+                    "redox_potential_.mV.",
+                    "TC",
+                    "TN",
+                    "SPC_.uS.cm.")
+```
+
+
+```{r}
+#Join all variables
+env_pred <- cbind(estrutura, bacia, agua)
+
+structural_complexity <- env_pred[,which(colnames(env_pred) %in% structural_complexity_vars)]
+hydrology <- env_pred[,which(colnames(env_pred) %in% hydrology_vars)]
+water_quality <- env_pred[,which(colnames(env_pred) %in% water_quality_vars)]
+
+
+```
+
+
+Standardizing predictors
+```{r}
+structural_complexity_st <- decostand(structural_complexity, method = "stand")
+hydrology_st <- decostand(hydrology, method = "stand")
+water_quality_st <- decostand(water_quality, method = "stand")
+
+
+#numero de colunas de cada uma
+ncol(water_quality_st)
+ncol(structural_complexity_st)
+ncol(hydrology_st)
+
+```
+
+
+### PCA structural complexity
+
+```{r}
+pca_structural_complexity <- rda(structural_complexity_st)
+
+importance_structural_complexity <- round(pca_structural_complexity$CA$eig/sum(pca_structural_complexity$CA$eig),2)
+Eigenvalues_structural_complexity <- data.frame(autovalores = pca_structural_complexity$CA$eig,
+                                    importance = importance_structural_complexity)
+
+Eigenvalues_structural_complexity
+sum(importance_structural_complexity[1:2])
+
+structural_complexity_PCs <- pca_structural_complexity$CA$u
+#structural_complexity_PCs[,1] <- structural_complexity_PCs[,1]*-1
+structural_complexity_loadings <- pca_structural_complexity$CA$v
+#structural_complexity_loadings[,1] <- structural_complexity_loadings[,1]*-1
+  
+structural_complexity_loadings_filtrados_PC1 <- structural_complexity_loadings[which(structural_complexity_loadings[,1] > 0.2 | structural_complexity_loadings[,1] < -0.2),1]
+structural_complexity_loadings_filtrados_PC1
+
+structural_complexity_loadings_filtrados_PC2 <- structural_complexity_loadings[which(structural_complexity_loadings[,2] > 0.2 | structural_complexity_loadings[,2] < -0.2),2]
+structural_complexity_loadings_filtrados_PC2
+
+structural_complexity_loadings_filtrados_PC3 <- structural_complexity_loadings[which(structural_complexity_loadings[,3] > 0.2 | structural_complexity_loadings[,3] < -0.2),3]
+structural_complexity_loadings_filtrados_PC3
+
+structural_complexity_loadings_filtrados_PC4 <- structural_complexity_loadings[which(structural_complexity_loadings[,4] > 0.2 | structural_complexity_loadings[,4] < -0.2),4]
+structural_complexity_loadings_filtrados_PC4
+
+structural_complexity_loadings_filtrados_PC5 <- structural_complexity_loadings[which(structural_complexity_loadings[,5] > 0.2 | structural_complexity_loadings[,5] < -0.2),5]
+structural_complexity_loadings_filtrados_PC5
+
+structural_complexity_loadings_filtrados_PC9 <- structural_complexity_loadings[which(structural_complexity_loadings[,9] > 0.2 | structural_complexity_loadings[,9] < -0.2),9]
+structural_complexity_loadings_filtrados_PC9
+
+structural_complexity_loadings_filtrados <- structural_complexity_loadings[which((structural_complexity_loadings[,1] > 0.2 | structural_complexity_loadings[,1] < -0.2) |
+                                                         (structural_complexity_loadings[,2] > 0.2 | structural_complexity_loadings[,2] < -0.2)),1:2]
+structural_complexity_loadings_filtrados
+
+urb_cors_structural_complexity <- rep(NA, ncol(structural_complexity_PCs))
+for(i in 1:ncol(structural_complexity_PCs)){
+  urb_cors_structural_complexity[i] <- cor(structural_complexity_PCs[,i], urb)
+}
+
+#write.csv(Eigenvalues_structural_complexity, "data/pcas_amb/structural_complexity_autovalores.csv")
+#write.csv(structural_complexity_PCs, "data/pcas_amb/structural_complexity_PCs.csv")
+#write.csv(structural_complexity_loadings, "data/pcas_amb/structural_complexity_loadings.csv")
+
+```
+
+
+Preparing variables for plotting the PCA
+
+```{r}
+#Plot parameters
+scaler <- min(max(abs(structural_complexity_PCs[, 1]))/max(abs(structural_complexity_loadings_filtrados[,1])),
+              max(abs(structural_complexity_PCs[, 2]))/max(abs(structural_complexity_loadings_filtrados[,2])))
+
+structural_complexity_loadings_filtrados_new <- structural_complexity_loadings_filtrados * scaler * 0.8
+
+#structural_complexity_PCs <- jitter(structural_complexity_PCs, amount = 0.1)
+
+pc1_label_structural_complexity <- paste("PC1 (",round(importance_structural_complexity[1]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_structural_complexity[1], 3), ")", sep = "")
+
+pc2_label_structural_complexity <- paste("PC2 (",round(importance_structural_complexity[2]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_structural_complexity[2], 3), ")", sep = "")
+
+xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))*1.1
+xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))*1.1
+ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))*1.1
+ymax <- max(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))*1.1
+
+
+
+#Plot########################################################################################
+names_structural_complexity <- rownames(structural_complexity_loadings_filtrados_new)
+
+names_structural_complexity[names_structural_complexity == "comp_ecotono_grasses"] <- "Marginal grasses"
+names_structural_complexity[names_structural_complexity == "comp_ecotono_arborea"] <- "Marginal arboreal veg."
+names_structural_complexity[names_structural_complexity == "comp_ecotono_aquatic_veg"] <- "Marginal aquatic veg."
+names_structural_complexity[names_structural_complexity == "comp_ecotono_raizes"] <- "Marginal roots"
+
+names_structural_complexity[names_structural_complexity == "substrato_rocha"] <- "Rocky substrate"
+names_structural_complexity[names_structural_complexity == "substrato_argila"] <- "Muddy substrate"
+
+names_structural_complexity[names_structural_complexity == "tipo_de_canal_corredeira"] <- "Rapids"
+names_structural_complexity[names_structural_complexity == "tipo_de_canal_poco"] <- "Pools"
+names_structural_complexity[names_structural_complexity == "tipo_de_canal_fluxo_continuo"] <- "Continuous flow"
+
+names_structural_complexity[names_structural_complexity == "pert_zona_riparia_cano_esgoto"] <- "Swage pipes on RZ"
+names_structural_complexity[names_structural_complexity == "pert_zona_riparia_lixo_inorganico"] <- "Inorganic waste on RZ"
+names_structural_complexity[names_structural_complexity == "comp_zona_riparia_veg_arborea"] <- "Arboreal vegetation on RZ"
+names_structural_complexity[names_structural_complexity == "comp_zona_riparia_const_anthr"] <- "Rubble and rubbish on RZ"
+names_structural_complexity[names_structural_complexity == "comp_zona_riparia_grasses"] <- "Grasses on RZ"
+
+#names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_entulho"] <- "Construction waste inside"
+#names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_lixo_inorganico"] <- "Inorganic waste inside"
+
+names_structural_complexity[names_structural_complexity == "encaixe_vale"] <- "Valley channel confinement"
+names_structural_complexity[names_structural_complexity == "encaixe_alt_antropica"] <- "Anthr. channel confinement"
+names_structural_complexity[names_structural_complexity == "tipo_de_encaixe_vale_em_U"] <- "U shaped channel confinement"
+
+names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_entulho_e_lixo"] <- "Rubble and rubbish IC"
+names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_macrofitas_e_raizes"] <- "Macrophytes and roots IC"
+
+
+```
+
+
+
+### PCA Hydrology
+
+```{r}
+pca_hydrology <- rda(hydrology_st)
+
+importance_hydrology <- round(pca_hydrology$CA$eig/sum(pca_hydrology$CA$eig),2)
+
+cumulative_importance_hydrology <- rep(NA, length(importance_hydrology))
+exp_importance_hydrology <- rep(NA, length(importance_hydrology))
+
+cumulative_importance_hydrology[1] <- importance_hydrology[1]
+#exp_importance_hydrology[1] <- importance_hydrology[1]
+for(i in 2:length(importance_hydrology)){
+  cumulative_importance_hydrology[i] <- cumulative_importance_hydrology[i-1] + importance_hydrology[i]
+#  exp_importance_hydrology[i] <- importance_hydrology[i-1]/2
+}
+
+
+Eigenvalues_hydrology <- data.frame(autovalores = pca_hydrology$CA$eig,
+                                    importance = importance_hydrology,
+                                cumulative_importance_hydrology)
+
+Eigenvalues_hydrology
+
+
+Eigenvalues_hydrology
+sum(importance_hydrology[1:3])
+hydrology_PCs <- pca_hydrology$CA$u
+hydrology_PCs[,1] <- hydrology_PCs[,1]*-1
+hydrology_loadings <- pca_hydrology$CA$v
+hydrology_loadings[,1] <- hydrology_loadings[,1]*-1
+
+
+hydrology_loadings_filtrados <- hydrology_loadings[which((hydrology_loadings[,1] > 0.2 | hydrology_loadings[,1] < -0.2) |
+                                                         (hydrology_loadings[,2] > 0.2 | hydrology_loadings[,2] < -0.2)),1:2]
+hydrology_loadings_filtrados
+
+urb_cors_hydrology <- rep(NA, ncol(hydrology_PCs))
+for(i in 1:ncol(hydrology_PCs)){
+  urb_cors_hydrology[i] <- cor(hydrology_PCs[,i], urb)
+}
+
+#write.csv(Eigenvalues_hydrology, "data/pcas_amb/hydrology_autovalores.csv")
+#write.csv(hydrology_PCs, "data/pcas_amb/hydrology_PCs.csv")
+#write.csv(hydrology_loadings, "data/pcas_amb/hydrology_loadings.csv")
+```
+
+
+Preparing variables for plotting the PCA
+
+```{r}
+#Plot parameters
+scaler <- min(max(abs(hydrology_PCs[, 1]))/max(abs(hydrology_loadings_filtrados[,1])),
+              max(abs(hydrology_PCs[, 2]))/max(abs(hydrology_loadings_filtrados[,2])))
+
+hydrology_loadings_filtrados_new <- hydrology_loadings_filtrados * scaler * 0.8
+
+#hydrology_PCs <- jitter(hydrology_PCs, amount = 0.1)
+
+pc1_label_hydrology <- paste("PC1 (",round(importance_hydrology[1]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_hydrology[1], 3), ")", sep = "")
+
+pc2_label_hydrology <- paste("PC2 (",round(importance_hydrology[2]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_hydrology[2], 3), ")", sep = "")
+
+xmin <- min(c(hydrology_PCs[,1], hydrology_loadings_filtrados_new[,1]))*1.1
+xmax <- max(c(hydrology_PCs[,1], hydrology_loadings_filtrados_new[,1]))*1.1
+ymin <- min(c(hydrology_PCs[,2], hydrology_loadings_filtrados_new[,2]))*1.1
+ymax <- max(c(hydrology_PCs[,2], hydrology_loadings_filtrados_new[,2]))*1.1
+
+
+
+#Plot########################################################################################
+names_hydrology <- rownames(hydrology_loadings_filtrados_new)
+
+names_hydrology[names_hydrology == "larg_media"] <- "Width" 
+names_hydrology[names_hydrology == "nova_descarga_sal"] <- "Discharge"
+names_hydrology[names_hydrology == "prof_media"] <- "Depth"
+names_hydrology[names_hydrology == "sinuosidade"] <- "Sinuosity"
+names_hydrology[names_hydrology == "velocidade_media"] <- "Water velocity"
+names_hydrology[names_hydrology == "Area_ha"] <- "Area"
+names_hydrology[names_hydrology == "Ic"] <- "IC"
+names_hydrology[names_hydrology == "Kc"] <- "KC"
+names_hydrology[names_hydrology == "Declividade_av"] <- "Slope"
+names_hydrology[names_hydrology == "Altitude_av"] <- "Altitude"
+
+
+```
+
+
+### PCA water quality
+
+```{r}
+pca_water_quality <- rda(water_quality_st)
+
+importance_water_quality <- round(pca_water_quality$CA$eig/sum(pca_water_quality$CA$eig),2)
+Eigenvalues_water_quality <- data.frame(autovalores = pca_water_quality$CA$eig,
+                                importance = importance_water_quality)
+Eigenvalues_water_quality
+
+sum(importance_water_quality[1:2])
+water_quality_PCs <- pca_water_quality$CA$u
+water_quality_loadings <- pca_water_quality$CA$v
+
+water_quality_loadings_filtrados <- water_quality_loadings[which((water_quality_loadings[,1] > 0.2 | water_quality_loadings[,1] < -0.2) |
+                                                         (water_quality_loadings[,2] > 0.2 | water_quality_loadings[,2] < -0.2)),1:2]
+
+water_quality_loadings_filtrados
+
+
+urb_cors_water_quality <- rep(NA, ncol(water_quality_PCs))
+for(i in 1:ncol(water_quality_PCs)){
+  urb_cors_water_quality[i] <- cor(water_quality_PCs[,i], urb)
+}
+#write.csv(Eigenvalues_water_quality, "data/pcas_amb/water_quality_autovalores.csv")
+#write.csv(water_quality_PCs, "data/pcas_amb/water_quality_PCs.csv")
+#write.csv(water_quality_loadings, "data/pcas_amb/water_quality_loadings.csv")
+```
+
+
+Preparing variables for plotting the PCA
+
+```{r}
+#Plot parameters
+scaler <- min(max(abs(water_quality_PCs[, 1]))/max(abs(water_quality_loadings_filtrados[,1])),
+              max(abs(water_quality_PCs[, 2]))/max(abs(water_quality_loadings_filtrados[,2])))
+
+water_quality_loadings_filtrados_new <- water_quality_loadings_filtrados * scaler * 0.8
+
+#water_quality_PCs <- jitter(water_quality_PCs, amount = 0.1)
+
+
+
+
+
+pc1_label_water_quality <- paste("PC1 (",round(importance_water_quality[1]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_water_quality[1], 3), ")", sep = "")
+
+pc2_label_water_quality <- paste("PC2 (",round(importance_water_quality[2]*100,2),"%)", " (", greeks("rho"), " = ", round(urb_cors_water_quality[2], 3), ")", sep = "")
+
+xmin <- min(c(water_quality_PCs[,1], water_quality_loadings_filtrados_new[,1]))*1.1
+xmax <- max(c(water_quality_PCs[,1], water_quality_loadings_filtrados_new[,1]))*1.1
+ymin <- min(c(water_quality_PCs[,2], water_quality_loadings_filtrados_new[,2]))*1.1
+ymax <- max(c(water_quality_PCs[,2], water_quality_loadings_filtrados_new[,2]))*1.1
+
+
+
+#Plot########################################################################################
+names_water_quality <- rownames(water_quality_loadings_filtrados_new)
+
+names_water_quality[names_water_quality == "chlorophyll_a"] <- "Chlorophyll-a" 
+names_water_quality[names_water_quality == "phycocyanin"] <- "Phycocyanin"
+names_water_quality[names_water_quality == "Temperature_.oC."] <- "Temperature"
+names_water_quality[names_water_quality == "pH"] <- "pH"
+names_water_quality[names_water_quality == "turbidity_.NTU."] <- "Turbidity"
+names_water_quality[names_water_quality == "redox_potential_.mV."] <- "Redox potential"
+names_water_quality[names_water_quality == "TC"] <- "TC"
+names_water_quality[names_water_quality == "TN"] <- "TN"
+names_water_quality[names_water_quality == "SPC_.uS.cm."] <- "Specific conductivity"
+names_water_quality[names_water_quality == "DO_.mg.L."] <- "DO"
+```
+
+
+
+## PCA plots
+
+```{r,   fig.width = 3.5, fig.height = 10.5, dpi = 600, dev.args= list(pointsize=6), eval = TRUE, echo = TRUE}
+
+#svg("plots/pcas_N_S.svg", height = 10.5, width = 3.5, pointsize = 6)
+
+par(mfrow =c(3,1))
+
+par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
+xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))*1.2
+xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))*1.6
+ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))*1.2
+ymax <- max(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))*1.2
+
+plot(structural_complexity_PCs[,1], structural_complexity_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
+     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+
+abline(h = 0, v = 0, lty = 2)
+
+
+pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+col <-pal(urb)
+
+Arrows(x0 <- rep(0, nrow(structural_complexity_loadings_filtrados_new)),
+       y0 <- rep(0, nrow(structural_complexity_loadings_filtrados_new)),
+       x1 <- structural_complexity_loadings_filtrados_new[,1],
+       y1 <- structural_complexity_loadings_filtrados_new[,2], arr.type = "triangle", arr.length = 0.4, col = "#98DF8A", lwd = 1.5)
+
+points(structural_complexity_PCs[,1],structural_complexity_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
+#text(structural_complexity_PCs[,1],structural_complexity_PCs[,2], labels = rownames(structural_complexity_PCs))
+
+
+text(x = structural_complexity_loadings_filtrados_new[,1], y = structural_complexity_loadings_filtrados_new[,2], labels = names_structural_complexity, cex = 1, font = 2, xpd = NA)
+
+axis(1, cex.axis = 1.25)
+axis(2, cex.axis = 1.25, las = 2)
+title(xlab = pc1_label_structural_complexity, cex.lab = 1.4, line = 2.75)
+title(ylab = pc2_label_structural_complexity, cex.lab = 1.4, line = 2.75)
+title(main = "a) Structural complexity", line = 0.5, adj = 0, cex.main = 1.5)
+
+
+
+
+
+par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
+xmin <- min(c(water_quality_PCs[,1], water_quality_loadings_filtrados_new[,1]))*1.2
+xmax <- max(c(water_quality_PCs[,1], water_quality_loadings_filtrados_new[,1]))*1.2
+ymin <- min(c(water_quality_PCs[,2], water_quality_loadings_filtrados_new[,2]))*1.2
+ymax <- max(c(water_quality_PCs[,2], water_quality_loadings_filtrados_new[,2]))*1.2
+
+plot(water_quality_PCs[,1], water_quality_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
+     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+
+abline(h = 0, v = 0, lty = 2)
+
+library(scales)
+library(shape)
+
+
+pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+col <-pal(urb)
+
+Arrows(x0 <- rep(0, nrow(water_quality_loadings_filtrados_new)),
+       y0 <- rep(0, nrow(water_quality_loadings_filtrados_new)),
+       x1 <- water_quality_loadings_filtrados_new[,1],
+       y1 <- water_quality_loadings_filtrados_new[,2], arr.type = "triangle", arr.length = 0.4, col = "#9EDAE5", lwd = 1.5)
+
+points(water_quality_PCs[,1],water_quality_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
+#text(water_quality_PCs[,1],water_quality_PCs[,2], labels = rownames(water_quality_PCs))
+
+text(x = water_quality_loadings_filtrados_new[,1], y = water_quality_loadings_filtrados_new[,2], labels = names_water_quality, cex = 1, font = 2, xpd = NA)
+
+axis(1, cex.axis = 1.25)
+axis(2, cex.axis = 1.25, las = 2)
+title(xlab = pc1_label_water_quality, cex.lab = 1.4, line = 2.75)
+title(ylab = pc2_label_water_quality, cex.lab = 1.4, line = 2.75)
+title(main = "b) Water quality", line = 0.5, adj = 0, cex.main = 1.5)
+
+
+
+
+
+par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
+xmin <- min(c(hydrology_PCs[,1], hydrology_loadings_filtrados_new[,1]))*1.2
+xmax <- max(c(hydrology_PCs[,1], hydrology_loadings_filtrados_new[,1]))*1.2
+ymin <- min(c(hydrology_PCs[,2], hydrology_loadings_filtrados_new[,2]))*1.2
+ymax <- max(c(hydrology_PCs[,2], hydrology_loadings_filtrados_new[,2]))*1.2
+
+plot(hydrology_PCs[,1], hydrology_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
+     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+
+abline(h = 0, v = 0, lty = 2)
+
+library(scales)
+library(shape)
+
+
+pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+col <-pal(urb)
+
+Arrows(x0 <- rep(0, nrow(hydrology_loadings_filtrados_new)),
+       y0 <- rep(0, nrow(hydrology_loadings_filtrados_new)),
+       x1 <- hydrology_loadings_filtrados_new[,1],
+       y1 <- hydrology_loadings_filtrados_new[,2], arr.type = "triangle", arr.length = 0.4, col = "#FFBB78", lwd = 1.5)
+
+points(hydrology_PCs[,1],hydrology_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
+#text(hydrology_PCs[,1],hydrology_PCs[,2], labels = rownames(hydrology_PCs))
+
+text(x = hydrology_loadings_filtrados_new[,1], y = hydrology_loadings_filtrados_new[,2], labels = names_hydrology, cex = 1, font = 2, xpd = NA)
+
+axis(1, cex.axis = 1.25)
+axis(2, cex.axis = 1.25, las = 2)
+title(xlab = pc1_label_hydrology, cex.lab = 1.4, line = 2.75)
+title(ylab = pc2_label_hydrology, cex.lab = 1.4, line = 2.75)
+title(main = "c) Hydrology", line = 0.5, adj = 0, cex.main = 1.5)
+#dev.off()
+
+```
+
