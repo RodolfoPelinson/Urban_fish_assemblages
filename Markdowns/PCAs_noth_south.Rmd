@@ -701,7 +701,7 @@ axis(2, cex.axis = 1.25, las = 2)
 title(xlab = pc1_label_hydrology, cex.lab = 1.4, line = 2.75)
 title(ylab = pc2_label_hydrology, cex.lab = 1.4, line = 2.75)
 title(main = "c) Hydrology", line = 0.5, adj = 0, cex.main = 1.5)
-#dev.off()
+# dev.off()
 
 ```
 
