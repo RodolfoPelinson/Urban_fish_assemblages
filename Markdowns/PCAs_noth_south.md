@@ -564,7 +564,7 @@ names_structural_complexity[names_structural_complexity == "tipo_de_canal_corred
 names_structural_complexity[names_structural_complexity == "tipo_de_canal_poco"] <- "Pools"
 names_structural_complexity[names_structural_complexity == "tipo_de_canal_fluxo_continuo"] <- "Continuous flow"
 
-names_structural_complexity[names_structural_complexity == "pert_zona_riparia_cano_esgoto"] <- "Swage pipes on RZ"
+names_structural_complexity[names_structural_complexity == "pert_zona_riparia_cano_esgoto"] <- "Swage pipes RZ"
 #names_structural_complexity[names_structural_complexity == "pert_zona_riparia_lixo_inorganico"] <- "Inorganic waste on RZ"
 names_structural_complexity[names_structural_complexity == "pert_zona_riparia_entulho_e_lixo"] <- "Rubble and rubbish IC"
 names_structural_complexity[names_structural_complexity == "comp_zona_riparia_veg_arborea"] <- "Arboreal vegetation RZ"
@@ -955,5 +955,5 @@ title(main = "c) Hydrology", line = 0.5, adj = 0, cex.main = 1.5)
 ![](PCAs_noth_south_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
-#dev.off()
+# dev.off()
 ```
