@@ -823,8 +823,8 @@ names_water_quality[names_water_quality == "DO_.mg.L."] <- "DO"
 par(mfrow =c(3,1))
 
 par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
-xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.35
-xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.37
+xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.4
+xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.3
 ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))-0.1
 ymax <- max(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))+0.1
 
@@ -871,7 +871,7 @@ par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
 xmin <- min(c(water_quality_PCs[,1], water_quality_loadings_filtrados_new[,1]))-0.1
 xmax <- max(c(water_quality_PCs[,1], water_quality_loadings_filtrados_new[,1]))+0.2
 ymin <- min(c(water_quality_PCs[,2], water_quality_loadings_filtrados_new[,2]))-0.1
-ymax <- max(c(water_quality_PCs[,2], water_quality_loadings_filtrados_new[,2]))
+ymax <- max(c(water_quality_PCs[,2], water_quality_loadings_filtrados_new[,2]))+0.05
 
 plot(water_quality_PCs[,1], water_quality_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
      type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
