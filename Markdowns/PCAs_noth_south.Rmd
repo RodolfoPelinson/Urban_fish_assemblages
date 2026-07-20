@@ -324,9 +324,9 @@ Eigenvalues_structural_complexity
 sum(importance_structural_complexity[1:2])
 
 structural_complexity_PCs <- pca_structural_complexity$CA$u
-#structural_complexity_PCs[,1] <- structural_complexity_PCs[,1]*-1
+structural_complexity_PCs[,1] <- structural_complexity_PCs[,1]*-1
 structural_complexity_loadings <- pca_structural_complexity$CA$v
-#structural_complexity_loadings[,1] <- structural_complexity_loadings[,1]*-1
+structural_complexity_loadings[,1] <- structural_complexity_loadings[,1]*-1
   
 structural_complexity_loadings_filtrados <- structural_complexity_loadings[which((structural_complexity_loadings[,1] > 0.2 | structural_complexity_loadings[,1] < -0.2) |
                                                          (structural_complexity_loadings[,2] > 0.2 | structural_complexity_loadings[,2] < -0.2)),1:2]
@@ -383,9 +383,9 @@ names_structural_complexity[names_structural_complexity == "tipo_de_canal_fluxo_
 
 names_structural_complexity[names_structural_complexity == "pert_zona_riparia_cano_esgoto"] <- "Swage pipes RZ"
 #names_structural_complexity[names_structural_complexity == "pert_zona_riparia_lixo_inorganico"] <- "Inorganic waste on RZ"
-names_structural_complexity[names_structural_complexity == "pert_zona_riparia_entulho_e_lixo"] <- "Rubble and rubbish IC"
+names_structural_complexity[names_structural_complexity == "pert_zona_riparia_entulho_e_lixo"] <- "Rubble and rubbish RZ"
 names_structural_complexity[names_structural_complexity == "comp_zona_riparia_veg_arborea"] <- "Arboreal vegetation RZ"
-names_structural_complexity[names_structural_complexity == "comp_zona_riparia_const_anthr"] <- "Rubble and rubbish RZ"
+names_structural_complexity[names_structural_complexity == "comp_zona_riparia_const_anthr"] <- "Pavement and buildings RZ"
 names_structural_complexity[names_structural_complexity == "comp_zona_riparia_grasses"] <- "Grasses RZ"
 
 #names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_entulho"] <- "Construction waste inside"
@@ -397,7 +397,8 @@ names_structural_complexity[names_structural_complexity == "tipo_de_encaixe_vale
 
 names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_entulho_e_lixo"] <- "Rubble and rubbish IC"
 names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_macrofitas_e_raizes"] <- "Macrophytes and roots IC"
-names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_pedaco_de_madeira"] <- "Wood pieces IC"
+names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_pedaco_de_madeira"] <- "Wood IC"
+names_structural_complexity[names_structural_complexity == "dossel"] <- "Canopy cover"
 
 
 ```
@@ -574,9 +575,9 @@ names_water_quality[names_water_quality == "DO_.mg.L."] <- "DO"
 par(mfrow =c(3,1))
 
 par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
-xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.4
-xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.3
-ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))-0.1
+xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.3
+xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.4
+ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))-0.05
 ymax <- max(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))+0.1
 
 plot(structural_complexity_PCs[,1], structural_complexity_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
@@ -701,7 +702,7 @@ axis(2, cex.axis = 1.25, las = 2)
 title(xlab = pc1_label_hydrology, cex.lab = 1.4, line = 2.75)
 title(ylab = pc2_label_hydrology, cex.lab = 1.4, line = 2.75)
 title(main = "c) Hydrology", line = 0.5, adj = 0, cex.main = 1.5)
-# dev.off()
+#dev.off()
 
 ```
 

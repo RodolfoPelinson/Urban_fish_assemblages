@@ -1,7 +1,7 @@
 Environmental PCAs - North vs South
 ================
 Rodolfo Pelinson
-2026-07-19
+2026-07-20
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -488,9 +488,9 @@ sum(importance_structural_complexity[1:2])
 
 ``` r
 structural_complexity_PCs <- pca_structural_complexity$CA$u
-#structural_complexity_PCs[,1] <- structural_complexity_PCs[,1]*-1
+structural_complexity_PCs[,1] <- structural_complexity_PCs[,1]*-1
 structural_complexity_loadings <- pca_structural_complexity$CA$v
-#structural_complexity_loadings[,1] <- structural_complexity_loadings[,1]*-1
+structural_complexity_loadings[,1] <- structural_complexity_loadings[,1]*-1
   
 structural_complexity_loadings_filtrados <- structural_complexity_loadings[which((structural_complexity_loadings[,1] > 0.2 | structural_complexity_loadings[,1] < -0.2) |
                                                          (structural_complexity_loadings[,2] > 0.2 | structural_complexity_loadings[,2] < -0.2)),1:2]
@@ -498,23 +498,23 @@ structural_complexity_loadings_filtrados
 ```
 
     ##                                                       PC1         PC2
-    ## comp_ecotono_aquatic_veg                      -0.03434030  0.22472489
-    ## comp_ecotono_arborea                           0.28506156  0.02775487
-    ## comp_ecotono_raizes                            0.24125498 -0.12295667
-    ## comp_zona_riparia_const_anthr                 -0.26900318 -0.15408409
-    ## comp_zona_riparia_grasses                     -0.08750488  0.29676066
-    ## comp_zona_riparia_veg_arborea                  0.32384088 -0.09512549
-    ## dossel                                         0.20216301 -0.01567603
-    ## estrutura_dentro_do_canal_entulho_e_lixo      -0.22815155 -0.21444710
-    ## estrutura_dentro_do_canal_macrofitas_e_raizes  0.16140246  0.23181346
-    ## estrutura_dentro_do_canal_pedaco_de_madeira    0.21010984  0.05826971
-    ## pert_zona_riparia_cano_esgoto                 -0.23886118 -0.09469692
-    ## pert_zona_riparia_entulho_e_lixo              -0.21061665 -0.11259183
-    ## substrato_argila                               0.06842101  0.23550855
-    ## substrato_rocha                                0.21787417 -0.20123602
-    ## tipo_de_canal_corredeira                       0.10067330 -0.34805746
-    ## tipo_de_canal_fluxo_continuo                  -0.13211646  0.34908095
-    ## tipo_de_canal_poco                             0.18815423 -0.22913498
+    ## comp_ecotono_aquatic_veg                       0.03434030  0.22472489
+    ## comp_ecotono_arborea                          -0.28506156  0.02775487
+    ## comp_ecotono_raizes                           -0.24125498 -0.12295667
+    ## comp_zona_riparia_const_anthr                  0.26900318 -0.15408409
+    ## comp_zona_riparia_grasses                      0.08750488  0.29676066
+    ## comp_zona_riparia_veg_arborea                 -0.32384088 -0.09512549
+    ## dossel                                        -0.20216301 -0.01567603
+    ## estrutura_dentro_do_canal_entulho_e_lixo       0.22815155 -0.21444710
+    ## estrutura_dentro_do_canal_macrofitas_e_raizes -0.16140246  0.23181346
+    ## estrutura_dentro_do_canal_pedaco_de_madeira   -0.21010984  0.05826971
+    ## pert_zona_riparia_cano_esgoto                  0.23886118 -0.09469692
+    ## pert_zona_riparia_entulho_e_lixo               0.21061665 -0.11259183
+    ## substrato_argila                              -0.06842101  0.23550855
+    ## substrato_rocha                               -0.21787417 -0.20123602
+    ## tipo_de_canal_corredeira                      -0.10067330 -0.34805746
+    ## tipo_de_canal_fluxo_continuo                   0.13211646  0.34908095
+    ## tipo_de_canal_poco                            -0.18815423 -0.22913498
 
 ``` r
 urb_cors_structural_complexity <- rep(NA, ncol(structural_complexity_PCs))
@@ -566,9 +566,9 @@ names_structural_complexity[names_structural_complexity == "tipo_de_canal_fluxo_
 
 names_structural_complexity[names_structural_complexity == "pert_zona_riparia_cano_esgoto"] <- "Swage pipes RZ"
 #names_structural_complexity[names_structural_complexity == "pert_zona_riparia_lixo_inorganico"] <- "Inorganic waste on RZ"
-names_structural_complexity[names_structural_complexity == "pert_zona_riparia_entulho_e_lixo"] <- "Rubble and rubbish IC"
+names_structural_complexity[names_structural_complexity == "pert_zona_riparia_entulho_e_lixo"] <- "Rubble and rubbish RZ"
 names_structural_complexity[names_structural_complexity == "comp_zona_riparia_veg_arborea"] <- "Arboreal vegetation RZ"
-names_structural_complexity[names_structural_complexity == "comp_zona_riparia_const_anthr"] <- "Rubble and rubbish RZ"
+names_structural_complexity[names_structural_complexity == "comp_zona_riparia_const_anthr"] <- "Pavement and buildings RZ"
 names_structural_complexity[names_structural_complexity == "comp_zona_riparia_grasses"] <- "Grasses RZ"
 
 #names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_entulho"] <- "Construction waste inside"
@@ -580,7 +580,8 @@ names_structural_complexity[names_structural_complexity == "tipo_de_encaixe_vale
 
 names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_entulho_e_lixo"] <- "Rubble and rubbish IC"
 names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_macrofitas_e_raizes"] <- "Macrophytes and roots IC"
-names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_pedaco_de_madeira"] <- "Wood pieces IC"
+names_structural_complexity[names_structural_complexity == "estrutura_dentro_do_canal_pedaco_de_madeira"] <- "Wood IC"
+names_structural_complexity[names_structural_complexity == "dossel"] <- "Canopy cover"
 ```
 
 ### PCA Hydrology
@@ -823,9 +824,9 @@ names_water_quality[names_water_quality == "DO_.mg.L."] <- "DO"
 par(mfrow =c(3,1))
 
 par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
-xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.4
-xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.3
-ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))-0.1
+xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.3
+xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.4
+ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))-0.05
 ymax <- max(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))+0.1
 
 plot(structural_complexity_PCs[,1], structural_complexity_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
@@ -955,5 +956,5 @@ title(main = "c) Hydrology", line = 0.5, adj = 0, cex.main = 1.5)
 ![](PCAs_noth_south_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
-# dev.off()
+#dev.off()
 ```
