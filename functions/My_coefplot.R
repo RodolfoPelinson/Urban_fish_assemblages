@@ -20,7 +20,7 @@
 
 My_coefplot <- function (mles, upper, lower, species_labels = NULL, xlab = "",
                          cex.axis = 1,y_spa = 0, break.axis = NULL,
-                         at.xaxis = NULL, xlim = NULL, col_sig = "red", cex_sig = 1.4, yaxis_font = 1, invert = FALSE, axis_sp_labels = 2, axis_effect_labels =  1,...)
+                         at.xaxis = NULL, xlim = NULL, col_sig = "red", cex_sig = 1.4, yaxis_font = 1, invert = FALSE, axis_sp_labels = 2, axis_effect_labels =  1)
 {
 
   
@@ -65,7 +65,7 @@ My_coefplot <- function (mles, upper, lower, species_labels = NULL, xlab = "",
       }
       
       plot(x = NULL, y = NULL, yaxt = "n", ylim = xlim, xaxt = "n",
-           ylab = "", xlab = xlab, xlim = ylim, ...)
+           ylab = "", xlab = xlab, xlim = ylim)
       
       if(is.null(at.xaxis)){
         axis(axis_effect_labels, gap.axis = -10)
@@ -75,7 +75,7 @@ My_coefplot <- function (mles, upper, lower, species_labels = NULL, xlab = "",
       
     }else{
       plot(x = NULL, y = NULL, yaxt = "n", ylim = ylim, xaxt = "n",
-           ylab = "", xlab = xlab, xlim = xlim, ...)
+           ylab = "", xlab = xlab, xlim = xlim)
       
       if(is.null(at.xaxis)){
         axis(axis_effect_labels, gap.axis = -10)

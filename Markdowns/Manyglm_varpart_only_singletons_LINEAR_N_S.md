@@ -1,7 +1,7 @@
 Manyglm_varpart
 ================
 Rodolfo Pelinson
-2026-06-17
+2026-07-20
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -17,6 +17,8 @@ source(paste(sep = "/",dir,"functions/varpart_manyglm.R"))
 source(paste(sep = "/",dir,"functions/My_coefplot.R"))
 source(paste(sep = "/",dir,"functions/letters.R"))
 source(paste(sep = "/",dir,"functions/at_generator.R"))
+source(paste(sep = "/",dir,"functions/text_repositioning.R"))
+source(paste(sep = "/",dir,"functions/text_contour.R"))
 
 
 
@@ -518,27 +520,27 @@ anova(mod_null, mod_lin, mod_quad, nBoot=999, show.time = "all")
 
     ## Resampling begins for test 1.
     ##  Resampling run 0 finished. Time elapsed: 0.00 minutes...
-    ##  Resampling run 100 finished. Time elapsed: 0.03 minutes...
-    ##  Resampling run 200 finished. Time elapsed: 0.05 minutes...
-    ##  Resampling run 300 finished. Time elapsed: 0.08 minutes...
-    ##  Resampling run 400 finished. Time elapsed: 0.10 minutes...
-    ##  Resampling run 500 finished. Time elapsed: 0.13 minutes...
-    ##  Resampling run 600 finished. Time elapsed: 0.15 minutes...
-    ##  Resampling run 700 finished. Time elapsed: 0.18 minutes...
-    ##  Resampling run 800 finished. Time elapsed: 0.21 minutes...
-    ##  Resampling run 900 finished. Time elapsed: 0.23 minutes...
+    ##  Resampling run 100 finished. Time elapsed: 0.04 minutes...
+    ##  Resampling run 200 finished. Time elapsed: 0.07 minutes...
+    ##  Resampling run 300 finished. Time elapsed: 0.10 minutes...
+    ##  Resampling run 400 finished. Time elapsed: 0.14 minutes...
+    ##  Resampling run 500 finished. Time elapsed: 0.17 minutes...
+    ##  Resampling run 600 finished. Time elapsed: 0.20 minutes...
+    ##  Resampling run 700 finished. Time elapsed: 0.23 minutes...
+    ##  Resampling run 800 finished. Time elapsed: 0.27 minutes...
+    ##  Resampling run 900 finished. Time elapsed: 0.30 minutes...
     ## Resampling begins for test 2.
     ##  Resampling run 0 finished. Time elapsed: 0.00 minutes...
-    ##  Resampling run 100 finished. Time elapsed: 0.01 minutes...
+    ##  Resampling run 100 finished. Time elapsed: 0.02 minutes...
     ##  Resampling run 200 finished. Time elapsed: 0.03 minutes...
-    ##  Resampling run 300 finished. Time elapsed: 0.04 minutes...
-    ##  Resampling run 400 finished. Time elapsed: 0.06 minutes...
-    ##  Resampling run 500 finished. Time elapsed: 0.07 minutes...
-    ##  Resampling run 600 finished. Time elapsed: 0.09 minutes...
-    ##  Resampling run 700 finished. Time elapsed: 0.10 minutes...
-    ##  Resampling run 800 finished. Time elapsed: 0.12 minutes...
-    ##  Resampling run 900 finished. Time elapsed: 0.13 minutes...
-    ## Time elapsed: 0 hr 0 min 24 sec
+    ##  Resampling run 300 finished. Time elapsed: 0.05 minutes...
+    ##  Resampling run 400 finished. Time elapsed: 0.07 minutes...
+    ##  Resampling run 500 finished. Time elapsed: 0.08 minutes...
+    ##  Resampling run 600 finished. Time elapsed: 0.10 minutes...
+    ##  Resampling run 700 finished. Time elapsed: 0.12 minutes...
+    ##  Resampling run 800 finished. Time elapsed: 0.13 minutes...
+    ##  Resampling run 900 finished. Time elapsed: 0.15 minutes...
+    ## Time elapsed: 0 hr 0 min 29 sec
 
     ## Analysis of Deviance Table
     ## 
@@ -605,37 +607,37 @@ varpart_peixes$R2_fractions_com
 ```
 
     ##                       R2_full_fraction R2_pure_fraction
-    ## structural_complexity        0.2139108      0.051068590
-    ## water_quality                0.2492397      0.068049207
-    ## hydrology                    0.1673292      0.024078192
-    ## urb                          0.1939071      0.004084171
-    ## esp                          0.1755213      0.145817839
+    ## structural_complexity        0.1993373      0.102198976
+    ## water_quality                0.2492397      0.066426063
+    ## hydrology                    0.1903480      0.029258591
+    ## urb                          0.1939071      0.009055757
+    ## esp                          0.1755213      0.156861287
 
 ``` r
 full_model2 <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology`
 full_model2
 ```
 
-    ## [1] 0.6234383
+    ## [1] 0.6291509
 
 ``` r
 round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
 ```
 
     ##                               structural_complexity water_quality hydrology
-    ## Gymnotus_pantherinus                         0.4462        0.4299    0.3560
-    ## Phalloceros_harpagos                         0.4743        0.3057    0.2156
-    ## Phalloceros_reisi                            0.1851        0.5989    0.0347
-    ## Hollandichthys_multifasciatus                0.3792        0.2353    0.5795
-    ## Astyanax_lacustris                           0.1280        0.2863    0.0889
-    ## Poecilia_reticulata                          0.1046        0.2476    0.1161
-    ## Callichthys_callichthys                      0.1444        0.2410    0.3442
-    ## Hoplias_malabaricus                          0.1195        0.2492    0.0019
-    ## Corydoras_aeneus                             0.0485        0.1664    0.0972
-    ## Hoplosternum_littorale                       0.1741        0.0241    0.0479
-    ## Poecilia_vivipara                            0.1176        0.0057    0.0476
-    ## Tilapia_rendalli                             0.1528        0.0093    0.0634
-    ## Singletons                                   0.3066        0.4408    0.1823
+    ## Gymnotus_pantherinus                         0.4664        0.4299    0.1782
+    ## Phalloceros_harpagos                         0.4481        0.3057    0.2402
+    ## Phalloceros_reisi                            0.1261        0.5989    0.1908
+    ## Hollandichthys_multifasciatus                0.3880        0.2353    0.6391
+    ## Astyanax_lacustris                           0.1050        0.2863    0.1540
+    ## Poecilia_reticulata                          0.1339        0.2476    0.1122
+    ## Callichthys_callichthys                      0.1241        0.2410    0.3240
+    ## Hoplias_malabaricus                          0.1011        0.2492    0.0640
+    ## Corydoras_aeneus                             0.0289        0.1664    0.0904
+    ## Hoplosternum_littorale                       0.1429        0.0241    0.1058
+    ## Poecilia_vivipara                            0.1009        0.0057    0.0720
+    ## Tilapia_rendalli                             0.1297        0.0093    0.0958
+    ## Singletons                                   0.2963        0.4408    0.2080
     ##                                  urb    esp
     ## Gymnotus_pantherinus          0.5088 0.0223
     ## Phalloceros_harpagos          0.2923 0.3576
@@ -656,33 +658,33 @@ round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
 ```
 
     ##                               structural_complexity water_quality hydrology
-    ## Gymnotus_pantherinus                         0.0000        0.0000    0.0054
-    ## Phalloceros_harpagos                         0.2916        0.0002    0.0000
-    ## Phalloceros_reisi                            0.0088        0.4113    0.0906
-    ## Hollandichthys_multifasciatus                0.0001        0.0000    0.0001
-    ## Astyanax_lacustris                           0.0026        0.0002    0.0002
-    ## Poecilia_reticulata                          0.0023        0.3901    0.0008
-    ## Callichthys_callichthys                      0.0000        0.0004    0.0023
-    ## Hoplias_malabaricus                          0.0000        0.0002    0.0003
-    ## Corydoras_aeneus                             0.0001        0.0000    0.0001
-    ## Hoplosternum_littorale                       0.1526        0.0091    0.0028
+    ## Gymnotus_pantherinus                         0.0001        0.0001    0.0070
+    ## Phalloceros_harpagos                         0.3642        0.2440    0.0000
+    ## Phalloceros_reisi                            0.0647        0.3823    0.0688
+    ## Hollandichthys_multifasciatus                0.0002        0.0000    0.0001
+    ## Astyanax_lacustris                           0.2616        0.0001    0.0003
+    ## Poecilia_reticulata                          0.2253        0.0000    0.0005
+    ## Callichthys_callichthys                      0.0004        0.0020    0.0024
+    ## Hoplias_malabaricus                          0.0002        0.0014    0.0002
+    ## Corydoras_aeneus                             0.0001        0.0002    0.0000
+    ## Hoplosternum_littorale                       0.1726        0.0172    0.0025
     ## Poecilia_vivipara                            0.0001        0.0003    0.0009
     ## Tilapia_rendalli                             0.0001        0.0004    0.0011
-    ## Singletons                                   0.2054        0.0724    0.2084
+    ## Singletons                                   0.2390        0.2155    0.2966
     ##                                  urb    esp
-    ## Gymnotus_pantherinus          0.0000 0.0032
-    ## Phalloceros_harpagos          0.0000 0.0557
-    ## Phalloceros_reisi             0.0018 0.0010
+    ## Gymnotus_pantherinus          0.0000 0.0000
+    ## Phalloceros_harpagos          0.0000 0.0001
+    ## Phalloceros_reisi             0.0022 0.0086
     ## Hollandichthys_multifasciatus 0.0000 0.0000
-    ## Astyanax_lacustris            0.0000 0.0593
-    ## Poecilia_reticulata           0.0005 0.0008
+    ## Astyanax_lacustris            0.0000 0.1023
+    ## Poecilia_reticulata           0.0000 0.0001
     ## Callichthys_callichthys       0.0000 0.0000
     ## Hoplias_malabaricus           0.0000 0.0000
-    ## Corydoras_aeneus              0.0001 0.0001
-    ## Hoplosternum_littorale        0.0019 0.5967
-    ## Poecilia_vivipara             0.0001 0.6111
-    ## Tilapia_rendalli              0.0001 0.5674
-    ## Singletons                    0.0486 0.0002
+    ## Corydoras_aeneus              0.0001 0.0004
+    ## Hoplosternum_littorale        0.0006 0.6085
+    ## Poecilia_vivipara             0.0001 0.6157
+    ## Tilapia_rendalli              0.0002 0.5843
+    ## Singletons                    0.1143 0.1191
 
 ``` r
 full_model_sp <- varpart_peixes$R2_models_sp$structural_complexity.water_quality.hydrology
@@ -691,19 +693,19 @@ full_model_sp
 ```
 
     ##          Gymnotus_pantherinus          Phalloceros_harpagos 
-    ##                     0.8222403                     0.7760447 
+    ##                     0.8336196                     0.8467111 
     ##             Phalloceros_reisi Hollandichthys_multifasciatus 
-    ##                     0.7576406                     0.8410073 
+    ##                     0.7181902                     0.8410076 
     ##            Astyanax_lacustris           Poecilia_reticulata 
-    ##                     0.7486341                     0.4409919 
+    ##                     0.7320550                     0.8490664 
     ##       Callichthys_callichthys           Hoplias_malabaricus 
-    ##                     0.7768523                     0.8147724 
+    ##                     0.7767439                     0.8147784 
     ##              Corydoras_aeneus        Hoplosternum_littorale 
-    ##                     0.8056349                     0.1971221 
+    ##                     0.5623126                     0.1771894 
     ##             Poecilia_vivipara              Tilapia_rendalli 
-    ##                     0.1903930                     0.2304609 
+    ##                     0.1270552                     0.2027522 
     ##                    Singletons 
-    ##                     0.7029040
+    ##                     0.6974805
 
 Looking at fractions related to the urbanization process
 
@@ -1118,7 +1120,7 @@ Now, lets plot these R² values:
 We will make the same procedures as before:
 
 ``` r
-names(full_model_sp) <- rownames(varpart_peixes$R2_models_sp)
+#names(full_model_sp) <- rownames(varpart_peixes$R2_models_sp)
 ord_sp <- order(full_model_sp, decreasing = TRUE)
 
 full_model_sp <- full_model_sp[ord_sp]
@@ -1215,7 +1217,7 @@ sp_pure_frac_scaled <- scale_fractions(full_model_sp, sp_pure_frac)
 
 full_model <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology-urb-esp`
 
-pure_com <- varpart_peixes$R2_fractions_com$R2_pure_fraction
+#pure_com <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 
 pure_fracs <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 
@@ -1250,7 +1252,7 @@ parameters and watershed predictores are redundant with urban cover
 structural_complexity_without_urb
 ```
 
-    ## [1] 0.1490469
+    ## [1] 0.1452527
 
 ``` r
 water_quality_without_urb
@@ -1262,7 +1264,7 @@ water_quality_without_urb
 hydrology_without_urb
 ```
 
-    ## [1] 0.2177044
+    ## [1] 0.1807798
 
 ``` r
 esp_without_urb
@@ -1275,7 +1277,7 @@ esp_without_urb
 1 - structural_complexity_without_urb/varpart_peixes$R2_fractions_com[1,1]
 ```
 
-    ## [1] 0.3032287
+    ## [1] 0.271322
 
 ``` r
 #Water parametersc
@@ -1289,7 +1291,7 @@ esp_without_urb
 1 - hydrology_without_urb/varpart_peixes$R2_fractions_com[3,1]
 ```
 
-    ## [1] -0.3010541
+    ## [1] 0.05026665
 
 ``` r
 #Spatial filters
@@ -1428,14 +1430,8 @@ screen(2)
 par(mar = c(2,1,1,1))
 
 fulls_urb <- rbind(full_est, full_water_quality, full_hydrology, full_esp, full_urb)
-pures_urb <- rbind(t(sp_structural_complexity_urb_scaled)[1,], t(sp_water_quality_urb_scaled)[1,],  t(sp_hydrology_urb_scaled)[1,], t(sp_esp_urb_scaled)[1,], rep(0, 8))
-```
+pures_urb <- rbind(t(sp_structural_complexity_urb_scaled)[1,], t(sp_water_quality_urb_scaled)[1,],  t(sp_hydrology_urb_scaled)[1,], t(sp_esp_urb_scaled)[1,], rep(0, 13))
 
-    ## Warning in rbind(t(sp_structural_complexity_urb_scaled)[1, ],
-    ## t(sp_water_quality_urb_scaled)[1, : number of columns of result is not a
-    ## multiple of vector length (arg 5)
-
-``` r
 barplot(fulls_urb, ylim = c(0,1), las = 2, col = c(darken("#98DF8A", amount = 0.25), darken("#9EDAE5", amount = 0.25), darken("#FFBB78", amount = 0.25), darken("#C49C94", amount = 0.25), "grey30"),
         border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = c(0,2), xlim = c(0,93), yaxt = "n", beside = TRUE)
 par(new = TRUE)
@@ -1536,7 +1532,7 @@ letters(x = 7, y = 96, "c)", cex = 1.5)
 
 ![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
-# Full and partial model coefficients
+# Model coefficients
 
 ``` r
 urb_coefs <- varpart_peixes$models$urb$coefficients[2,]
@@ -2162,9 +2158,11 @@ mtext("Abundance*", side = 4, line = 2)
 
 mtext("Rubble and rubbish", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est1$est_PC1)+0.4)
 mtext("Swage pipes",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est1$est_PC1)+0.4)
-#mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+mtext("Pavement and buildings",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est1$est_PC1)+0.4)
 
 mtext("Arboreal vegetation", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est1$est_PC1)-0.4)
+mtext("Closed canopy", side = 1, line = 0.75 , adj = 0, cex = 0.8, at = min(newdata_est1$est_PC1)-0.4)
+mtext("Wood inside channel", side = 1, line = 1.5 , adj = 0, cex = 0.8, at = min(newdata_est1$est_PC1)-0.4)
 
 
 title(xlab = "Structural", line = 0.5)
@@ -2208,8 +2206,10 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
+
+
 mtext("Continuous flow", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
-mtext("Grasses at the margins",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
+mtext("Grasses and macrophytes",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
 mtext("Muddy substrate",   side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
 
 mtext("Rapids and pools", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est2$est_PC2)-0.4)
@@ -2255,6 +2255,9 @@ mtext("Abundance*", side = 4, line = 2)
 
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
+
+### PAREI AQUI!!!!
+
 
 mtext("Higher conductivity",       side = 1, line = 0    , adj = 1, cex = 0.8, at = max(newdata_water_quality1$water_quality_PC1)+0.4)
 mtext("More total dissolved C and N",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_water_quality1$water_quality_PC1)+0.4)
@@ -2406,11 +2409,12 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
-mtext("Steeper slopes", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
-mtext("Higher altitudes",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
+mtext("Deeper channels", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
+mtext("Elongated catchments",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
 
 mtext("Greater water velocity", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_hydrology2$hydrology_PC2)-0.4)
-mtext("Shallower channels", side = 1, line = 0.75 , adj = 0, cex = 0.8,  at = min(newdata_hydrology2$hydrology_PC2)-0.4)
+mtext("Channelized channels", side = 1, line = 0.75 , adj = 0, cex = 0.8,  at = min(newdata_hydrology2$hydrology_PC2)-0.4)
+mtext("Shallower channels", side = 1, line = 1.5 , adj = 0, cex = 0.8,  at = min(newdata_hydrology2$hydrology_PC2)-0.4)
 
 title(xlab = "Hydrology", line = 0.5)
 title(xlab = "(PC2)", line = 1.5)

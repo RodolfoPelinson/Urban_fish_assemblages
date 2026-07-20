@@ -28,6 +28,8 @@ source(paste(sep = "/",dir,"functions/varpart_manyglm.R"))
 source(paste(sep = "/",dir,"functions/My_coefplot.R"))
 source(paste(sep = "/",dir,"functions/letters.R"))
 source(paste(sep = "/",dir,"functions/at_generator.R"))
+source(paste(sep = "/",dir,"functions/text_repositioning.R"))
+source(paste(sep = "/",dir,"functions/text_contour.R"))
 
 
 
@@ -371,7 +373,7 @@ Now, lets plot these R² values:
 We will make the same procedures as before:
 
 ```{r, warning=FALSE}
-names(full_model_sp) <- rownames(varpart_peixes$R2_models_sp)
+#names(full_model_sp) <- rownames(varpart_peixes$R2_models_sp)
 ord_sp <- order(full_model_sp, decreasing = TRUE)
 
 full_model_sp <- full_model_sp[ord_sp]
@@ -468,7 +470,7 @@ sp_pure_frac_scaled <- scale_fractions(full_model_sp, sp_pure_frac)
 
 full_model <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology-urb-esp`
 
-pure_com <- varpart_peixes$R2_fractions_com$R2_pure_fraction
+#pure_com <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 
 pure_fracs <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 
@@ -565,7 +567,7 @@ screen(2)
 par(mar = c(2,1,1,1))
 
 fulls_urb <- rbind(full_est, full_water_quality, full_hydrology, full_esp, full_urb)
-pures_urb <- rbind(t(sp_structural_complexity_urb_scaled)[1,], t(sp_water_quality_urb_scaled)[1,],  t(sp_hydrology_urb_scaled)[1,], t(sp_esp_urb_scaled)[1,], rep(0, 8))
+pures_urb <- rbind(t(sp_structural_complexity_urb_scaled)[1,], t(sp_water_quality_urb_scaled)[1,],  t(sp_hydrology_urb_scaled)[1,], t(sp_esp_urb_scaled)[1,], rep(0, 13))
 
 barplot(fulls_urb, ylim = c(0,1), las = 2, col = c(darken("#98DF8A", amount = 0.25), darken("#9EDAE5", amount = 0.25), darken("#FFBB78", amount = 0.25), darken("#C49C94", amount = 0.25), "grey30"),
         border = "transparent", xaxt = "n", xaxs = "i", width = 1, space = c(0,2), xlim = c(0,93), yaxt = "n", beside = TRUE)
@@ -666,7 +668,7 @@ letters(x = 7, y = 96, "c)", cex = 1.5)
 ```
 
 
-# Full and partial model coefficients
+# Model coefficients
 
 
 ```{r}
@@ -720,7 +722,7 @@ hydrology_2_lower_coefs <- hydrology_2_coefs - hydrology_2_IC_coefs
 ```
 
 
-```{r,  warning= FALSE, fig.width = 8, fig.height = 6, dpi = 600, dev.args= list(pointsize=7)}
+```{r,  warning= FALSE, fig.width = 8, fig.height = 4, dpi = 600, dev.args= list(pointsize=7)}
 
 
 
@@ -1310,9 +1312,11 @@ mtext("Abundance*", side = 4, line = 2)
 
 mtext("Rubble and rubbish", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est1$est_PC1)+0.4)
 mtext("Swage pipes",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est1$est_PC1)+0.4)
-#mtext("outside the channel",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est$est_PC1)+0.4)
+mtext("Pavement and buildings",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est1$est_PC1)+0.4)
 
 mtext("Arboreal vegetation", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est1$est_PC1)-0.4)
+mtext("Closed canopy", side = 1, line = 0.75 , adj = 0, cex = 0.8, at = min(newdata_est1$est_PC1)-0.4)
+mtext("Wood inside channel", side = 1, line = 1.5 , adj = 0, cex = 0.8, at = min(newdata_est1$est_PC1)-0.4)
 
 
 title(xlab = "Structural", line = 0.5)
@@ -1356,8 +1360,10 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
+
+
 mtext("Continuous flow", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
-mtext("Grasses at the margins",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
+mtext("Grasses and macrophytes",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
 mtext("Muddy substrate",   side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_est2$est_PC2)+0.4)
 
 mtext("Rapids and pools", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_est2$est_PC2)-0.4)
@@ -1403,6 +1409,9 @@ mtext("Abundance*", side = 4, line = 2)
 
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
+
+### PAREI AQUI!!!!
+
 
 mtext("Higher conductivity",       side = 1, line = 0    , adj = 1, cex = 0.8, at = max(newdata_water_quality1$water_quality_PC1)+0.4)
 mtext("More total dissolved C and N",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_water_quality1$water_quality_PC1)+0.4)
@@ -1554,11 +1563,12 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = FALSE)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
-mtext("Steeper slopes", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
-mtext("Higher altitudes",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
+mtext("Deeper channels", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
+mtext("Elongated catchments",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
 
 mtext("Greater water velocity", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_hydrology2$hydrology_PC2)-0.4)
-mtext("Shallower channels", side = 1, line = 0.75 , adj = 0, cex = 0.8,  at = min(newdata_hydrology2$hydrology_PC2)-0.4)
+mtext("Channelized channels", side = 1, line = 0.75 , adj = 0, cex = 0.8,  at = min(newdata_hydrology2$hydrology_PC2)-0.4)
+mtext("Shallower channels", side = 1, line = 1.5 , adj = 0, cex = 0.8,  at = min(newdata_hydrology2$hydrology_PC2)-0.4)
 
 title(xlab = "Hydrology", line = 0.5)
 title(xlab = "(PC2)", line = 1.5)
