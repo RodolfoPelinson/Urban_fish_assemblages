@@ -574,50 +574,9 @@ names_water_quality[names_water_quality == "DO_.mg.L."] <- "DO"
 
 par(mfrow =c(3,1))
 
-par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
-xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.3
-xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.4
-ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))-0.05
-ymax <- max(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))+0.1
+cex_variables <- 0.8
 
-plot(structural_complexity_PCs[,1], structural_complexity_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
-     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
-
-abline(h = 0, v = 0, lty = 2)
-
-
-pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
-col <-pal(urb)
-
-Arrows(x0 <- rep(0, nrow(structural_complexity_loadings_filtrados_new)),
-       y0 <- rep(0, nrow(structural_complexity_loadings_filtrados_new)),
-       x1 <- structural_complexity_loadings_filtrados_new[,1],
-       y1 <- structural_complexity_loadings_filtrados_new[,2], arr.type = "triangle", arr.length = 0.4, col = "#98DF8A", lwd = 1.5)
-
-
-
-structural_complexity_loadings_filtrados_new_rp <- text_repositioning(structural_complexity_loadings_filtrados_new, amount = 0.1)
-for(i in 1:nrow(structural_complexity_loadings_filtrados_new_rp)){
-  text_contour(x = structural_complexity_loadings_filtrados_new_rp[i,1], y = structural_complexity_loadings_filtrados_new_rp[i,2], labels = names_structural_complexity[i], cex = 1, col = "white", font = 2, thick = 0.004)
-  
-text(x = structural_complexity_loadings_filtrados_new_rp[i,1], y = structural_complexity_loadings_filtrados_new_rp[i,2], labels = names_structural_complexity[i], cex = 1, col = "black", font = 2)
-}
-
-points(structural_complexity_PCs[,1],structural_complexity_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
-#text(structural_complexity_PCs[,1],structural_complexity_PCs[,2], labels = rownames(structural_complexity_PCs))
-
-
-#text(x = structural_complexity_loadings_filtrados_new[,1], y = structural_complexity_loadings_filtrados_new[,2], labels = names_structural_complexity, cex = 1, font = 2, xpd = NA)
-
-axis(1, cex.axis = 1.25)
-axis(2, cex.axis = 1.25, las = 2)
-title(xlab = pc1_label_structural_complexity, cex.lab = 1.4, line = 2.75)
-title(ylab = pc2_label_structural_complexity, cex.lab = 1.4, line = 2.75)
-title(main = "a) Structural complexity", line = 0.5, adj = 0, cex.main = 1.5)
-
-
-
-
+###################### WATER QUALITY
 
 par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
 xmin <- min(c(water_quality_PCs[,1], water_quality_loadings_filtrados_new[,1]))-0.1
@@ -645,8 +604,8 @@ Arrows(x0 <- rep(0, nrow(water_quality_loadings_filtrados_new)),
 
 water_quality_loadings_filtrados_new_rp <- text_repositioning(water_quality_loadings_filtrados_new, amount = 0.1)
 for(i in 1:nrow(water_quality_loadings_filtrados_new_rp)){
-  text_contour(x = water_quality_loadings_filtrados_new_rp[i,1], y = water_quality_loadings_filtrados_new_rp[i,2], labels = names_water_quality[i], cex = 1, col = "white", font = 2, thick = 0.004)
-text(x = water_quality_loadings_filtrados_new_rp[i,1], y = water_quality_loadings_filtrados_new_rp[i,2], labels = names_water_quality[i], cex = 1, col = "black", font = 2)
+  text_contour(x = water_quality_loadings_filtrados_new_rp[i,1], y = water_quality_loadings_filtrados_new_rp[i,2], labels = names_water_quality[i], cex = cex_variables, col = "white", font = 2, thick = 0.004)
+text(x = water_quality_loadings_filtrados_new_rp[i,1], y = water_quality_loadings_filtrados_new_rp[i,2], labels = names_water_quality[i], cex = cex_variables, col = "black", font = 2)
 }
 
 points(water_quality_PCs[,1],water_quality_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
@@ -656,10 +615,55 @@ axis(1, cex.axis = 1.25)
 axis(2, cex.axis = 1.25, las = 2)
 title(xlab = pc1_label_water_quality, cex.lab = 1.4, line = 2.75)
 title(ylab = pc2_label_water_quality, cex.lab = 1.4, line = 2.75)
-title(main = "b) Water quality", line = 0.5, adj = 0, cex.main = 1.5)
+title(main = "a) Water quality", line = 0.5, adj = 0, cex.main = 1.5)
+
+
+###################### CHANNEL ENVIRONMENTAL STRUCTURE
+
+
+par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
+xmin <- min(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))-0.3
+xmax <- max(c(structural_complexity_PCs[,1], structural_complexity_loadings_filtrados_new[,1]))+0.4
+ymin <- min(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))-0.05
+ymax <- max(c(structural_complexity_PCs[,2], structural_complexity_loadings_filtrados_new[,2]))+0.1
+
+plot(structural_complexity_PCs[,1], structural_complexity_PCs[,2], xlim = c(xmin,xmax), ylim = c(ymin, ymax),
+     type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+
+abline(h = 0, v = 0, lty = 2)
+
+
+pal <- col_numeric(palette = c("white", "black"), domain = urb, na.color = "grey50", alpha = FALSE, reverse = FALSE)
+col <-pal(urb)
+
+Arrows(x0 <- rep(0, nrow(structural_complexity_loadings_filtrados_new)),
+       y0 <- rep(0, nrow(structural_complexity_loadings_filtrados_new)),
+       x1 <- structural_complexity_loadings_filtrados_new[,1],
+       y1 <- structural_complexity_loadings_filtrados_new[,2], arr.type = "triangle", arr.length = 0.4, col = "#98DF8A", lwd = 1.5)
 
 
 
+structural_complexity_loadings_filtrados_new_rp <- text_repositioning(structural_complexity_loadings_filtrados_new, amount = 0.1)
+for(i in 1:nrow(structural_complexity_loadings_filtrados_new_rp)){
+  text_contour(x = structural_complexity_loadings_filtrados_new_rp[i,1], y = structural_complexity_loadings_filtrados_new_rp[i,2], labels = names_structural_complexity[i], cex = cex_variables, col = "white", font = 2, thick = 0.004)
+  
+text(x = structural_complexity_loadings_filtrados_new_rp[i,1], y = structural_complexity_loadings_filtrados_new_rp[i,2], labels = names_structural_complexity[i], cex = cex_variables, col = "black", font = 2)
+}
+
+points(structural_complexity_PCs[,1],structural_complexity_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
+#text(structural_complexity_PCs[,1],structural_complexity_PCs[,2], labels = rownames(structural_complexity_PCs))
+
+
+#text(x = structural_complexity_loadings_filtrados_new[,1], y = structural_complexity_loadings_filtrados_new[,2], labels = names_structural_complexity, cex = 1, font = 2, xpd = NA)
+
+axis(1, cex.axis = 1.25)
+axis(2, cex.axis = 1.25, las = 2)
+title(xlab = pc1_label_structural_complexity, cex.lab = 1.4, line = 2.75)
+title(ylab = pc2_label_structural_complexity, cex.lab = 1.4, line = 2.75)
+title(main = "b) Channel environmental structure", line = 0.5, adj = 0, cex.main = 1.5)
+
+
+###################### HYDROLOGY
 
 
 par(mar = c(4,4,3,0.1), bty = "o", cex = 1.25)
@@ -689,8 +693,8 @@ Arrows(x0 <- rep(0, nrow(hydrology_loadings_filtrados_new)),
 
 hydrology_loadings_filtrados_new_rp <- text_repositioning(hydrology_loadings_filtrados_new, amount = 0.1)
 for(i in 1:nrow(hydrology_loadings_filtrados_new_rp)){
-  text_contour(x = hydrology_loadings_filtrados_new_rp[i,1], y = hydrology_loadings_filtrados_new_rp[i,2], labels = names_hydrology[i], cex = 1, col = "white", font = 2, thick = 0.004)
-text(x = hydrology_loadings_filtrados_new_rp[i,1], y = hydrology_loadings_filtrados_new_rp[i,2], labels = names_hydrology[i], cex = 1, col = "black", font = 2)
+  text_contour(x = hydrology_loadings_filtrados_new_rp[i,1], y = hydrology_loadings_filtrados_new_rp[i,2], labels = names_hydrology[i], cex = cex_variables, col = "white", font = 2, thick = 0.004)
+text(x = hydrology_loadings_filtrados_new_rp[i,1], y = hydrology_loadings_filtrados_new_rp[i,2], labels = names_hydrology[i], cex = cex_variables, col = "black", font = 2)
 }
 
 points(hydrology_PCs[,1],hydrology_PCs[,2], col = "black", bg = col, pch = 21, cex = 1.5)
