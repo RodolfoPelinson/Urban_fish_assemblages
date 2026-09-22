@@ -214,7 +214,8 @@ anova(mod_null, mod_lin, mod_quad, nBoot=999, show.time = "all")
 ## Forward selection
 
 
-```{r, warning=FALSE, cache=TRUE}
+```{r, warning=FALSE, cache=TRUE, eval = TRUE, echo = TRUE}
+#change
 set.seed(1); esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE, adj_R2 = FALSE) 
 
 ```
@@ -252,7 +253,7 @@ round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
 
 round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
 
-full_model_sp <- varpart_peixes$R2_models_sp$structural_complexity.water_quality.hydrology
+full_model_sp <- varpart_peixes$R2_models_sp$structural_complexity.water_quality.hydrology.urb.esp
 names(full_model_sp) <- rownames(varpart_peixes$R2_fractions_sp$R2_full_fraction)
 full_model_sp
 ```
@@ -319,51 +320,60 @@ sp_full_urb_esp <- varpart_peixes$R2_models_sp$`urb.esp`
 ## Tests of significance
 
 ```{r, warning=FALSE, cache=TRUE}
+#change
+set.seed(1)
+
 p_est <- anova(varpart_peixes$model_null,
-               varpart_peixes$models$structural_complexity,nBoot=9999)
+               varpart_peixes$models$structural_complexity,nBoot=999)
 p_est
 
+
 p_hydrology <- anova(varpart_peixes$model_null,
-                 varpart_peixes$models$hydrology,nBoot=9999)
+                 varpart_peixes$models$hydrology,nBoot=999)
 p_hydrology
 
 p_water_quality <- anova(varpart_peixes$model_null,
-                varpart_peixes$models$water_quality,nBoot=9999)
+                varpart_peixes$models$water_quality,nBoot=999)
 p_water_quality
 
 p_esp <- anova(varpart_peixes$model_null,
-                varpart_peixes$models$esp,nBoot=9999)
+                varpart_peixes$models$esp,nBoot=999)
 p_esp
 
 p_urb <- anova(varpart_peixes$model_null,
-                varpart_peixes$models$urb,nBoot=9999)
+                varpart_peixes$models$urb,nBoot=999)
 p_urb
 
+```
+
+
+```{r, cache = TRUE}
+set.seed(1)
+
 p_est_pure <- anova(varpart_peixes$models$`water_quality-hydrology-urb-esp`,
-                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 p_est_pure
 
 p_hydrology_pure <- anova(varpart_peixes$models$`structural_complexity-water_quality-urb-esp`,
-                      varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                      varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 p_hydrology_pure
 
 p_water_quality_pure <- anova(varpart_peixes$models$`structural_complexity-hydrology-urb-esp`,
-                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 p_water_quality_pure
 
 p_urb_pure <- anova(varpart_peixes$models$`structural_complexity-water_quality-hydrology-esp`,
-                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 p_urb_pure
 
 p_esp_pure <- anova(varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb`,
-                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 p_esp_pure
 
 p_full_model <- anova(varpart_peixes$model_null,
-                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 p_full_model
 ```
-
 
 
 ## Plot of R²
@@ -436,7 +446,7 @@ scale_fractions <- function(full, pures){
   
   sumed_pure <- apply(pures, MARGIN = 1, sum)
   
-  scale <- full / sumed_pure
+  scale <- full/sumed_pure 
   
   scale[scale > 1] <- 1
   
@@ -468,7 +478,7 @@ sp_pure_frac_scaled <- scale_fractions(full_model_sp, sp_pure_frac)
 ###########
 
 
-full_model <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology-urb-esp`
+full_model <- varpart_peixes$R2_fractions_com$R2_full_fraction
 
 #pure_com <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 
@@ -529,20 +539,22 @@ esp_without_urb
 Are these fractions significant after the removal of urban cover explanation?
 
 ```{r, cache = TRUE}
+#change
 p_est_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`structural_complexity-urb`,nBoot=9999)
+               varpart_peixes$models$`structural_complexity-urb`,nBoot=999)
 p_est_no_urb
 
+
 p_water_quality_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`water_quality-urb`,nBoot=9999)
+               varpart_peixes$models$`water_quality-urb`,nBoot=999)
 p_water_quality_no_urb
 
 p_hydrology_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`hydrology-urb`,nBoot=9999)
+               varpart_peixes$models$`hydrology-urb`,nBoot=999)
 p_hydrology_no_urb
 
 p_esp_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`urb-esp`,nBoot=9999)
+               varpart_peixes$models$`urb-esp`,nBoot=999)
 p_esp_no_urb
 ```
 
@@ -591,7 +603,7 @@ par(new = TRUE, mar = c(0,0,0,0), bty = "n")
 plot(NA, xlim = c(0,100), ylim = c(0,100), xaxt = "n", yaxt = "n", xaxs = "i", yaxs = "i", )
 
 legend(x = 5, y = 100, xjust = 0, yjust = 1, fill = c("#98DF8A", "#9EDAE5", "#FFBB78", "#C49C94", "grey30"),
-       legend = c("Structural complexity*", "Water quality*", "Hydrology*", "Spatial filters*", "Urban cover"), border = "transparent", bty = "n", cex = 0.8, ncol = 3)
+       legend = c("Channel structure*", "Water quality*", "Hydrology*", "Spatial filters*", "Urban cover"), border = "transparent", bty = "n", cex = 0.8, ncol = 3)
 
 text(x = 72, y = 88, adj = c(0,1), labels = "*Darker colors are effects", cex = 0.7)
 text(x = 72, y = 84, adj = c(0,1), labels = "shared with urban cover", cex = 0.7)
@@ -890,7 +902,7 @@ NOT_poecilidae <- which(colnames(predicted_urb) != "Phalloceros_reisi" & colname
 ## Loess
 
 ```{r}
-degree <- 0
+degree <- 1
 span <- 0.2
 
 

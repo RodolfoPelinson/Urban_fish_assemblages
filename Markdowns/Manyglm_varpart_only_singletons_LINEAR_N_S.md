@@ -1,7 +1,7 @@
 Manyglm_varpart
 ================
 Rodolfo Pelinson
-2026-07-20
+2026-09-22
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -521,26 +521,26 @@ anova(mod_null, mod_lin, mod_quad, nBoot=999, show.time = "all")
     ## Resampling begins for test 1.
     ##  Resampling run 0 finished. Time elapsed: 0.00 minutes...
     ##  Resampling run 100 finished. Time elapsed: 0.03 minutes...
-    ##  Resampling run 200 finished. Time elapsed: 0.07 minutes...
-    ##  Resampling run 300 finished. Time elapsed: 0.10 minutes...
-    ##  Resampling run 400 finished. Time elapsed: 0.13 minutes...
-    ##  Resampling run 500 finished. Time elapsed: 0.17 minutes...
-    ##  Resampling run 600 finished. Time elapsed: 0.25 minutes...
-    ##  Resampling run 700 finished. Time elapsed: 0.31 minutes...
-    ##  Resampling run 800 finished. Time elapsed: 0.37 minutes...
-    ##  Resampling run 900 finished. Time elapsed: 0.43 minutes...
+    ##  Resampling run 200 finished. Time elapsed: 0.06 minutes...
+    ##  Resampling run 300 finished. Time elapsed: 0.09 minutes...
+    ##  Resampling run 400 finished. Time elapsed: 0.12 minutes...
+    ##  Resampling run 500 finished. Time elapsed: 0.14 minutes...
+    ##  Resampling run 600 finished. Time elapsed: 0.17 minutes...
+    ##  Resampling run 700 finished. Time elapsed: 0.20 minutes...
+    ##  Resampling run 800 finished. Time elapsed: 0.23 minutes...
+    ##  Resampling run 900 finished. Time elapsed: 0.26 minutes...
     ## Resampling begins for test 2.
     ##  Resampling run 0 finished. Time elapsed: 0.00 minutes...
     ##  Resampling run 100 finished. Time elapsed: 0.02 minutes...
-    ##  Resampling run 200 finished. Time elapsed: 0.05 minutes...
-    ##  Resampling run 300 finished. Time elapsed: 0.08 minutes...
-    ##  Resampling run 400 finished. Time elapsed: 0.11 minutes...
-    ##  Resampling run 500 finished. Time elapsed: 0.13 minutes...
-    ##  Resampling run 600 finished. Time elapsed: 0.15 minutes...
-    ##  Resampling run 700 finished. Time elapsed: 0.17 minutes...
-    ##  Resampling run 800 finished. Time elapsed: 0.20 minutes...
-    ##  Resampling run 900 finished. Time elapsed: 0.23 minutes...
-    ## Time elapsed: 0 hr 0 min 43 sec
+    ##  Resampling run 200 finished. Time elapsed: 0.03 minutes...
+    ##  Resampling run 300 finished. Time elapsed: 0.05 minutes...
+    ##  Resampling run 400 finished. Time elapsed: 0.07 minutes...
+    ##  Resampling run 500 finished. Time elapsed: 0.08 minutes...
+    ##  Resampling run 600 finished. Time elapsed: 0.10 minutes...
+    ##  Resampling run 700 finished. Time elapsed: 0.12 minutes...
+    ##  Resampling run 800 finished. Time elapsed: 0.13 minutes...
+    ##  Resampling run 900 finished. Time elapsed: 0.15 minutes...
+    ## Time elapsed: 0 hr 0 min 27 sec
 
     ## Analysis of Deviance Table
     ## 
@@ -562,6 +562,7 @@ anova(mod_null, mod_lin, mod_quad, nBoot=999, show.time = "all")
 ## Forward selection
 
 ``` r
+#change
 set.seed(1); esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.frame(dbmem_euclid), nBoot=999, quad = FALSE, adj_R2 = FALSE) 
 ```
 
@@ -569,14 +570,14 @@ set.seed(1); esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.fr
 
     ## testing for Global Model...
 
-    ## Time elapsed: 0 hr 0 min 33 sec
+    ## Time elapsed: 0 hr 0 min 24 sec
 
     ## Global linear model is significant with p value of 0.005 and R2 of  0.592212485765701
 
     ## Executing forward selection...
 
-    ## Time elapsed: 0 hr 0 min 13 sec
-    ## Time elapsed: 0 hr 0 min 28 sec
+    ## Time elapsed: 0 hr 0 min 10 sec
+    ## Time elapsed: 0 hr 0 min 23 sec
     ##      df.diff      Dev        R2     p
     ## MEM2       1 46.97309 0.1755213 0.015
     ## MEM3       1 37.05634 0.2977625 0.070
@@ -687,25 +688,25 @@ round(varpart_peixes$R2_fractions_sp$R2_pure_fraction,4)
     ## Singletons                    0.1143 0.1191
 
 ``` r
-full_model_sp <- varpart_peixes$R2_models_sp$structural_complexity.water_quality.hydrology
+full_model_sp <- varpart_peixes$R2_models_sp$structural_complexity.water_quality.hydrology.urb.esp
 names(full_model_sp) <- rownames(varpart_peixes$R2_fractions_sp$R2_full_fraction)
 full_model_sp
 ```
 
     ##          Gymnotus_pantherinus          Phalloceros_harpagos 
-    ##                     0.8336196                     0.8467111 
+    ##                     0.8336293                     0.8468804 
     ##             Phalloceros_reisi Hollandichthys_multifasciatus 
-    ##                     0.7181902                     0.8410076 
+    ##                     0.7268400                     0.8410110 
     ##            Astyanax_lacustris           Poecilia_reticulata 
-    ##                     0.7320550                     0.8490664 
+    ##                     0.8406739                     0.8493268 
     ##       Callichthys_callichthys           Hoplias_malabaricus 
-    ##                     0.7767439                     0.8147784 
+    ##                     0.7767833                     0.8147997 
     ##              Corydoras_aeneus        Hoplosternum_littorale 
-    ##                     0.5623126                     0.1771894 
+    ##                     0.8081059                     0.8161728 
     ##             Poecilia_vivipara              Tilapia_rendalli 
-    ##                     0.1270552                     0.2027522 
+    ##                     0.8160748                     0.8154326 
     ##                    Singletons 
-    ##                     0.6974805
+    ##                     0.8705467
 
 Looking at fractions related to the urbanization process
 
@@ -761,11 +762,14 @@ sp_full_urb_esp <- varpart_peixes$R2_models_sp$`urb.esp`
 ## Tests of significance
 
 ``` r
+#change
+set.seed(1)
+
 p_est <- anova(varpart_peixes$model_null,
-               varpart_peixes$models$structural_complexity,nBoot=9999)
+               varpart_peixes$models$structural_complexity,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 2 min 44 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
 
 ``` r
 p_est
@@ -777,21 +781,21 @@ p_est
     ## varpart_peixes$models$structural_complexity: resp_mv ~ est_PC1 + est_PC2
     ## 
     ## Multivariate test:
-    ##                                             Res.Df Df.diff  Dev Pr(>Dev)  
-    ## varpart_peixes$model_null                       29                        
-    ## varpart_peixes$models$structural_complexity     27       2 68.3    0.023 *
+    ##                                             Res.Df Df.diff   Dev Pr(>Dev)  
+    ## varpart_peixes$model_null                       29                         
+    ## varpart_peixes$models$structural_complexity     27       2 63.99    0.042 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_hydrology <- anova(varpart_peixes$model_null,
-                 varpart_peixes$models$hydrology,nBoot=9999)
+                 varpart_peixes$models$hydrology,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 2 min 41 sec
+    ## Time elapsed: 0 hr 0 min 15 sec
 
 ``` r
 p_hydrology
@@ -803,21 +807,21 @@ p_hydrology
     ## varpart_peixes$models$hydrology: resp_mv ~ hydrology_PC1 + hydrology_PC2
     ## 
     ## Multivariate test:
-    ##                                 Res.Df Df.diff   Dev Pr(>Dev)  
-    ## varpart_peixes$model_null           29                         
-    ## varpart_peixes$models$hydrology     27       2 51.42     0.09 .
+    ##                                 Res.Df Df.diff  Dev Pr(>Dev)  
+    ## varpart_peixes$model_null           29                        
+    ## varpart_peixes$models$hydrology     27       2 59.9     0.05 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_water_quality <- anova(varpart_peixes$model_null,
-                varpart_peixes$models$water_quality,nBoot=9999)
+                varpart_peixes$models$water_quality,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 41 sec
+    ## Time elapsed: 0 hr 0 min 12 sec
 
 ``` r
 p_water_quality
@@ -831,19 +835,19 @@ p_water_quality
     ## Multivariate test:
     ##                                     Res.Df Df.diff Dev Pr(>Dev)   
     ## varpart_peixes$model_null               29                        
-    ## varpart_peixes$models$water_quality     27       2  90    0.005 **
+    ## varpart_peixes$models$water_quality     27       2  90    0.002 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_esp <- anova(varpart_peixes$model_null,
-                varpart_peixes$models$esp,nBoot=9999)
+                varpart_peixes$models$esp,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 29 sec
+    ## Time elapsed: 0 hr 0 min 11 sec
 
 ``` r
 p_esp
@@ -855,21 +859,21 @@ p_esp
     ## varpart_peixes$models$esp: resp_mv ~ MEM2
     ## 
     ## Multivariate test:
-    ##                           Res.Df Df.diff   Dev Pr(>Dev)  
-    ## varpart_peixes$model_null     29                         
-    ## varpart_peixes$models$esp     28       1 46.97    0.011 *
+    ##                           Res.Df Df.diff   Dev Pr(>Dev)   
+    ## varpart_peixes$model_null     29                          
+    ## varpart_peixes$models$esp     28       1 46.97     0.01 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_urb <- anova(varpart_peixes$model_null,
-                varpart_peixes$models$urb,nBoot=9999)
+                varpart_peixes$models$urb,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 27 sec
+    ## Time elapsed: 0 hr 0 min 10 sec
 
 ``` r
 p_urb
@@ -881,21 +885,23 @@ p_urb
     ## varpart_peixes$models$urb: resp_mv ~ urb
     ## 
     ## Multivariate test:
-    ##                           Res.Df Df.diff   Dev Pr(>Dev)    
-    ## varpart_peixes$model_null     29                           
-    ## varpart_peixes$models$urb     28       1 62.26    0.001 ***
+    ##                           Res.Df Df.diff   Dev Pr(>Dev)   
+    ## varpart_peixes$model_null     29                          
+    ## varpart_peixes$models$urb     28       1 62.26    0.003 **
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
+set.seed(1)
+
 p_est_pure <- anova(varpart_peixes$models$`water_quality-hydrology-urb-esp`,
-                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 36 sec
+    ## Time elapsed: 0 hr 0 min 13 sec
 
 ``` r
 p_est_pure
@@ -915,10 +921,10 @@ p_est_pure
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`       2
     ##                                                                                 Dev
     ## varpart_peixes$models$`water_quality-hydrology-urb-esp`                            
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 32.58
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 70.14
     ##                                                                               Pr(>Dev)
     ## varpart_peixes$models$`water_quality-hydrology-urb-esp`                               
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.085
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.092
     ##                                                                                
     ## varpart_peixes$models$`water_quality-hydrology-urb-esp`                        
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` .
@@ -926,14 +932,14 @@ p_est_pure
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_hydrology_pure <- anova(varpart_peixes$models$`structural_complexity-water_quality-urb-esp`,
-                      varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                      varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 44 sec
+    ## Time elapsed: 0 hr 0 min 17 sec
 
 ``` r
 p_hydrology_pure
@@ -953,10 +959,10 @@ p_hydrology_pure
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`       2
     ##                                                                                 Dev
     ## varpart_peixes$models$`structural_complexity-water_quality-urb-esp`                
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 23.61
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 29.98
     ##                                                                               Pr(>Dev)
     ## varpart_peixes$models$`structural_complexity-water_quality-urb-esp`                   
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`     0.07
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.077
     ##                                                                                
     ## varpart_peixes$models$`structural_complexity-water_quality-urb-esp`            
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` .
@@ -964,14 +970,14 @@ p_hydrology_pure
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_water_quality_pure <- anova(varpart_peixes$models$`structural_complexity-hydrology-urb-esp`,
-                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 57 sec
+    ## Time elapsed: 0 hr 0 min 15 sec
 
 ``` r
 p_water_quality_pure
@@ -991,25 +997,20 @@ p_water_quality_pure
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`       2
     ##                                                                                 Dev
     ## varpart_peixes$models$`structural_complexity-hydrology-urb-esp`                    
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 55.28
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 55.91
     ##                                                                               Pr(>Dev)
     ## varpart_peixes$models$`structural_complexity-hydrology-urb-esp`                       
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.095
-    ##                                                                                
-    ## varpart_peixes$models$`structural_complexity-hydrology-urb-esp`                
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` .
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.124
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_urb_pure <- anova(varpart_peixes$models$`structural_complexity-water_quality-hydrology-esp`,
-                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 16 sec
+    ## Time elapsed: 0 hr 0 min 13 sec
 
 ``` r
 p_urb_pure
@@ -1029,20 +1030,25 @@ p_urb_pure
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`       1
     ##                                                                                 Dev
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-esp`          
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 4.033
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 11.09
     ##                                                                               Pr(>Dev)
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-esp`             
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.373
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.086
+    ##                                                                                
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-esp`      
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` .
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_esp_pure <- anova(varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb`,
-                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 1 min 41 sec
+    ## Time elapsed: 0 hr 0 min 15 sec
 
 ``` r
 p_esp_pure
@@ -1060,9 +1066,9 @@ p_esp_pure
     ##                                                                               Df.diff
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb`            
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`       1
-    ##                                                                                 Dev
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb`          
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 52.41
+    ##                                                                                Dev
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb`         
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 66.3
     ##                                                                               Pr(>Dev)
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb`             
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.018
@@ -1073,14 +1079,14 @@ p_esp_pure
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_full_model <- anova(varpart_peixes$model_null,
-                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=9999)
+                    varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 2 min 47 sec
+    ## Time elapsed: 0 hr 0 min 25 sec
 
 ``` r
 p_full_model
@@ -1100,10 +1106,10 @@ p_full_model
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`       8
     ##                                                                                 Dev
     ## varpart_peixes$model_null                                                          
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 325.1
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` 331.3
     ##                                                                               Pr(>Dev)
     ## varpart_peixes$model_null                                                             
-    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`   <2e-16
+    ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`    0.001
     ##                                                                                  
     ## varpart_peixes$model_null                                                        
     ## varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp` ***
@@ -1111,7 +1117,7 @@ p_full_model
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ## Plot of R²
 
@@ -1183,7 +1189,7 @@ scale_fractions <- function(full, pures){
   
   sumed_pure <- apply(pures, MARGIN = 1, sum)
   
-  scale <- full / sumed_pure
+  scale <- full/sumed_pure 
   
   scale[scale > 1] <- 1
   
@@ -1215,7 +1221,7 @@ sp_pure_frac_scaled <- scale_fractions(full_model_sp, sp_pure_frac)
 ###########
 
 
-full_model <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology-urb-esp`
+full_model <- varpart_peixes$R2_fractions_com$R2_full_fraction
 
 #pure_com <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 
@@ -1304,11 +1310,12 @@ Are these fractions significant after the removal of urban cover
 explanation?
 
 ``` r
+#change
 p_est_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`structural_complexity-urb`,nBoot=9999)
+               varpart_peixes$models$`structural_complexity-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 2 min 42 sec
+    ## Time elapsed: 0 hr 0 min 25 sec
 
 ``` r
 p_est_no_urb
@@ -1322,17 +1329,17 @@ p_est_no_urb
     ## Multivariate test:
     ##                                                   Res.Df Df.diff   Dev Pr(>Dev)
     ## varpart_peixes$models$urb                             28                       
-    ## varpart_peixes$models$`structural_complexity-urb`     26       2 45.63    0.456
+    ## varpart_peixes$models$`structural_complexity-urb`     26       2 44.76    0.458
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_water_quality_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`water_quality-urb`,nBoot=9999)
+               varpart_peixes$models$`water_quality-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 2 min 47 sec
+    ## Time elapsed: 0 hr 0 min 24 sec
 
 ``` r
 p_water_quality_no_urb
@@ -1346,17 +1353,17 @@ p_water_quality_no_urb
     ## Multivariate test:
     ##                                           Res.Df Df.diff   Dev Pr(>Dev)
     ## varpart_peixes$models$urb                     28                       
-    ## varpart_peixes$models$`water_quality-urb`     26       2 36.56    0.519
+    ## varpart_peixes$models$`water_quality-urb`     26       2 36.56    0.523
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_hydrology_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`hydrology-urb`,nBoot=9999)
+               varpart_peixes$models$`hydrology-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 2 min 40 sec
+    ## Time elapsed: 0 hr 0 min 23 sec
 
 ``` r
 p_hydrology_no_urb
@@ -1368,21 +1375,19 @@ p_hydrology_no_urb
     ## varpart_peixes$models$`hydrology-urb`: resp_mv ~ hydrology_PC1 + hydrology_PC2 + urb
     ## 
     ## Multivariate test:
-    ##                                       Res.Df Df.diff   Dev Pr(>Dev)  
-    ## varpart_peixes$models$urb                 28                         
-    ## varpart_peixes$models$`hydrology-urb`     26       2 63.75    0.093 .
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ##                                       Res.Df Df.diff   Dev Pr(>Dev)
+    ## varpart_peixes$models$urb                 28                       
+    ## varpart_peixes$models$`hydrology-urb`     26       2 58.09     0.28
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 ``` r
 p_esp_no_urb <- anova(varpart_peixes$models$urb,
-               varpart_peixes$models$`urb-esp`,nBoot=9999)
+               varpart_peixes$models$`urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 2 min 39 sec
+    ## Time elapsed: 0 hr 0 min 19 sec
 
 ``` r
 p_esp_no_urb
@@ -1396,12 +1401,12 @@ p_esp_no_urb
     ## Multivariate test:
     ##                                 Res.Df Df.diff   Dev Pr(>Dev)  
     ## varpart_peixes$models$urb           28                         
-    ## varpart_peixes$models$`urb-esp`     27       1 46.93    0.018 *
+    ## varpart_peixes$models$`urb-esp`     27       1 46.93    0.024 *
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## Arguments:
     ##  Test statistics calculated assuming uncorrelated response (for faster computation) 
-    ##  P-value calculated using 9999 iterations via PIT-trap resampling.
+    ##  P-value calculated using 999 iterations via PIT-trap resampling.
 
 Now we can plot all of these fractions:
 
@@ -1454,7 +1459,7 @@ par(new = TRUE, mar = c(0,0,0,0), bty = "n")
 plot(NA, xlim = c(0,100), ylim = c(0,100), xaxt = "n", yaxt = "n", xaxs = "i", yaxs = "i", )
 
 legend(x = 5, y = 100, xjust = 0, yjust = 1, fill = c("#98DF8A", "#9EDAE5", "#FFBB78", "#C49C94", "grey30"),
-       legend = c("Structural complexity*", "Water quality*", "Hydrology*", "Spatial filters*", "Urban cover"), border = "transparent", bty = "n", cex = 0.8, ncol = 3)
+       legend = c("Channel structure*", "Water quality*", "Hydrology*", "Spatial filters*", "Urban cover"), border = "transparent", bty = "n", cex = 0.8, ncol = 3)
 
 text(x = 72, y = 88, adj = c(0,1), labels = "*Darker colors are effects", cex = 0.7)
 text(x = 72, y = 84, adj = c(0,1), labels = "shared with urban cover", cex = 0.7)
@@ -1530,7 +1535,7 @@ letters(x = 7, y = 96, "c)", cex = 1.5)
 #dev.off()
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 # Model coefficients
 
@@ -1694,7 +1699,7 @@ letters(x = 12, y = 94, "g)", cex = 1.5)
 #dev.off()
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 # Plot urban cover predictons and loess
 
@@ -1747,7 +1752,7 @@ NOT_poecilidae <- which(colnames(predicted_urb) != "Phalloceros_reisi" & colname
 ## Loess
 
 ``` r
-degree <- 0
+degree <- 1
 span <- 0.2
 
 
@@ -1758,7 +1763,165 @@ for(i in 1:ncol(loess_pred_urb)){
   newdata_urb <- data.frame(urb = seq(from = min(predictors$urb), to = max(predictors$urb), length.out = 100))
   loess_pred_urb[,i] <- predict(loess, newdata = newdata_urb)
 }
+```
 
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : pseudoinverse used at -1.2439
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : neighborhood radius 0.18348
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : reciprocal condition number 0
+
+    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
+    ## : There are other near singularities as well. 0.028685
+
+``` r
 colnames(loess_pred_urb) <- colnames(varpart_peixes$models$structural_complexity$y)
 
 scaled_ubr <- scale(delineamento$urbana)
@@ -1877,7 +2040,7 @@ font[which(names == "Singletons")] <- 1
 legend(x = 20, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font, y.intersp = 1.5, text.width = 20)
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 ``` r
 # left, right, bottom, and top
@@ -1978,7 +2141,7 @@ font[which(names == "Singletons")] <- 1
 legend(x = 20, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font, y.intersp = 1.5, text.width = 20)
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
 
 \#Plot environmental predictions
 
@@ -2442,7 +2605,7 @@ legend(x = 50, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 3,
 = 1)
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 ``` r
 #dev.off()
