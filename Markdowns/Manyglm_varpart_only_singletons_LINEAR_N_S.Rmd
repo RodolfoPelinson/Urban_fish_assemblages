@@ -221,6 +221,63 @@ set.seed(1); esp_FS <- forward_sel_manyglm(y = assembleia_peixes_rm, x = data.fr
 ```
 
 
+```{r, eval = FALSE, echo = FALSE}
+structural_complexity <- data.frame(est_PC1 = structural_complexity_PCs[,1],
+                                    est_PC2 = structural_complexity_PCs[,2],
+                                    est_PC3 = structural_complexity_PCs[,3],
+                                    est_PC4 = structural_complexity_PCs[,4])
+
+assembleia_peixes_rm_mv <- mvabund(assembleia_peixes_rm)
+
+mod_est_null <- manyglm(assembleia_peixes_rm_mv ~ 1, data = structural_complexity)
+mod_est_pc1 <- manyglm(assembleia_peixes_rm_mv ~ est_PC1, data = structural_complexity)
+mod_est_pc2 <- manyglm(assembleia_peixes_rm_mv ~ est_PC1 + est_PC2, data = structural_complexity)
+mod_est_pc3 <- manyglm(assembleia_peixes_rm_mv ~ est_PC1 + est_PC2 + est_PC3, data = structural_complexity)
+mod_est_pc4 <- manyglm(assembleia_peixes_rm_mv ~ est_PC1 + est_PC2 + est_PC3 + est_PC4, data = structural_complexity)
+
+anova(mod_est_null, mod_est_pc1, mod_est_pc2, mod_est_pc3, mod_est_pc4, nBoot=999, show.time = "all")
+```
+
+
+```{r, eval = FALSE, echo = FALSE}
+water_quality <- data.frame(water_quality_PC1 = water_quality_PCs[,1],
+                                    water_quality_PC2 = water_quality_PCs[,2],
+                                    water_quality_PC3 = water_quality_PCs[,3],
+                                    water_quality_PC4 = water_quality_PCs[,4])
+
+assembleia_peixes_rm_mv <- mvabund(assembleia_peixes_rm)
+
+mod_water_quality_null <- manyglm(assembleia_peixes_rm_mv ~ 1, data = water_quality)
+mod_water_quality_pc1 <- manyglm(assembleia_peixes_rm_mv ~ water_quality_PC1, data = water_quality)
+mod_water_quality_pc2 <- manyglm(assembleia_peixes_rm_mv ~ water_quality_PC1 + water_quality_PC2, data = water_quality)
+mod_water_quality_pc3 <- manyglm(assembleia_peixes_rm_mv ~ water_quality_PC1 + water_quality_PC2 + water_quality_PC3, data = water_quality)
+mod_water_quality_pc4 <- manyglm(assembleia_peixes_rm_mv ~ water_quality_PC1 + water_quality_PC2 + water_quality_PC3 + water_quality_PC4, data = water_quality)
+
+anova(mod_water_quality_null, mod_water_quality_pc1, mod_water_quality_pc2, mod_water_quality_pc3, mod_water_quality_pc4, nBoot=999, show.time = "all")
+```
+
+
+```{r, eval = FALSE, echo = FALSE}
+hydrology <- data.frame(hydrology_PC1 = hydrology_PCs[,1],
+                                    hydrology_PC2 = hydrology_PCs[,2],
+                                    hydrology_PC3 = hydrology_PCs[,3],
+                                    hydrology_PC4 = hydrology_PCs[,4])
+
+assembleia_peixes_rm_mv <- mvabund(assembleia_peixes_rm)
+
+mod_hydrology_null <- manyglm(assembleia_peixes_rm_mv ~ 1, data = hydrology)
+mod_hydrology_pc1 <- manyglm(assembleia_peixes_rm_mv ~ hydrology_PC1, data = hydrology)
+mod_hydrology_pc2 <- manyglm(assembleia_peixes_rm_mv ~ hydrology_PC1 + hydrology_PC2, data = hydrology)
+mod_hydrology_pc3 <- manyglm(assembleia_peixes_rm_mv ~ hydrology_PC1 + hydrology_PC2 + hydrology_PC3, data = hydrology)
+mod_hydrology_pc4 <- manyglm(assembleia_peixes_rm_mv ~ hydrology_PC1 + hydrology_PC2 + hydrology_PC3 + hydrology_PC4, data = hydrology)
+
+anova(mod_hydrology_null, mod_hydrology_pc1, mod_hydrology_pc2, mod_hydrology_pc3, mod_hydrology_pc4, nBoot=999, show.time = "all")
+```
+
+
+
+
+
 ## Variation partitioning
 
 ```{r, warning=FALSE}
@@ -902,7 +959,7 @@ NOT_poecilidae <- which(colnames(predicted_urb) != "Phalloceros_reisi" & colname
 ## Loess
 
 ```{r}
-degree <- 1
+degree <- 0
 span <- 0.2
 
 

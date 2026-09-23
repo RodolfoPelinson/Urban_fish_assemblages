@@ -1,7 +1,7 @@
 Manyglm_varpart
 ================
 Rodolfo Pelinson
-2026-09-22
+2026-09-23
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -261,7 +261,7 @@ dbmem_euclid <- dbmem(dist_euclid, thresh = NULL, MEM.autocor = c("positive", "n
 ```
 
     ## Truncation level = 0.3268453 
-    ## Time to compute dbMEMs = 0.010000  sec
+    ## Time to compute dbMEMs = 0.000000  sec
 
 ``` r
 dbmem_euclid <- decostand(dbmem_euclid, method = "stand")
@@ -520,27 +520,27 @@ anova(mod_null, mod_lin, mod_quad, nBoot=999, show.time = "all")
 
     ## Resampling begins for test 1.
     ##  Resampling run 0 finished. Time elapsed: 0.00 minutes...
-    ##  Resampling run 100 finished. Time elapsed: 0.03 minutes...
-    ##  Resampling run 200 finished. Time elapsed: 0.06 minutes...
-    ##  Resampling run 300 finished. Time elapsed: 0.09 minutes...
-    ##  Resampling run 400 finished. Time elapsed: 0.12 minutes...
-    ##  Resampling run 500 finished. Time elapsed: 0.14 minutes...
-    ##  Resampling run 600 finished. Time elapsed: 0.17 minutes...
-    ##  Resampling run 700 finished. Time elapsed: 0.20 minutes...
-    ##  Resampling run 800 finished. Time elapsed: 0.23 minutes...
-    ##  Resampling run 900 finished. Time elapsed: 0.26 minutes...
+    ##  Resampling run 100 finished. Time elapsed: 0.05 minutes...
+    ##  Resampling run 200 finished. Time elapsed: 0.09 minutes...
+    ##  Resampling run 300 finished. Time elapsed: 0.12 minutes...
+    ##  Resampling run 400 finished. Time elapsed: 0.17 minutes...
+    ##  Resampling run 500 finished. Time elapsed: 0.21 minutes...
+    ##  Resampling run 600 finished. Time elapsed: 0.25 minutes...
+    ##  Resampling run 700 finished. Time elapsed: 0.30 minutes...
+    ##  Resampling run 800 finished. Time elapsed: 0.35 minutes...
+    ##  Resampling run 900 finished. Time elapsed: 0.41 minutes...
     ## Resampling begins for test 2.
     ##  Resampling run 0 finished. Time elapsed: 0.00 minutes...
     ##  Resampling run 100 finished. Time elapsed: 0.02 minutes...
-    ##  Resampling run 200 finished. Time elapsed: 0.03 minutes...
-    ##  Resampling run 300 finished. Time elapsed: 0.05 minutes...
-    ##  Resampling run 400 finished. Time elapsed: 0.07 minutes...
-    ##  Resampling run 500 finished. Time elapsed: 0.08 minutes...
-    ##  Resampling run 600 finished. Time elapsed: 0.10 minutes...
-    ##  Resampling run 700 finished. Time elapsed: 0.12 minutes...
-    ##  Resampling run 800 finished. Time elapsed: 0.13 minutes...
-    ##  Resampling run 900 finished. Time elapsed: 0.15 minutes...
-    ## Time elapsed: 0 hr 0 min 27 sec
+    ##  Resampling run 200 finished. Time elapsed: 0.05 minutes...
+    ##  Resampling run 300 finished. Time elapsed: 0.07 minutes...
+    ##  Resampling run 400 finished. Time elapsed: 0.10 minutes...
+    ##  Resampling run 500 finished. Time elapsed: 0.13 minutes...
+    ##  Resampling run 600 finished. Time elapsed: 0.16 minutes...
+    ##  Resampling run 700 finished. Time elapsed: 0.18 minutes...
+    ##  Resampling run 800 finished. Time elapsed: 0.20 minutes...
+    ##  Resampling run 900 finished. Time elapsed: 0.22 minutes...
+    ## Time elapsed: 0 hr 0 min 40 sec
 
     ## Analysis of Deviance Table
     ## 
@@ -769,7 +769,7 @@ p_est <- anova(varpart_peixes$model_null,
                varpart_peixes$models$structural_complexity,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 21 sec
+    ## Time elapsed: 0 hr 0 min 15 sec
 
 ``` r
 p_est
@@ -795,7 +795,7 @@ p_hydrology <- anova(varpart_peixes$model_null,
                  varpart_peixes$models$hydrology,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 14 sec
 
 ``` r
 p_hydrology
@@ -821,7 +821,7 @@ p_water_quality <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$water_quality,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 12 sec
+    ## Time elapsed: 0 hr 0 min 14 sec
 
 ``` r
 p_water_quality
@@ -873,7 +873,7 @@ p_urb <- anova(varpart_peixes$model_null,
                 varpart_peixes$models$urb,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 10 sec
+    ## Time elapsed: 0 hr 0 min 12 sec
 
 ``` r
 p_urb
@@ -901,7 +901,7 @@ p_est_pure <- anova(varpart_peixes$models$`water_quality-hydrology-urb-esp`,
                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 13 sec
+    ## Time elapsed: 0 hr 0 min 17 sec
 
 ``` r
 p_est_pure
@@ -977,7 +977,7 @@ p_water_quality_pure <- anova(varpart_peixes$models$`structural_complexity-hydro
                      varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 14 sec
 
 ``` r
 p_water_quality_pure
@@ -1048,7 +1048,7 @@ p_esp_pure <- anova(varpart_peixes$models$`structural_complexity-water_quality-h
                      varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 15 sec
+    ## Time elapsed: 0 hr 0 min 13 sec
 
 ``` r
 p_esp_pure
@@ -1086,7 +1086,7 @@ p_full_model <- anova(varpart_peixes$model_null,
                     varpart_peixes$models$`structural_complexity-water_quality-hydrology-urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 25 sec
+    ## Time elapsed: 0 hr 0 min 19 sec
 
 ``` r
 p_full_model
@@ -1315,7 +1315,7 @@ p_est_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`structural_complexity-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 25 sec
+    ## Time elapsed: 0 hr 0 min 21 sec
 
 ``` r
 p_est_no_urb
@@ -1339,7 +1339,7 @@ p_water_quality_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`water_quality-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 24 sec
+    ## Time elapsed: 0 hr 0 min 22 sec
 
 ``` r
 p_water_quality_no_urb
@@ -1363,7 +1363,7 @@ p_hydrology_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`hydrology-urb`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 23 sec
+    ## Time elapsed: 0 hr 0 min 20 sec
 
 ``` r
 p_hydrology_no_urb
@@ -1387,7 +1387,7 @@ p_esp_no_urb <- anova(varpart_peixes$models$urb,
                varpart_peixes$models$`urb-esp`,nBoot=999)
 ```
 
-    ## Time elapsed: 0 hr 0 min 19 sec
+    ## Time elapsed: 0 hr 0 min 20 sec
 
 ``` r
 p_esp_no_urb
@@ -1535,7 +1535,7 @@ letters(x = 7, y = 96, "c)", cex = 1.5)
 #dev.off()
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 # Model coefficients
 
@@ -1699,7 +1699,7 @@ letters(x = 12, y = 94, "g)", cex = 1.5)
 #dev.off()
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 # Plot urban cover predictons and loess
 
@@ -1752,7 +1752,7 @@ NOT_poecilidae <- which(colnames(predicted_urb) != "Phalloceros_reisi" & colname
 ## Loess
 
 ``` r
-degree <- 1
+degree <- 0
 span <- 0.2
 
 
@@ -1763,165 +1763,7 @@ for(i in 1:ncol(loess_pred_urb)){
   newdata_urb <- data.frame(urb = seq(from = min(predictors$urb), to = max(predictors$urb), length.out = 100))
   loess_pred_urb[,i] <- predict(loess, newdata = newdata_urb)
 }
-```
 
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : pseudoinverse used at -1.2439
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : neighborhood radius 0.18348
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : reciprocal condition number 0
-
-    ## Warning in simpleLoess(y, x, w, span, degree = degree, parametric = parametric,
-    ## : There are other near singularities as well. 0.028685
-
-``` r
 colnames(loess_pred_urb) <- colnames(varpart_peixes$models$structural_complexity$y)
 
 scaled_ubr <- scale(delineamento$urbana)
@@ -2040,7 +1882,7 @@ font[which(names == "Singletons")] <- 1
 legend(x = 20, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font, y.intersp = 1.5, text.width = 20)
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 ``` r
 # left, right, bottom, and top
@@ -2141,7 +1983,7 @@ font[which(names == "Singletons")] <- 1
 legend(x = 20, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 1, xjust = 0.5, yjust = 0.5, box.lty = 0, text.font = font, y.intersp = 1.5, text.width = 20)
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
 \#Plot environmental predictions
 
@@ -2605,7 +2447,7 @@ legend(x = 50, y = 50, col = colors, lty = 1, lwd = 4, legend = names, ncol = 3,
 = 1)
 ```
 
-![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](Manyglm_varpart_only_singletons_LINEAR_N_S_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
 
 ``` r
 #dev.off()
