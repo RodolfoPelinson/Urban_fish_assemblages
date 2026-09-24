@@ -1,7 +1,7 @@
 Environmental PCAs - North vs South
 ================
 Rodolfo Pelinson
-2026-09-22
+2026-09-24
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -522,6 +522,7 @@ for(i in 1:ncol(structural_complexity_PCs)){
   urb_cors_structural_complexity[i] <- cor(structural_complexity_PCs[,i], urb)
 }
 
+
 #write.csv(Eigenvalues_structural_complexity, "data/pcas_amb/structural_complexity_autovalores.csv")
 #write.csv(structural_complexity_PCs, "data/pcas_amb/structural_complexity_PCs.csv")
 #write.csv(structural_complexity_loadings, "data/pcas_amb/structural_complexity_loadings.csv")
@@ -957,7 +958,7 @@ title(ylab = pc2_label_hydrology, cex.lab = 1.4, line = 2.75)
 title(main = "c) Hydrology", line = 0.5, adj = 0, cex.main = 1.5)
 ```
 
-![](PCAs_noth_south_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](PCAs_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
 #dev.off()

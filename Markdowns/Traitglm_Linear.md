@@ -1,7 +1,7 @@
 Traitglm_ONE
 ================
 Rodolfo Pelinson
-2026-09-23
+2026-09-24
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -687,7 +687,7 @@ letters(x = 7, y = 97, "a)", cex = 1.5)
 #dev.off()
 ```
 
-![](Traitglm_only_singletons_N_S_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](Traitglm_Linear_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 #### Non morphological traits
 
@@ -979,4 +979,4 @@ letters(x = 7, y = 97, "a)", cex = 1.5)
 #dev.off()
 ```
 
-![](Traitglm_only_singletons_N_S_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](Traitglm_Linear_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
