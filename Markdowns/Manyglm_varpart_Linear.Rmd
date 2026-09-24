@@ -540,9 +540,7 @@ sp_pure_frac_scaled <- scale_fractions(full_model_sp, sp_pure_frac)
 ###########
 
 
-full_model <- varpart_peixes$R2_fractions_com$R2_full_fraction
-
-#pure_com <- varpart_peixes$R2_fractions_com$R2_pure_fraction
+full_model <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology-urb-esp`
 
 pure_fracs <- varpart_peixes$R2_fractions_com$R2_pure_fraction
 
@@ -1587,11 +1585,11 @@ mtext("Abundance*", side = 4, line = 2)
 
 mtext("Larger catchment area", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_hydrology1$hydrology_PC1)+0.4)
 mtext("Greater discharge",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_hydrology1$hydrology_PC1)+0.4)
-mtext("Elongated catchments",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_hydrology1$hydrology_PC1)+0.4)
+#mtext("Elongated catchments",       side = 1, line = 1.5    , adj = 1, cex = 0.8, at = max(newdata_hydrology1$hydrology_PC1)+0.4)
 
 
-mtext("Circular catchments", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_hydrology1$hydrology_PC1)-0.4)
-mtext("Narrower channels", side = 1, line = 0.75 , adj = 0, cex = 0.8, at = min(newdata_hydrology1$hydrology_PC1)-0.4)
+mtext("Narrower channels", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_hydrology1$hydrology_PC1)-0.4)
+#mtext("Circular catchments", side = 1, line = 0.75 , adj = 0, cex = 0.8, at = min(newdata_hydrology1$hydrology_PC1)-0.4)
 
 title(xlab = "Hydrology", line = 0.5)
 title(xlab = "(PC1)", line = 1.5)
@@ -1638,7 +1636,6 @@ mtext("Abundance*", side = 4, line = 2)
 #axis(1, labels = TRUE, tick = FALSE, line = -0.5)
 
 mtext("Deeper channels", side = 1, line = 0 , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
-mtext("Elongated catchments",       side = 1, line = 0.75    , adj = 1, cex = 0.8, at = max(newdata_hydrology2$hydrology_PC2)+0.4)
 
 mtext("Greater water velocity", side = 1, line = 0 , adj = 0, cex = 0.8, at = min(newdata_hydrology2$hydrology_PC2)-0.4)
 mtext("Channelized channels", side = 1, line = 0.75 , adj = 0, cex = 0.8,  at = min(newdata_hydrology2$hydrology_PC2)-0.4)
