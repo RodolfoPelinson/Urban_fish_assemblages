@@ -305,8 +305,11 @@ predictors <- list(structural_complexity = structural_complexity,
 varpart_peixes <- varpart_manyglm(resp = assembleia_peixes_rm, pred = predictors, DF_adj_r2 = FALSE)
 varpart_peixes$R2_fractions_com
 
-full_model2 <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology`
-full_model2
+full_model <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology-urb-esp`
+full_model
+
+full_model_env <- varpart_peixes$R2_models$`structural_complexity-water_quality-hydrology`
+full_model_env
 
 round(varpart_peixes$R2_fractions_sp$R2_full_fraction,4)
 
