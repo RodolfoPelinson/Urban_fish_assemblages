@@ -1,7 +1,7 @@
 Traitglm_ONE
 ================
 Rodolfo Pelinson
-2026-09-24
+2026-09-25
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -387,7 +387,7 @@ new_func$exotic[rownames(new_func) == "Tilapia_rendalli" | rownames(new_func) ==
 non_morph_func <- new_func
 ```
 
-### Trait PCAs
+### Trait PCoAs
 
 #### Morphological traits
 
@@ -399,7 +399,7 @@ functional <- functional[,colSums(functional, na.rm = TRUE) > 0]
 functional <- functional[,colSums(functional, na.rm = TRUE)/nrow(functional) != 1]
 
 
-#functional_st <- decostand(functional, method = "stand")
+functional_st <- decostand(functional, method = "stand")
 gower_dist <- vegdist(functional, method = "gower")
 
 pcoa <- wcmdscale(gower_dist, eig = TRUE)
@@ -412,14 +412,16 @@ importance_funcional
     ##  [1] 0.37 0.20 0.17 0.08 0.04 0.03 0.03 0.02 0.02 0.01 0.01 0.01 0.01 0.00 0.00
 
 ``` r
-efit <- envfit(pcoa$points, functional, choices = c(1,2,3))
-trait_scores <- scores(efit, display = "vectors")
+efit <- envfit(pcoa$points, functional, choices = c(1,2))
+trait_scores <- scores(efit, display = "vectors") #correlation coefficients .Loadings
 
 sig_traits <- which(efit$vectors$pvals < 0.05 & efit$vectors$r > 0.5)
 
-functional_PCs <- pcoa$points[,1:3]
-colnames(functional_PCs) <- c("PC1","PC2", "PC3")
-functional_loadings <- trait_scores
+trait_scores_filtered <- trait_scores[trait_scores[,1] > 0.25 | trait_scores[,2] > 0.25,]
+
+functional_PCs <- pcoa$points[,1:2]
+colnames(functional_PCs) <- c("PC1","PC2")
+functional_loadings <- trait_scores_filtered
 ```
 
 Assessing effects on community responses:
@@ -427,20 +429,20 @@ Assessing effects on community responses:
 ``` r
 urb_pred <- data.frame(urb = urb)
 colnames(urb_pred) <- c("urb")
-Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:3]), formula = ~ urb + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1 + urb:PC2)
+Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ urb + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1 + urb:PC2)
 
 
 structural_complexity_pred <- data.frame(structural_complexity_PC1 = structural_complexity_PCs[,1],
                                          structural_complexity_PC2 = structural_complexity_PCs[,2])
-Model_trait_structural_complexity_trait <- traitglm(L = assembleia_peixes_rm, R = structural_complexity_pred, Q = data.frame(functional_PCs[,1:3]), formula = ~ structural_complexity_PC1 + structural_complexity_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + structural_complexity_PC1:PC1 + structural_complexity_PC1:PC2 + structural_complexity_PC2:PC1 + structural_complexity_PC2:PC2)
+Model_trait_structural_complexity_trait <- traitglm(L = assembleia_peixes_rm, R = structural_complexity_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ structural_complexity_PC1 + structural_complexity_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + structural_complexity_PC1:PC1 + structural_complexity_PC1:PC2 + structural_complexity_PC2:PC1 + structural_complexity_PC2:PC2)
 
 water_quality_pred <- data.frame(water_quality_PC1 = water_quality_PCs[,1],
                                          water_quality_PC2 = water_quality_PCs[,2])
-Model_trait_water_quality_trait <- traitglm(L = assembleia_peixes_rm, R = water_quality_pred, Q = data.frame(functional_PCs[,1:3]), formula = ~ water_quality_PC1 + water_quality_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) +  water_quality_PC1:PC1 + water_quality_PC1:PC2 + water_quality_PC2:PC1 + water_quality_PC2:PC2)
+Model_trait_water_quality_trait <- traitglm(L = assembleia_peixes_rm, R = water_quality_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ water_quality_PC1 + water_quality_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) +  water_quality_PC1:PC1 + water_quality_PC1:PC2 + water_quality_PC2:PC1 + water_quality_PC2:PC2)
 
 hydrology_pred <- data.frame(hydrology_PC1 = hydrology_PCs[,1],
                                          hydrology_PC2 = hydrology_PCs[,2])
-Model_trait_hydrology_trait <- traitglm(L = assembleia_peixes_rm, R = hydrology_pred, Q = data.frame(functional_PCs[,1:3]), formula = ~ hydrology_PC1 + hydrology_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + hydrology_PC1:PC1 + hydrology_PC1:PC2 + hydrology_PC2:PC1 + hydrology_PC2:PC2)
+Model_trait_hydrology_trait <- traitglm(L = assembleia_peixes_rm, R = hydrology_pred, Q = data.frame(functional_PCs[,1:2]), formula = ~ hydrology_PC1 + hydrology_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + hydrology_PC1:PC1 + hydrology_PC1:PC2 + hydrology_PC2:PC1 + hydrology_PC2:PC2)
 
 
 
@@ -473,8 +475,7 @@ correlated with them.
 ``` r
 #Scale loadings
 scaler <- min(max(abs(functional_PCs[, 1]))/max(abs(functional_loadings[,1])),
-              max(abs(functional_PCs[, 2]))/max(abs(functional_loadings[,2])),
-              max(abs(functional_PCs[, 3]))/max(abs(functional_loadings[,3])))
+              max(abs(functional_PCs[, 2]))/max(abs(functional_loadings[,2])))
 
 functional_loadings_sc <- functional_loadings * scaler
 
@@ -485,7 +486,7 @@ functional_loadings_sc <- functional_loadings * scaler
 #                                                           functional_loadings_sc[,2] > threshold | functional_loadings_sc[,2] < #-threshold),1:2]
 #functional_loadings_filtrados
 
-functional_loadings_filtrados <- functional_loadings_sc[sig_traits,]                                                   
+functional_loadings_filtrados <- functional_loadings_sc                                                 
 ```
 
 Lets plot this PCA
@@ -581,7 +582,7 @@ lower_PC2<- coefs_PC2 - CI_PC2
 
 #labels <- c("Urban cover", "(Urban cover)²", "Stream structure (PC2)", "Stream structure (PC2)²", "Water parameters (PC1)","Water parameters (PC1)²", "Watershed descriptors (PC1)", "Watershed descriptors (PC1)²")
 
-labels <- c("Urban cover", "Structural comp. (PC1)",  "Structural comp. (PC2)","Water quality (PC1)", "Water quality (PC2)","Hydrology (PC1)", "Hydrology (PC2)")
+labels <- c("Urban cover", "Channel Env. (PC1)",  "Channel Env. (PC2)","Water quality (PC1)", "Water quality (PC2)","Hydrology (PC1)", "Hydrology (PC2)")
 ```
 
 ``` r
@@ -715,15 +716,17 @@ importance_funcional_non_morph
     ## [1] 0.37 0.23 0.19 0.09 0.06 0.03 0.02 0.01 0.00
 
 ``` r
-efit_non_morph <- envfit(pcoa_non_morph$points, non_morph_func, choices = c(1,2,3))
+efit_non_morph <- envfit(pcoa_non_morph$points, non_morph_func, choices = c(1,2))
 trait_scores_non_mortph <- scores(efit_non_morph, display = "vectors")
 
-sig_traits <- which(efit_non_morph$vectors$pvals < 0.05 & efit_non_morph$vectors$r > 0.5)
+#sig_traits <- which(efit_non_morph$vectors$pvals < 0.05 & efit_non_morph$vectors$r > 0.5)
+
+trait_scores_non_mortph_filtered <- trait_scores_non_mortph[trait_scores_non_mortph[,1] > 0.25 | trait_scores_non_mortph[,2] > 0.25,]
 
 
-non_morph_func_PCs <- pcoa_non_morph$points[,1:3]
-colnames(non_morph_func_PCs) <- c("PC1","PC2", "PC3")
-non_morph_func_loadings <- trait_scores_non_mortph
+non_morph_func_PCs <- pcoa_non_morph$points[,1:2]
+colnames(non_morph_func_PCs) <- c("PC1","PC2")
+non_morph_func_loadings <- trait_scores_non_mortph_filtered
 ```
 
 First three axis are the most important, lets see which are the traits
@@ -734,21 +737,21 @@ Assessing effects on community responses:
 ``` r
 urb_pred <- data.frame(urb = urb)
 colnames(urb_pred) <- c("urb")
-Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1:3]), formula = ~ urb + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1 + urb:PC2)
+Model_trait_urb_trait <- traitglm(L = assembleia_peixes_rm, R = urb_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ urb + PC1 + PC2 + I(PC1^2) + I(PC2^2) + urb:PC1 + urb:PC2)
 
 
 structural_complexity_pred <- data.frame(structural_complexity_PC1 = structural_complexity_PCs[,1],
                                          structural_complexity_PC2 = structural_complexity_PCs[,2])
-Model_trait_structural_complexity_trait <- traitglm(L = assembleia_peixes_rm, R = structural_complexity_pred, Q = data.frame(non_morph_func_PCs[,1:3]), formula = ~ structural_complexity_PC1 + structural_complexity_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + structural_complexity_PC1:PC1 + structural_complexity_PC1:PC2 + structural_complexity_PC2:PC1 + structural_complexity_PC2:PC2)
+Model_trait_structural_complexity_trait <- traitglm(L = assembleia_peixes_rm, R = structural_complexity_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ structural_complexity_PC1 + structural_complexity_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + structural_complexity_PC1:PC1 + structural_complexity_PC1:PC2 + structural_complexity_PC2:PC1 + structural_complexity_PC2:PC2)
 
 
 water_quality_pred <- data.frame(water_quality_PC1 = water_quality_PCs[,1],
                                          water_quality_PC2 = water_quality_PCs[,2])
-Model_trait_water_quality_trait <- traitglm(L = assembleia_peixes_rm, R = water_quality_pred, Q = data.frame(non_morph_func_PCs[,1:3]), formula = ~ water_quality_PC1 + water_quality_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + water_quality_PC1:PC1 + water_quality_PC1:PC2 + water_quality_PC2:PC1 + water_quality_PC2:PC2)
+Model_trait_water_quality_trait <- traitglm(L = assembleia_peixes_rm, R = water_quality_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ water_quality_PC1 + water_quality_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + water_quality_PC1:PC1 + water_quality_PC1:PC2 + water_quality_PC2:PC1 + water_quality_PC2:PC2)
 
 hydrology_pred <- data.frame(hydrology_PC1 = hydrology_PCs[,1],
                                          hydrology_PC2 = hydrology_PCs[,2])
-Model_trait_hydrology_trait <- traitglm(L = assembleia_peixes_rm, R = hydrology_pred, Q = data.frame(non_morph_func_PCs[,1:3]), formula = ~ hydrology_PC1 + hydrology_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + hydrology_PC1:PC1 + hydrology_PC1:PC2 + hydrology_PC2:PC1 + hydrology_PC2:PC2)
+Model_trait_hydrology_trait <- traitglm(L = assembleia_peixes_rm, R = hydrology_pred, Q = data.frame(non_morph_func_PCs[,1:2]), formula = ~ hydrology_PC1 + hydrology_PC2 + PC1 + PC2 + I(PC1^2) + I(PC2^2) + hydrology_PC1:PC1 + hydrology_PC1:PC2 + hydrology_PC2:PC1 + hydrology_PC2:PC2)
 
 
 
@@ -815,14 +818,13 @@ lower_PC2<- coefs_PC2 - CI_PC2
 
 #labels <- c("Urban cover", "(Urban cover)²", "Stream structure (PC2)", "Stream structure (PC2)²", "Water parameters (PC1)","Water parameters (PC1)²", "Watershed descriptors (PC1)", "Watershed descriptors (PC1)²")
 
-labels <- c("Urban cover", "Structural comp. (PC1)",  "Structural comp. (PC2)","Water quality (PC1)", "Water quality (PC2)","Hydrology (PC1)", "Hydrology (PC2)")
+labels <- c("Urban cover", "Channel Env. (PC1)",  "Channel Env. (PC2)","Water quality (PC1)", "Water quality (PC2)","Hydrology (PC1)", "Hydrology (PC2)")
 ```
 
 ``` r
 #Scale loadings
 scaler <- min(max(abs(non_morph_func_PCs[, 1]))/max(abs(non_morph_func_loadings[,1])),
-              max(abs(non_morph_func_PCs[, 2]))/max(abs(non_morph_func_loadings[,2])),
-              max(abs(non_morph_func_PCs[, 3]))/max(abs(non_morph_func_loadings[,3])))
+              max(abs(non_morph_func_PCs[, 2]))/max(abs(non_morph_func_loadings[,2])))
 
 non_morph_func_loadings_sc <- non_morph_func_loadings * scaler
 
@@ -833,7 +835,7 @@ non_morph_func_loadings_sc <- non_morph_func_loadings * scaler
 #non_morph_func_loadings_filtrados
 
 
-non_morph_func_loadings_filtrados <- non_morph_func_loadings_sc[sig_traits,]                                                   
+non_morph_func_loadings_filtrados <- non_morph_func_loadings_sc                                                
 ```
 
 Lets plot this PCA
@@ -841,7 +843,7 @@ Lets plot this PCA
 ``` r
 pc1_label_non_morph_func <- paste("PCoA 1 (",round(importance_funcional_non_morph[1]*100,2),"%)",sep = "")
 pc2_label_non_morph_func <- paste("PCoA 2 (",round(importance_funcional_non_morph[2]*100,2),"%)",sep = "")
-pc3_label_non_morph_func <- paste("PCoA 3 (",round(importance_funcional_non_morph[3]*100,2),"%)",sep = "")
+#pc3_label_non_morph_func <- paste("PCoA 3 (",round(importance_funcional_non_morph[3]*100,2),"%)",sep = "")
 
 sp_names <- rownames(non_morph_func_PCs)
 
@@ -885,7 +887,7 @@ names_func[names_func == "Mac_sm_lo_6"] <- "Low-gradient streams"
 names_func[names_func == "Mac_sm_hi_7"] <- "High-gradient streams"
 names_func[names_func == "Mac_lg_lo_10"] <- "Large rivers"
 names_func[names_func == "Mic_ben_grv_22"] <- "Benthic gravel/rocks"
-names_func[names_func == "Mic_epi_col_25"] <- "Epibenthic above bottom"
+names_func[names_func == "Mic_epi_col_25"] <- "Epibenthic"
 names_func[names_func == "MAD_det_29"] <- "Planktivores"
 names_func[names_func == "MAD_alg_31"] <- "Algivores"
 names_func[names_func == "MAD_fol_32"] <- "Folivores"
