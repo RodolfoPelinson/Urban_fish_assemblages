@@ -1,7 +1,7 @@
 Traitglm_ONE
 ================
 Rodolfo Pelinson
-2026-09-25
+2026-10-19
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -364,18 +364,46 @@ functional <- functional[match(colnames(assembleia_peixes), rownames(functional)
 
 new_func <- new_func[match(rownames(functional), rownames(new_func)),]
 
-traits_select <- c(6,7,10, 12:13, 19:26 ,27:35, 37:38)
 
-new_func <- new_func[traits_select]
-colnames(new_func) <- paste(colnames(new_func), traits_select, sep = "_")
+#macrohabitat <- c("Mac_sm_lo", "Mac_sm_hi", "Mac_sm_la", "Mac_sm_ca", "Mac_lg_lo", "Mac_lg_hi")
+mesohabitat <- c("Mes_sm_lot", "Mes_sm_len")
+microhabitat <- c("Mic_ben_uns", "Mic_ben_mud", "Mic_ben_san", "Mic_ben_grv", "Mic_ben_wd", "Mic_ben_lf", "Mic_epi_col", "Mic_epi_sur")
+diet <- c("MAD_ben_inv", "MAD_sur_inv", "MAD_pla","MAD_det","MAD_alg", "MAD_fol", "MAD_fru", "MAD_pis", "MAD_omn")
+behaviour <- c("B_Viv")
 
+new_func <- new_func[colnames(new_func) %in% c(mesohabitat, microhabitat, diet, behaviour)]
 
-new_func[which(rownames(new_func) == "Tilapia_rendalli"),] <- c(
-  0,0,1, #6, 7, 10
-  1,1, #12, 13
-  0,0,0,0,0,0,1,0,  #19,20,21,22,23,24,25,26
-  0,0,0,0,0,1,0,0,1, # 27:35
-  0,0) #37,38
+#colnames(new_func) <- paste(colnames(new_func), traits_select, sep = "_")
+
+#From (Oliveira and Bennemann 2005)
+tilapia <- which(rownames(new_func) == "Tilapia_rendalli")
+
+new_func[tilapia, colnames(new_func) == "Mes_sm_lot"] <- 1
+new_func[tilapia, colnames(new_func) == "Mes_sm_len"] <- 1
+
+new_func[tilapia, colnames(new_func) == "Mic_ben_uns"] <- 0
+new_func[tilapia, colnames(new_func) == "Mic_ben_mud"] <- 0
+new_func[tilapia, colnames(new_func) == "Mic_ben_san"] <- 0
+new_func[tilapia, colnames(new_func) == "Mic_ben_grv"] <- 0
+new_func[tilapia, colnames(new_func) == "Mic_ben_wd"] <- 0
+new_func[tilapia, colnames(new_func) == "Mic_ben_lf"] <- 0
+new_func[tilapia, colnames(new_func) == "Mic_epi_col"] <- 1
+new_func[tilapia, colnames(new_func) == "Mic_epi_sur"] <- 0
+
+new_func[tilapia, colnames(new_func) == "MAD_ben_inv"] <- 1
+new_func[tilapia, colnames(new_func) == "MAD_sur_inv"] <- 0
+new_func[tilapia, colnames(new_func) == "MAD_pla"] <- 1
+new_func[tilapia, colnames(new_func) == "MAD_det"] <- 1
+new_func[tilapia, colnames(new_func) == "MAD_alg"] <- 1
+new_func[tilapia, colnames(new_func) == "MAD_fol"] <- 1
+new_func[tilapia, colnames(new_func) == "MAD_fru"] <- 0
+new_func[tilapia, colnames(new_func) == "MAD_pis"] <- 0
+new_func[tilapia, colnames(new_func) == "MAD_omn"] <- 1
+new_func[tilapia, colnames(new_func) == "MAD_ect"] <- 0
+
+new_func[tilapia, colnames(new_func) == "B_Viv"] <- 0
+new_func[tilapia, colnames(new_func) == "LHS_Elr"] <- 0
+new_func[tilapia, colnames(new_func) == "LHS_Elg"] <- 0
 ```
 
 Creating the “exotic” trait
@@ -385,6 +413,43 @@ new_func$exotic <- rep(0, nrow(new_func))
 new_func$exotic[rownames(new_func) == "Tilapia_rendalli" | rownames(new_func) == "Poecilia_reticulata" | rownames(new_func) == "Poecilia_vivipara"] <- 1
 
 non_morph_func <- new_func
+```
+
+First there is a few changes to the original data that must be done.
+Specifically, we have data on the diet of the Poecilidae that are not
+quite acurate in the original dataset of Albert et al
+
+``` r
+non_morph_func <- non_morph_func[match(colnames(assembleia_peixes_rm), rownames(non_morph_func)),]
+#non_morph_func$niche_amplitude[7] <- mean(non_morph_func$niche_amplitude, na.rm = TRUE)
+
+non_morph_func$MAD_omn[rownames(non_morph_func) == "Phalloceros_reisi"] <- 0
+non_morph_func$MAD_omn[rownames(non_morph_func) == "Phalloceros_harpagos"] <- 0
+non_morph_func$MAD_omn[rownames(non_morph_func) == "Poecilia_reticulata"] <- 0
+non_morph_func$MAD_omn[rownames(non_morph_func) == "Poecilia_vivipara"] <- 0
+
+non_morph_func$MAD_det[rownames(non_morph_func) == "Phalloceros_reisi"] <- 1
+non_morph_func$MAD_det[rownames(non_morph_func) == "Phalloceros_harpagos"] <- 0
+non_morph_func$MAD_det[rownames(non_morph_func) == "Poecilia_reticulata"] <- 1
+non_morph_func$MAD_det[rownames(non_morph_func) == "Poecilia_vivipara"] <- 1
+
+non_morph_func$Mic_ben_uns[ non_morph_func$Mic_ben_wd == 1 |
+                                 non_morph_func$Mic_ben_grv == 1 |
+                                 non_morph_func$Mic_ben_san == 1 |
+                                 non_morph_func$Mic_ben_lf == 1 |
+                                 non_morph_func$Mic_ben_mud == 1 ] <- 1
+
+
+non_morph_func <- non_morph_func[,colMeans(non_morph_func, na.rm = TRUE) != 0 & colMeans(non_morph_func, na.rm = TRUE) != 1]
+#non_morph_func <- non_morph_func[,colSums(non_morph_func, na.rm = TRUE)/nrow(non_morph_func) != 1]
+
+
+
+#folivore and planktonic are the same, so we can remove one.
+non_morph_func <- non_morph_func[,colnames(non_morph_func) != "MAD_pla"]
+
+#microhabitat of benthic leaves and wood and vegetation also, so lets let only one.
+non_morph_func <- non_morph_func[,colnames(non_morph_func) != "Mic_ben_lf"]
 ```
 
 ### Trait PCoAs
@@ -417,7 +482,9 @@ trait_scores <- scores(efit, display = "vectors") #correlation coefficients .Loa
 
 sig_traits <- which(efit$vectors$pvals < 0.05 & efit$vectors$r > 0.5)
 
-trait_scores_filtered <- trait_scores[trait_scores[,1] > 0.25 | trait_scores[,2] > 0.25,]
+trait_scores_filtered <- trait_scores[(trait_scores[,1] > 0.5 | trait_scores[,1] < -0.5) |
+                                                              (trait_scores[,2] > 0.5 | trait_scores[,2] < -0.5) ,]
+
 
 functional_PCs <- pcoa$points[,1:2]
 colnames(functional_PCs) <- c("PC1","PC2")
@@ -688,7 +755,7 @@ letters(x = 7, y = 97, "a)", cex = 1.5)
 #dev.off()
 ```
 
-![](Traitglm_Linear_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](Traitglm_Linear_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 #### Non morphological traits
 
@@ -713,7 +780,7 @@ importance_funcional_non_morph <- round(pcoa_non_morph$eig[pcoa_non_morph$eig > 
 importance_funcional_non_morph
 ```
 
-    ## [1] 0.37 0.23 0.19 0.09 0.06 0.03 0.02 0.01 0.00
+    ##  [1] 0.44 0.26 0.17 0.07 0.03 0.02 0.01 0.01 0.00 0.00
 
 ``` r
 efit_non_morph <- envfit(pcoa_non_morph$points, non_morph_func, choices = c(1,2))
@@ -721,7 +788,8 @@ trait_scores_non_mortph <- scores(efit_non_morph, display = "vectors")
 
 #sig_traits <- which(efit_non_morph$vectors$pvals < 0.05 & efit_non_morph$vectors$r > 0.5)
 
-trait_scores_non_mortph_filtered <- trait_scores_non_mortph[trait_scores_non_mortph[,1] > 0.25 | trait_scores_non_mortph[,2] > 0.25,]
+trait_scores_non_mortph_filtered <- trait_scores_non_mortph[(trait_scores_non_mortph[,1] > 0.5 | trait_scores_non_mortph[,1] < -0.5) |
+                                                              (trait_scores_non_mortph[,2] > 0.5 | trait_scores_non_mortph[,2] < -0.5) ,]
 
 
 non_morph_func_PCs <- pcoa_non_morph$points[,1:2]
@@ -874,23 +942,25 @@ sp_names[sp_names == "Taunayia_bifasciata"] <- "T. bifasciata"
 
 names_func <- rownames(non_morph_func_loadings_filtrados) 
 
-names_func[names_func == "Mes_sm_len_13"] <- "Lentic waters"
-names_func[names_func == "Mic_ben_uns_19"] <- "Generally benthic"
-names_func[names_func == "Mic_ben_wd_23"] <- "Benthic wood and veg."
-names_func[names_func == "Mic_ben_lf_24"] <- "Benthic leafs"
-names_func[names_func == "MAD_ben_inv_27"] <- "Invertivores"
-names_func[names_func == "MAD_omn_35"] <- "Omnivores"
-names_func[names_func == "B_Viv_38"] <- "Viviparous"
+names_func[names_func == "Mes_sm_len"] <- "Lentic waters"
+names_func[names_func == "Mic_ben_uns"] <- "Generally benthic"
+names_func[names_func == "Mic_ben_wd"] <- "Benthic wood and veg."
+names_func[names_func == "Mic_ben_lf"] <- "Benthic leafs"
+
+names_func[names_func == "MAD_ben_inv"] <- "Invertivores"
+names_func[names_func == "MAD_omn"] <- "Omnivores"
+names_func[names_func == "MAD_det"] <- "Detritivores"
+names_func[names_func == "MAD_alg"] <- "Algivores"
+names_func[names_func == "MAD_fol"] <- "Folivores"
+
+names_func[names_func == "B_Viv"] <- "Viviparous"
 names_func[names_func == "exotic"] <- "Non-native"
 names_func[names_func == "niche_amplitude"] <- "Troph. generalist"
-names_func[names_func == "Mac_sm_lo_6"] <- "Low-gradient streams"
-names_func[names_func == "Mac_sm_hi_7"] <- "High-gradient streams"
-names_func[names_func == "Mac_lg_lo_10"] <- "Large rivers"
-names_func[names_func == "Mic_ben_grv_22"] <- "Benthic gravel/rocks"
-names_func[names_func == "Mic_epi_col_25"] <- "Epibenthic"
-names_func[names_func == "MAD_det_29"] <- "Planktivores"
-names_func[names_func == "MAD_alg_31"] <- "Algivores"
-names_func[names_func == "MAD_fol_32"] <- "Folivores"
+names_func[names_func == "Mac_sm_lo"] <- "Low-gradient streams"
+names_func[names_func == "Mac_sm_hi"] <- "High-gradient streams"
+names_func[names_func == "Mac_lg_lo"] <- "Large rivers"
+names_func[names_func == "Mic_ben_grv"] <- "Benthic gravel/rocks"
+names_func[names_func == "Mic_epi_col"] <- "Epibenthic"
 ```
 
 ``` r
@@ -913,7 +983,7 @@ screen(2)
 non_morph_func_PCs_jt <- jitter(non_morph_func_PCs, amount = 0.02)
 
 par(mar = c(5,5,1,1), bty = "o")
-xmin <- min(c(non_morph_func_PCs_jt[,1], non_morph_func_loadings_filtrados[,1]))*1.2
+xmin <- min(c(non_morph_func_PCs_jt[,1], non_morph_func_loadings_filtrados[,1]))*1.4
 xmax <- max(c(non_morph_func_PCs_jt[,1], non_morph_func_loadings_filtrados[,1]))*1.2
 ymin <- min(c(non_morph_func_PCs_jt[,2], non_morph_func_loadings_filtrados[,2]))*1.2
 ymax <- max(c(non_morph_func_PCs_jt[,2], non_morph_func_loadings_filtrados[,2]))*1.2
@@ -981,4 +1051,4 @@ letters(x = 7, y = 97, "a)", cex = 1.5)
 #dev.off()
 ```
 
-![](Traitglm_Linear_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](Traitglm_Linear_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
