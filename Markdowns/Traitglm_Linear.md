@@ -1,7 +1,7 @@
 Traitglm_ONE
 ================
 Rodolfo Pelinson
-2026-10-19
+2026-10-20
 
 ``` r
 dir<-("C:/Users/rodol/OneDrive/repos/Urban_fish_assemblages")
@@ -433,6 +433,11 @@ non_morph_func$MAD_det[rownames(non_morph_func) == "Phalloceros_harpagos"] <- 0
 non_morph_func$MAD_det[rownames(non_morph_func) == "Poecilia_reticulata"] <- 1
 non_morph_func$MAD_det[rownames(non_morph_func) == "Poecilia_vivipara"] <- 1
 
+non_morph_func$Mes_sm_len[rownames(non_morph_func) == "Phalloceros_reisi"] <- 1
+non_morph_func$Mes_sm_len[rownames(non_morph_func) == "Phalloceros_harpagos"] <- 1
+non_morph_func$Mes_sm_len[rownames(non_morph_func) == "Poecilia_reticulata"] <- 1
+non_morph_func$Mes_sm_len[rownames(non_morph_func) == "Poecilia_vivipara"] <- 1
+
 non_morph_func$Mic_ben_uns[ non_morph_func$Mic_ben_wd == 1 |
                                  non_morph_func$Mic_ben_grv == 1 |
                                  non_morph_func$Mic_ben_san == 1 |
@@ -780,7 +785,7 @@ importance_funcional_non_morph <- round(pcoa_non_morph$eig[pcoa_non_morph$eig > 
 importance_funcional_non_morph
 ```
 
-    ##  [1] 0.44 0.26 0.17 0.07 0.03 0.02 0.01 0.01 0.00 0.00
+    ##  [1] 0.52 0.19 0.15 0.08 0.03 0.02 0.02 0.01 0.01 0.00
 
 ``` r
 efit_non_morph <- envfit(pcoa_non_morph$points, non_morph_func, choices = c(1,2))
